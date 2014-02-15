@@ -1,5 +1,6 @@
 package cs2340.woms;
 
+import cs2340.woms.auth.AndroidLoginManager;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,7 +24,9 @@ public class RegistrationScreen extends Activity {
         registerButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v){
-                // TODO: add user to login manager
+            	if(passField.getText().equals(passField2.getText())){
+            		AndroidLoginManager.instance.register(userField.getText().toString(), passField.getText().toString());
+            	}
             };
         });
 	}
