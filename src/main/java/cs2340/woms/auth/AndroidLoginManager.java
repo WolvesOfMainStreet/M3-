@@ -4,10 +4,15 @@ import java.util.ArrayList;
 
 public class AndroidLoginManager implements LoginManager {
 
-    public static LoginManager instance = new AndroidLoginManager();
+    public static AndroidLoginManager instance = new AndroidLoginManager();
     private ArrayList<Pair> names;
-    
-    private AndroidLoginManager() { }
+
+    private AndroidLoginManager() {
+        names = new ArrayList<Pair>();
+
+        // Admin Account
+        register("admin", "pass123");
+    }
 
     @Override
     public boolean handleLogin(String username, String password) {
@@ -15,9 +20,6 @@ public class AndroidLoginManager implements LoginManager {
             return false;
         }
 
-        if (username.equals("admin") && password.equals("pass123")) {
-            return true;
-        }
         for(Pair pair: names){
         	if(pair.getName() == username){
         		if(pair.getPass() == password){
@@ -26,18 +28,18 @@ public class AndroidLoginManager implements LoginManager {
         		else return false;
         	}
         }
-        
+
         return false;
     }
-    
+
     public void register(String name, String pass){
     	Pair pair = new Pair(name, pass);
     	names.add(pair);
     }
-    
+
     private class Pair{
     	private String name, pass;
-    	
+
     	public Pair(String name, String pass){
     		this.name = name;
     		this.pass = pass;
