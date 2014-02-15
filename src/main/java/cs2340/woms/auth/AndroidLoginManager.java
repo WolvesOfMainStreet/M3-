@@ -7,7 +7,7 @@ public class AndroidLoginManager implements LoginManager {
     private AndroidLoginManager() { }
 
     @Override
-    public void handleLogin(String username, String password) {
-
+    public boolean handleLogin(String username, String password) {
+        return false;
     }
 }
