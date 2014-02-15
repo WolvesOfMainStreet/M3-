@@ -10,12 +10,6 @@ public class LoginScreen extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen);
-        
-        /*View view = this.findViewById(R.id.action_settings);
-        
-        View root = view.getRootView();
-        
-        root.setBackgroundColor(0x00000000);*/
     }
 
     @Override
