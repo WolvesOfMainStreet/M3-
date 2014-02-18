@@ -26,6 +26,8 @@
         </activity>
         <activity android:name="cs2340.woms.SuccessScreen" >
         </activity>
+        <activity android:name="cs2340.woms.RegistrationScreen" >
+        </activity>
     </application>
 
 </manifest>

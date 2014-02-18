@@ -1,12 +1,12 @@
 package cs2340.woms;
 
-import cs2340.woms.auth.AndroidLoginManager;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import cs2340.woms.auth.AndroidLoginManager;
 
 public class RegistrationScreen extends Activity {
 
@@ -24,8 +24,9 @@ public class RegistrationScreen extends Activity {
         registerButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v){
-            	if(passField.getText().equals(passField2.getText())){
+            	if(passField.getText().toString().equals(passField2.getText().toString())) {
             		AndroidLoginManager.instance.register(userField.getText().toString(), passField.getText().toString());
+            		RegistrationScreen.this.finish();
             	}
             };
         });

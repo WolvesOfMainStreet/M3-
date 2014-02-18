@@ -19,6 +19,7 @@ public class LoginScreen extends Activity {
         setContentView(R.layout.login_screen);
 
         Button loginButton = (Button) this.findViewById(R.id.button1);
+        Button registerButton = (Button) this.findViewById(R.id.button2);
 
         final EditText userField = (EditText) this.findViewById(R.id.editText1);
         final EditText passField = (EditText) this.findViewById(R.id.editText2);
@@ -32,6 +33,14 @@ public class LoginScreen extends Activity {
                     startActivity(intent);
                 }
             };
+        });
+
+        registerButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginScreen.this, RegistrationScreen.class);
+                startActivity(intent);
+            }
         });
     }
 
