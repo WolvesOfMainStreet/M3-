@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class AndroidLoginManager implements LoginManager {
 
-    public static AndroidLoginManager instance = new AndroidLoginManager();
+    public static LoginManager instance = new AndroidLoginManager();
     private ArrayList<Pair> names;
 
     private AndroidLoginManager() {
@@ -32,9 +32,22 @@ public class AndroidLoginManager implements LoginManager {
         return false;
     }
 
-    public void register(String name, String pass){
-    	Pair pair = new Pair(name, pass);
+    @Override
+    public boolean register(String username, String password) {
+        if (username == null || password == null) {
+            return false;
+        }
+
+        // Don't re-register an already registered name username.
+        for (Pair login: names) {
+            if (login.name.equals(username)) {
+                return false;
+            }
+        }
+
+    	Pair pair = new Pair(username, password);
     	names.add(pair);
+    	return true;
     }
 
     private class Pair{
