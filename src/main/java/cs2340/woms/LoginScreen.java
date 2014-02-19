@@ -18,11 +18,11 @@ public class LoginScreen extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen);
 
-        Button loginButton = (Button) this.findViewById(R.id.button1);
-        Button registerButton = (Button) this.findViewById(R.id.button2);
+        Button loginButton = (Button) this.findViewById(R.id.loginButtonLogin);
+        Button registerButton = (Button) this.findViewById(R.id.loginButtonRegister);
 
-        final EditText userField = (EditText) this.findViewById(R.id.editText1);
-        final EditText passField = (EditText) this.findViewById(R.id.editText2);
+        final EditText userField = (EditText) this.findViewById(R.id.loginFieldUsername);
+        final EditText passField = (EditText) this.findViewById(R.id.loginFieldPassword);
 
         loginButton.setOnClickListener(new OnClickListener() {
             @Override

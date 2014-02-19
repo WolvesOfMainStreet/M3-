@@ -15,11 +15,11 @@ public class RegistrationScreen extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.registration_screen);
 
-		Button registerButton = (Button) this.findViewById(R.id.button1);
+		Button registerButton = (Button) this.findViewById(R.id.registerButtonRegister);
 
-        final EditText userField = (EditText) this.findViewById(R.id.editText1);
-        final EditText passField = (EditText) this.findViewById(R.id.EditText01);
-        final EditText passField2 = (EditText) this.findViewById(R.id.editText2);
+        final EditText userField = (EditText) this.findViewById(R.id.registerFieldUsername);
+        final EditText passField = (EditText) this.findViewById(R.id.registerFieldPassword1);
+        final EditText passField2 = (EditText) this.findViewById(R.id.registerFieldPassword2);
 
         registerButton.setOnClickListener(new OnClickListener() {
             @Override

@@ -16,7 +16,7 @@ public class MainActivityMatt extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_activity_matt);
 
-        Button loginButton = (Button) this.findViewById(R.id.button1);
+        Button loginButton = (Button) this.findViewById(R.id.mainButtonLogin);
 
         loginButton.setOnClickListener(new OnClickListener(){
             @Override

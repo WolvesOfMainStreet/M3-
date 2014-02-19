@@ -9,10 +9,10 @@
     tools:context=".LoginScreen" >
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/registerButtonRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editText2"
+        android:layout_below="@+id/registerFieldPassword2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="57dp"
         android:gravity="center_vertical|center_horizontal"
@@ -20,7 +20,7 @@
         android:textAlignment="center" />
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/registerFieldUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -30,11 +30,11 @@
         android:hint="Enter Username" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/registerFieldPassword2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/EditText01"
-        android:layout_below="@+id/EditText01"
+        android:layout_alignLeft="@+id/registerFieldPassword1"
+        android:layout_below="@+id/registerFieldPassword1"
         android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Confirm Password"
@@ -44,10 +44,10 @@
     </EditText>
 
     <EditText
-        android:id="@+id/EditText01"
+        android:id="@+id/registerFieldPassword1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText1"
+        android:layout_alignLeft="@+id/registerFieldUsername"
         android:layout_centerVertical="true"
         android:ems="10"
         android:hint="Enter Password"

@@ -9,7 +9,7 @@
     tools:context=".MainActivityMatt" >
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/mainButtonLogin"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,7 +18,7 @@
         android:text="Login" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/mainTextWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
