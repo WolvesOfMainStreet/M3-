@@ -1,14 +1,17 @@
 package cs2340.woms.auth;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import cs2340.woms.account.LoginAccount;
 
 public class AndroidLoginManager implements LoginManager {
 
     public static LoginManager instance = new AndroidLoginManager();
-    private ArrayList<Pair> names;
+    private Set<LoginAccount> logins;
 
     private AndroidLoginManager() {
-        names = new ArrayList<Pair>();
+        logins = new HashSet<LoginAccount>();
 
         // Admin Account
         register("admin", "pass123");
@@ -20,12 +23,10 @@ public class AndroidLoginManager implements LoginManager {
             return false;
         }
 
-        for(Pair pair: names){
-        	if(pair.getName().equals(username)){
-        		if(pair.getPass().equals(password)){
-        			return true;
-        		}
-        		else return false;
+        for(LoginAccount login: logins) {
+        	if(login.getUsername().equals(username)
+        	        && login.getPassword().equals(password)) {
+        	    return true;
         	}
         }
 
@@ -39,30 +40,15 @@ public class AndroidLoginManager implements LoginManager {
         }
 
         // Don't re-register an already registered name username.
-        for (Pair login: names) {
-            if (login.name.equals(username)) {
+        for (LoginAccount login: logins) {
+            if (login.getUsername().equals(username)) {
                 return false;
             }
         }
 
-    	Pair pair = new Pair(username, password);
-    	names.add(pair);
+    	LoginAccount newLogin = new LoginAccount(username, password);
+    	logins.add(newLogin);
     	return true;
-    }
-
-    private class Pair{
-    	private String name, pass;
-
-    	public Pair(String name, String pass){
-    		this.name = name;
-    		this.pass = pass;
-    	}
-    	public String getName(){
-    		return name;
-    	}
-    	public String getPass(){
-        	return pass;
-    	}
     }
 }
 
