@@ -1,5 +1,8 @@
 package cs2340.woms.account;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * An account for logging into the financial application. Not to be confused
  * with an Account, which a LoginAccount can any number of.
@@ -11,9 +14,12 @@ public class LoginAccount {
     private final String username;
     private final String password;
 
+    private final Set<FinanceAccount> accounts;
+
     public LoginAccount(String username, String password) {
         this.username = username;
         this.password = password;
+        this.accounts = new HashSet<FinanceAccount>();
     }
 
     public String getUsername() {
