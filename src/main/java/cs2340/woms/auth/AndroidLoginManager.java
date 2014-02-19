@@ -24,10 +24,7 @@ public class AndroidLoginManager implements LoginManager {
         }
 
         for(LoginAccount login: logins) {
-        	if(login.getUsername().equals(username)
-        	        && login.getPassword().equals(password)) {
-        	    return true;
-        	}
+        	if (login.matches(username, password)) return true;
         }
 
         return false;
