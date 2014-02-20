@@ -1,5 +1,7 @@
 package cs2340.woms.auth;
 
+import cs2340.woms.account.LoginAccount;
+
 public interface LoginManager {
 
     /**
@@ -13,6 +15,14 @@ public interface LoginManager {
     boolean handleLogin(String username, String password);
 
     /**
+     * Logs out the currently logged in user. Returns true if this was
+     * successful and false if it was not.
+     *
+     * @return whether the current user was successfully logged out.
+     */
+    boolean handleLogout();
+
+    /**
      * Registers a new username for logging in. Returns true if the registration
      * was successful, and false if not. Registration will usually succeed, but
      * can fail if, for example, the given username and password were already
@@ -23,4 +33,12 @@ public interface LoginManager {
      * @return true if registration was successful, false if not.
      */
     boolean register(String username, String password);
+
+    /**
+     * Returns the currently logged in account, or null if no account is
+     * currently logged in.
+     *
+     * @return the currently logged in account or null if no one is logged in.
+     */
+    LoginAccount getCurrentLogin();
 }

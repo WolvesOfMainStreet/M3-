@@ -10,6 +10,9 @@ public class AndroidLoginManager implements LoginManager {
     public static LoginManager instance = new AndroidLoginManager();
     private Set<LoginAccount> logins;
 
+    // The currently logged in account
+    private LoginAccount currentLogin = null;
+
     private AndroidLoginManager() {
         logins = new HashSet<LoginAccount>();
 
@@ -24,10 +27,24 @@ public class AndroidLoginManager implements LoginManager {
         }
 
         for(LoginAccount login: logins) {
-        	if (login.matches(username, password)) return true;
+        	if (login.matches(username, password)) {
+        	    currentLogin = login;
+        	    return true;
+        	}
         }
 
         return false;
+    }
+
+    @Override
+    public boolean handleLogout() {
+        // Can't log out if no one was logged in in the first place.
+        if (currentLogin == null) {
+            return false;
+        } else {
+            currentLogin = null;
+            return true;
+        }
     }
 
     @Override
@@ -47,5 +64,9 @@ public class AndroidLoginManager implements LoginManager {
     	logins.add(newLogin);
     	return true;
     }
-}
 
+    @Override
+    public LoginAccount getCurrentLogin() {
+        return currentLogin;
+    }
+}
