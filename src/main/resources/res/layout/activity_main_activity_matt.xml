@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="Login" />
+        android:text="@string/login" />
 
     <TextView
         android:id="@+id/mainTextWelcome"
@@ -24,7 +24,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="66dp"
-        android:text="Welcome to the Wolfpack!"
+        android:text="@string/welcome"
         android:textSize="10pt" />
 
 </RelativeLayout>

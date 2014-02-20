@@ -16,7 +16,7 @@
         android:layout_alignBottom="@+id/accountcreateButtonCancel"
         android:layout_alignParentRight="true"
         android:layout_marginRight="22dp"
-        android:text="Create Account" />
+        android:text="@string/cancel" />
 
     <Button
         android:id="@+id/accountcreateButtonCancel"
@@ -26,7 +26,7 @@
         android:layout_marginBottom="45dp"
         android:layout_marginRight="17dp"
         android:layout_toLeftOf="@+id/accountcreateButtonCreate"
-        android:text="Cancel" />
+        android:text="@string/cancel" />
 
     <EditText
         android:id="@+id/accountcreateFieldName"
@@ -36,7 +36,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="119dp"
         android:ems="10"
-        android:hint="Account Name" >
+        android:hint="@string/finance_account_name" >
 
         <requestFocus />
     </EditText>
@@ -48,7 +48,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:ems="10"
-        android:hint="Starting Balance"
+        android:hint="@string/finance_account_start_balance"
         android:inputType="numberDecimal" />
 
 </RelativeLayout>

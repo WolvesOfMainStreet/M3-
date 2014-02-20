@@ -24,6 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Create New Account" />
+        android:text="@string/register_finace_account" />
 
 </RelativeLayout>
