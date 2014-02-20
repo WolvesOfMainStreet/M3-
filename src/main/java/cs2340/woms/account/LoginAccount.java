@@ -1,7 +1,7 @@
 package cs2340.woms.account;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An account for logging into the financial application. Not to be confused
@@ -14,12 +14,12 @@ public class LoginAccount {
     private final String username;
     private final String password;
 
-    private final Set<FinanceAccount> accounts;
+    private final List<FinanceAccount> accounts;
 
     public LoginAccount(String username, String password) {
         this.username = username;
         this.password = password;
-        this.accounts = new HashSet<FinanceAccount>();
+        this.accounts = new ArrayList<FinanceAccount>();
     }
 
     public String getUsername() {
@@ -41,5 +41,9 @@ public class LoginAccount {
      */
     public boolean matches(String username, String password) {
         return this.username.equals(username) && this.password.equals(password);
+    }
+
+    public List<FinanceAccount> getAccounts() {
+        return accounts;
     }
 }

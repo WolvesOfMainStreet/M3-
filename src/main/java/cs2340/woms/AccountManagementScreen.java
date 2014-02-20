@@ -7,6 +7,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import cs2340.woms.account.FinanceAccount;
+import cs2340.woms.auth.AndroidLoginManager;
 
 public class AccountManagementScreen extends Activity {
 
@@ -17,7 +19,14 @@ public class AccountManagementScreen extends Activity {
 
         ListView listview = (ListView) this.findViewById(R.id.accountmanageListAccount);
 
-        listview.setAdapter(new ArrayAdapter<String>(this, R.layout.account_listing, new String[]{"Hello"}));
+        // Shouldn't happen, but if no one is logged in there is no reason to
+        // be viewing their non-existent accounts
+        if (AndroidLoginManager.instance.getCurrentLogin() == null) {
+            this.finish();
+        }
+
+        listview.setAdapter(new ArrayAdapter<FinanceAccount>(
+                this, R.layout.account_listing, AndroidLoginManager.instance.getCurrentLogin().getAccounts()));
 
         listview.setOnItemClickListener(new OnItemClickListener() {
             @Override
