@@ -2,6 +2,7 @@ package cs2340.woms.account;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.text.NumberFormat;
 
 /**
  * A financial account which stores information such as transactions and which
@@ -12,7 +13,7 @@ import java.math.MathContext;
 public class FinanceAccount {
 
     private final String name;
-    private final BigDecimal balance;
+    private BigDecimal balance;
 
     /**
      * Creates a new FinanceAccount with the given name and a starting balance
@@ -33,7 +34,7 @@ public class FinanceAccount {
     public FinanceAccount(String name, BigDecimal balance) {
         this.name = name;
         this.balance = new BigDecimal(0, MathContext.DECIMAL32);
-        this.balance.add(balance);
+        this.balance = this.balance.add(balance);
     }
 
     public String getName() {
@@ -42,5 +43,18 @@ public class FinanceAccount {
 
     public double getBalance() {
         return balance.doubleValue();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder string = new StringBuilder();
+        string.append("Name: ");
+        string.append(name);
+        string.append("\n");
+
+        string.append("\tBalance: ");
+        //TODO: add support for accounts in multiple currencies
+        string.append(NumberFormat.getCurrencyInstance().format(balance.doubleValue()));
+        return string.toString();
     }
 }

@@ -51,4 +51,16 @@ public class LoginAccount {
     public void addAccount(FinanceAccount account) {
         accounts.add(account);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder string = new StringBuilder();
+        string.append("Username: ");
+        string.append(username);
+        string.append("\n");
+
+        string.append("Password: ");
+        string.append(password);
+        return string.toString();
+    }
 }
