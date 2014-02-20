@@ -46,4 +46,8 @@ public class LoginAccount {
     public List<FinanceAccount> getAccounts() {
         return accounts;
     }
+
+    public void addAccount(FinanceAccount account) {
+        accounts.add(account);
+    }
 }

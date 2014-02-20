@@ -30,6 +30,8 @@
         </activity>
         <activity android:name="cs2340.woms.AccountManagementScreen" >
         </activity>
+        <activity android:name="cs2340.woms.AccountCreationScreen" >
+        </activity>
     </application>
 
 </manifest>

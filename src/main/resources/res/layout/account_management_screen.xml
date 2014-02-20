@@ -12,8 +12,18 @@
         android:id="@+id/accountmanageListAccount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/accountmanageButtonNewaccount"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" >
+        android:layout_marginTop="15dp" >
+
     </ListView>
+
+    <Button
+        android:id="@+id/accountmanageButtonNewaccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="Create New Account" />
 
 </RelativeLayout>

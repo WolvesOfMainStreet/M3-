@@ -1,11 +1,14 @@
 package cs2340.woms;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import cs2340.woms.account.FinanceAccount;
 import cs2340.woms.auth.AndroidLoginManager;
@@ -32,6 +35,16 @@ public class AccountManagementScreen extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+            }
+        });
+
+        Button createAccountButton = (Button) this.findViewById(R.id.accountmanageButtonNewaccount);
+
+        createAccountButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AccountManagementScreen.this, AccountCreationScreen.class);
+                startActivity(intent);
             }
         });
     }
