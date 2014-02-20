@@ -22,15 +22,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="cs2340.woms.LoginScreen" >
+        <activity android:name=".LoginScreen" >
         </activity>
-        <activity android:name="cs2340.woms.SuccessScreen" >
+        <activity android:name=".SuccessScreen" >
         </activity>
-        <activity android:name="cs2340.woms.RegistrationScreen" >
+        <activity android:name=".RegistrationScreen" >
         </activity>
-        <activity android:name="cs2340.woms.AccountManagementScreen" >
+        <activity android:name=".AccountManagementScreen" >
         </activity>
-        <activity android:name="cs2340.woms.AccountCreationScreen" >
+        <activity android:name=".AccountCreationScreen" >
         </activity>
     </application>
 
