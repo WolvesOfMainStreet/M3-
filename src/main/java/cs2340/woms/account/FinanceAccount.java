@@ -21,8 +21,19 @@ public class FinanceAccount {
      * @param name the full name for this FinanceAccount.
      */
     public FinanceAccount(String name) {
+        this(name, new BigDecimal(0));
+    }
+
+    /**
+     * Creates a new FinanceAccount with the given name and starting balance.
+     *
+     * @param name the full name for this FinanceAccount.
+     * @param balance the starting balance for this FinanceAccount.
+     */
+    public FinanceAccount(String name, BigDecimal balance) {
         this.name = name;
         this.balance = new BigDecimal(0, MathContext.DECIMAL32);
+        this.balance.add(balance);
     }
 
     public String getName() {
