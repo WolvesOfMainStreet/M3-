@@ -1,7 +1,8 @@
 package cs2340.woms.account;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import cs2340.woms.ObservableList;
 
 /**
  * An account for logging into the financial application. Not to be confused
@@ -14,12 +15,12 @@ public class LoginAccount {
     private final String username;
     private final String password;
 
-    private final List<FinanceAccount> accounts;
+    private final ObservableList<FinanceAccount> accounts;
 
     public LoginAccount(String username, String password) {
         this.username = username;
         this.password = password;
-        this.accounts = new ArrayList<FinanceAccount>();
+        this.accounts = new ObservableList<FinanceAccount>(new ArrayList<FinanceAccount>());
     }
 
     public String getUsername() {
@@ -43,7 +44,7 @@ public class LoginAccount {
         return this.username.equals(username) && this.password.equals(password);
     }
 
-    public List<FinanceAccount> getAccounts() {
+    public ObservableList<FinanceAccount> getAccounts() {
         return accounts;
     }
 
