@@ -9,6 +9,16 @@
     tools:context=".LoginScreen" >
 
     <EditText
+        android:id="@+id/loginFieldUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/loginFieldPassword"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="38dp"
+        android:ems="10"
+        android:hint="Username" />
+    
+    <EditText
         android:id="@+id/loginFieldPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,16 +38,6 @@
         android:gravity="center_vertical|center_horizontal"
         android:text="Login"
         android:textAlignment="center" />
-
-    <EditText
-        android:id="@+id/loginFieldUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/loginFieldPassword"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="38dp"
-        android:ems="10"
-        android:hint="Username" />
 
     <Button
         android:id="@+id/loginButtonRegister"
