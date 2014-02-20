@@ -29,7 +29,7 @@ public class LoginScreen extends Activity {
             public void onClick(View v){
                 LoginManager loginManager = AndroidLoginManager.instance;
                 if (loginManager.handleLogin(userField.getText().toString(), passField.getText().toString())) {
-                    Intent intent = new Intent(LoginScreen.this, SuccessScreen.class);
+                    Intent intent = new Intent(LoginScreen.this, AccountManagementScreen.class);
                     startActivity(intent);
                 }
             };
