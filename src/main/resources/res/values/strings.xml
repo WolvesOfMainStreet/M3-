@@ -14,5 +14,6 @@
     <string name="register_finance_account">Create New Account</string>
     <string name="finance_account_name">Account Name</string>
     <string name="finance_account_start_balance">Starting Balance</string>
+    <string name="new_transaction">New Transaction</string>
 
 </resources>

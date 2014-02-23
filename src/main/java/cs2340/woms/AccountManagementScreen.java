@@ -54,7 +54,9 @@ public class AccountManagementScreen extends Activity {
         listview.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Intent intent = new Intent(AccountManagementScreen.this, TransactionHistoryScreen.class);
+                intent.putExtra("financeAccount", position);
+                startActivity(intent);
             }
         });
 

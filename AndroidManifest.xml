@@ -32,6 +32,8 @@
         </activity>
         <activity android:name=".AccountCreationScreen" >
         </activity>
+        <activity android:name=".TransactionHistoryScreen" >
+        </activity>
     </application>
 
 </manifest>
