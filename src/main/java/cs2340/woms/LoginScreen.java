@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import cs2340.woms.auth.AndroidLoginManager;
 import cs2340.woms.auth.LoginManager;
 
@@ -30,6 +31,8 @@ public class LoginScreen extends Activity {
                 if (loginManager.handleLogin(userField.getText().toString(), passField.getText().toString())) {
                     Intent intent = new Intent(LoginScreen.this, AccountManagementScreen.class);
                     startActivity(intent);
+                } else {
+                    Toast.makeText(LoginScreen.this, "Incorrect username or password.", Toast.LENGTH_SHORT).show();
                 }
             };
         });

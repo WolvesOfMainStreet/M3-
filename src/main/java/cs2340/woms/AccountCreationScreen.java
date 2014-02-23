@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import cs2340.woms.account.FinanceAccount;
 import cs2340.woms.auth.AndroidLoginManager;
 
@@ -36,24 +37,31 @@ public class AccountCreationScreen extends Activity {
             public void onClick(View v) {
                 String name = nameField.getText().toString();
                 String balanceString = balanceField.getText().toString();
-                BigDecimal balance;
+                BigDecimal balance = null;
 
-                if ("".equals(name) || "".equals(balanceString)) {
-                    // TODO: inform user of their error
-                    return;
+                String error = null;
+
+                if ("".equals(name)) {
+                    error = "Name field cannot be empty.";
+                } else if ("".equals(balanceString)) {
+                    error = "Balance field cannot be empty.";
                 }
 
-                try {
-                    balance = new BigDecimal(balanceString);
-                } catch (NumberFormatException e) {
-                    //TODO: inform user of their error
-                    return;
+                if (error == null) {
+                    try {
+                        balance = new BigDecimal(balanceString);
+                    } catch (NumberFormatException e) {
+                        error = "Balance field is not a number.";
+                    }
                 }
 
-                FinanceAccount newAccount = new FinanceAccount(name, balance);
-                AndroidLoginManager.instance.getCurrentLogin().addAccount(newAccount);
-                //TODO: inform user of their success
-                AccountCreationScreen.this.finish();
+                if (error != null) {
+                    Toast.makeText(AccountCreationScreen.this, error, Toast.LENGTH_SHORT).show();
+                } else {
+                    FinanceAccount newAccount = new FinanceAccount(name, balance);
+                    AndroidLoginManager.instance.getCurrentLogin().addAccount(newAccount);
+                    AccountCreationScreen.this.finish();
+                }
             }
         });
     }

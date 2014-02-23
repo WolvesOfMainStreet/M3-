@@ -71,5 +71,7 @@ public class AccountManagementScreen extends Activity {
                 startActivity(intent);
             }
         });
+
+        // TODO: add back button (logout)
     }
 }

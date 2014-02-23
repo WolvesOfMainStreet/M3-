@@ -52,5 +52,7 @@ public class TransactionHistoryScreen extends Activity {
                 // TODO: Link to Transaction creation screen
             }
         });
+
+        // TODO: add back button (go to account management screen)
     }
 }
