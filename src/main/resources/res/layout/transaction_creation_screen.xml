@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".TransactionCreationScreen" >
+
+    <Button
+        android:id="@+id/transactioncreateButtonCreate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/transactioncreateButtonCancel"
+        android:layout_alignBottom="@+id/transactioncreateButtonCancel"
+        android:layout_alignRight="@+id/transactioncreateFieldAmount"
+        android:text="@string/confirm" />
+
+    <Button
+        android:id="@+id/transactioncreateButtonCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/transactioncreateFieldAmount"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="45dp"
+        android:text="@string/cancel" />
+
+    <EditText
+        android:id="@+id/transactioncreateFieldAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:ems="10"
+        android:hint="@string/transaction_amount"
+        android:inputType="numberDecimal" >
+
+        <requestFocus />
+    </EditText>
+
+</RelativeLayout>

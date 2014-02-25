@@ -1,6 +1,11 @@
 package cs2340.woms;
 
+import static cs2340.woms.TransactionCreationScreen.CREATE_TRANSACTION;
+
+import java.math.BigDecimal;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +20,8 @@ import cs2340.woms.auth.AndroidLoginManager;
 
 public class TransactionHistoryScreen extends Activity {
 
+    private FinanceAccount financeAccount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,12 +29,12 @@ public class TransactionHistoryScreen extends Activity {
 
         Bundle extraData = this.getIntent().getExtras();
         int financeAccountIndex = extraData.getInt("financeAccount");
-        FinanceAccount currentFinanceAccount = AndroidLoginManager.instance.getCurrentLogin().getAccounts().get(financeAccountIndex);
+        this.financeAccount = AndroidLoginManager.instance.getCurrentLogin().getAccounts().get(financeAccountIndex);
 
         //-----Set up Transaction List------------------------------------------
 
         ListView listview = (ListView) this.findViewById(R.id.transactionhistoryListTransaction);
-        ObservableList<Transaction> updateableList = currentFinanceAccount.getTransactions();
+        ObservableList<Transaction> updateableList = financeAccount.getTransactions();
 
         final BaseAdapter accountListAdapter = new ArrayAdapter<Transaction>(this, R.layout.account_listing, updateableList);
         updateableList.registerObserver(new DataSetObserver() {
@@ -49,10 +56,25 @@ public class TransactionHistoryScreen extends Activity {
         newTransactionButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Link to Transaction creation screen
+                Intent intent = new Intent(TransactionHistoryScreen.this, TransactionCreationScreen.class);
+                TransactionHistoryScreen.this.startActivityForResult(intent, CREATE_TRANSACTION);
             }
         });
 
         // TODO: add back button (go to account management screen)
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == CREATE_TRANSACTION) {
+            Bundle extras = data.getExtras();
+            String amountString = extras.getString("amount");
+
+            BigDecimal amount = new BigDecimal(amountString);
+            Transaction newTransaction = new Transaction(amount);
+            this.financeAccount.addTransaction(newTransaction);
+        }
     }
 }

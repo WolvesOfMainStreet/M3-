@@ -15,5 +15,6 @@
     <string name="finance_account_name">Account Name</string>
     <string name="finance_account_start_balance">Starting Balance</string>
     <string name="new_transaction">New Transaction</string>
+    <string name="transaction_amount">Amount</string>
 
 </resources>
