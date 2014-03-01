@@ -4,3 +4,6 @@
 
 # Local android build properties
 local.properties
+
+# build files
+**/build
