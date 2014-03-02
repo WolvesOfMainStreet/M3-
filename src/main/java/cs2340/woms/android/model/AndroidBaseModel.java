@@ -70,6 +70,7 @@ public class AndroidBaseModel implements BaseModel {
         }
 
         accountObservers.add(observer);
+        observer.update(currentUser.getAccounts());
     }
 
     @Override
@@ -83,6 +84,12 @@ public class AndroidBaseModel implements BaseModel {
         for (DataSetObserver<Transaction> observer: transactionObservers) {
             observer.update(account.getTransactions());
         }
+
+        // Also update the account observers, since at least one account has changed
+        // TODO: this can be improved by altering the model-account interactions
+        for (DataSetObserver<FinanceAccount> observer: accountObservers) {
+            observer.update(currentUser.getAccounts());
+        }
     }
 
     @Override
@@ -94,5 +101,6 @@ public class AndroidBaseModel implements BaseModel {
         // TODO: this implementation is incorrect. It notifies all transaction
         //observers, regardless of which account they belong to.
         transactionObservers.add(observer);
+        observer.update(account.getTransactions());
     }
 }
