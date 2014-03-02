@@ -1,7 +1,7 @@
 package cs2340.woms.view.screens;
 
-import cs2340.woms.account.FinanceAccount;
 import cs2340.woms.model.DataSetObserver;
+import cs2340.woms.model.FinanceAccount;
 import cs2340.woms.view.ListSelectBehavior;
 
 /**

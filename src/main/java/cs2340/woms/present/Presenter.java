@@ -2,9 +2,9 @@ package cs2340.woms.present;
 
 import java.math.BigDecimal;
 
-import cs2340.woms.account.FinanceAccount;
-import cs2340.woms.account.Transaction;
 import cs2340.woms.model.BaseModel;
+import cs2340.woms.model.FinanceAccount;
+import cs2340.woms.model.Transaction;
 import cs2340.woms.view.ListSelectBehavior;
 import cs2340.woms.view.screens.AccountCreationScreen;
 import cs2340.woms.view.screens.AccountManagementScreen;

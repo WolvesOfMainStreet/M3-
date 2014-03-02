@@ -5,11 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import cs2340.woms.account.FinanceAccount;
-import cs2340.woms.account.LoginAccount;
-import cs2340.woms.account.Transaction;
 import cs2340.woms.model.BaseModel;
 import cs2340.woms.model.DataSetObserver;
+import cs2340.woms.model.FinanceAccount;
+import cs2340.woms.model.LoginAccount;
+import cs2340.woms.model.Transaction;
 
 /**
  * The android implementation of {@link cs2340.woms.model.BaseModel}.

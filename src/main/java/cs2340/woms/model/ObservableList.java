@@ -1,4 +1,4 @@
-package cs2340.woms;
+package cs2340.woms.model;
 
 import java.util.Collection;
 import java.util.Iterator;
