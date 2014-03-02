@@ -57,6 +57,7 @@ public class FinanceAccount {
 
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
+        balance = balance.add(transaction.getAmount());
     }
 
     @Override
