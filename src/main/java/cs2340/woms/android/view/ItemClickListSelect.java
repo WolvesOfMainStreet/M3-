@@ -19,6 +19,6 @@ public class ItemClickListSelect<T> implements OnItemClickListener {
     @Override
     @SuppressWarnings("unchecked")
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        behavior.select((T) parent.getSelectedItem());
+        behavior.select((T) parent.getItemAtPosition(position));
     }
 }
