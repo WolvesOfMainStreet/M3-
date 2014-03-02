@@ -1,4 +1,4 @@
-package cs2340.woms.account;
+package cs2340.woms.model;
 
 import java.math.BigDecimal;
 import java.math.MathContext;

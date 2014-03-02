@@ -1,8 +1,6 @@
-package cs2340.woms.account;
+package cs2340.woms.model;
 
 import java.util.ArrayList;
-
-import cs2340.woms.ObservableList;
 
 /**
  * An account for logging into the financial application. Not to be confused

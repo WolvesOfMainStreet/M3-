@@ -1,11 +1,9 @@
-package cs2340.woms.account;
+package cs2340.woms.model;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-
-import cs2340.woms.ObservableList;
 
 /**
  * A financial account which stores information such as transactions and which
