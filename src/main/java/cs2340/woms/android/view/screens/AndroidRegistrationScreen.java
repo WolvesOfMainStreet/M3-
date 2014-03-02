@@ -1,11 +1,11 @@
-package cs2340.woms.view.android.screens;
+package cs2340.woms.android.view.screens;
 
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import cs2340.woms.R;
+import cs2340.woms.android.view.RunnableClickListener;
 import cs2340.woms.present.Presenter;
-import cs2340.woms.view.android.RunnableClickListener;
 import cs2340.woms.view.screens.RegistrationScreen;
 
 /**

@@ -1,4 +1,4 @@
-package cs2340.woms.view.android;
+package cs2340.woms.android.view;
 
 import android.view.View;
 import android.view.View.OnClickListener;

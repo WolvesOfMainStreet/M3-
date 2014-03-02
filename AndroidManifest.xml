@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="cs2340.woms.MainActivityMatt"
+            android:name=".android.view.screens.AndroidMainScreen"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,20 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginScreen" >
-        </activity>
-        <activity android:name=".SuccessScreen" >
-        </activity>
-        <activity android:name=".RegistrationScreen" >
-        </activity>
-        <activity android:name=".AccountManagementScreen" >
-        </activity>
-        <activity android:name=".AccountCreationScreen" >
-        </activity>
-        <activity android:name=".TransactionHistoryScreen" >
-        </activity>
-        <activity android:name=".TransactionCreationScreen" >
-        </activity>
+        <activity android:name=".android.view.screens.AndroidAccountCreationScreen" />
+        <activity android:name=".android.view.screens.AndroidAccountManagementScreen" />
+        <activity android:name=".android.view.screens.AndroidLoginScreen" />
+        <activity android:name=".android.view.screens.AndroidRegistrationScreen" />
+        <activity android:name=".android.view.screens.AndroidTransactionCreationScreen" />
+        <activity android:name=".android.view.screens.AndroidTransactionHistoryScreen" />
     </application>
 
 </manifest>

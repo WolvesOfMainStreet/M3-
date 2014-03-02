@@ -1,4 +1,4 @@
-package cs2340.woms.view.android.screens;
+package cs2340.woms.android.view.screens;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,11 +11,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import cs2340.woms.R;
 import cs2340.woms.account.FinanceAccount;
+import cs2340.woms.android.view.ItemClickListSelect;
+import cs2340.woms.android.view.RunnableClickListener;
 import cs2340.woms.model.DataSetObserver;
 import cs2340.woms.present.Presenter;
 import cs2340.woms.view.ListSelectBehavior;
-import cs2340.woms.view.android.ItemClickListSelect;
-import cs2340.woms.view.android.RunnableClickListener;
 import cs2340.woms.view.screens.AccountManagementScreen;
 
 /**
