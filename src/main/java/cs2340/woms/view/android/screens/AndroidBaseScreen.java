@@ -16,6 +16,11 @@ public abstract class AndroidBaseScreen extends Activity implements BaseScreen {
     }
 
     @Override
+    public void close() {
+        this.finish();
+    }
+
+    @Override
     public void popup(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
