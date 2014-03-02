@@ -1,4 +1,4 @@
-package cs2340.woms.model.android;
+package cs2340.woms.android.model;
 
 import java.util.ArrayList;
 import java.util.HashSet;

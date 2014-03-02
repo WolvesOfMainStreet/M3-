@@ -1,13 +1,13 @@
-package cs2340.woms.view.android.screens;
+package cs2340.woms.android.view.screens;
 
 import android.os.Bundle;
 import android.widget.Button;
 import cs2340.woms.R;
+import cs2340.woms.android.model.AndroidBaseModel;
+import cs2340.woms.android.view.RunnableClickListener;
 import cs2340.woms.model.BaseModel;
-import cs2340.woms.model.android.AndroidBaseModel;
 import cs2340.woms.present.DependencyManager;
 import cs2340.woms.present.Presenter;
-import cs2340.woms.view.android.RunnableClickListener;
 import cs2340.woms.view.screens.AccountCreationScreen;
 import cs2340.woms.view.screens.AccountManagementScreen;
 import cs2340.woms.view.screens.LoginScreen;

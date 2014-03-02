@@ -1,4 +1,4 @@
-package cs2340.woms.view.android.screens;
+package cs2340.woms.android.view.screens;
 
 import android.app.Activity;
 import android.content.Intent;
