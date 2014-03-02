@@ -73,7 +73,7 @@ public class AndroidBaseModel implements BaseModel {
     }
 
     @Override
-    public void AddTransaction(FinanceAccount account, Transaction transaction) {
+    public void addTransaction(FinanceAccount account, Transaction transaction) {
         if (currentUser == null) {
             return;
         }

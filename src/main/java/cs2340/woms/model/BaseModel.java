@@ -57,7 +57,7 @@ public interface BaseModel {
      * @param account the account to add the transaction to.
      * @param transaction the transaction to add.
      */
-    void AddTransaction(FinanceAccount account, Transaction transaction);
+    void addTransaction(FinanceAccount account, Transaction transaction);
 
     /**
      * Registers an observer on the set of transactions in the given account

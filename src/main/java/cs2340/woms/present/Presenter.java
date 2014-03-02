@@ -161,7 +161,7 @@ public final class Presenter {
                     screen.popup(error);
                 } else {
                     Transaction newTransaction = new Transaction(amount);
-                    model.AddTransaction(currentAccount, newTransaction);
+                    model.addTransaction(currentAccount, newTransaction);
                     screen.close();
                 }
             }
