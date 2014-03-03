@@ -1,6 +1,5 @@
 package cs2340.woms.model;
 
-import java.util.ArrayList;
 
 /**
  * An account for logging into the financial application. Not to be confused
@@ -13,12 +12,9 @@ public class LoginAccount {
     private final String username;
     private final String password;
 
-    private final ObservableList<FinanceAccount> accounts;
-
     public LoginAccount(String username, String password) {
         this.username = username;
         this.password = password;
-        this.accounts = new ObservableList<FinanceAccount>(new ArrayList<FinanceAccount>());
     }
 
     public String getUsername() {
@@ -40,14 +36,6 @@ public class LoginAccount {
      */
     public boolean matches(String username, String password) {
         return this.username.equals(username) && this.password.equals(password);
-    }
-
-    public ObservableList<FinanceAccount> getAccounts() {
-        return accounts;
-    }
-
-    public void addAccount(FinanceAccount account) {
-        accounts.add(account);
     }
 
     @Override

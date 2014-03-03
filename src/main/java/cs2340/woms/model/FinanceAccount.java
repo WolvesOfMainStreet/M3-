@@ -3,7 +3,6 @@ package cs2340.woms.model;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 
 /**
  * A financial account which stores information such as transactions and which
@@ -15,8 +14,6 @@ public class FinanceAccount {
 
     private final String name;
     private BigDecimal balance;
-
-    private final ObservableList<Transaction> transactions;
 
     /**
      * Creates a new FinanceAccount with the given name and a starting balance
@@ -38,24 +35,18 @@ public class FinanceAccount {
         this.name = name;
         this.balance = new BigDecimal(0, MathContext.DECIMAL32);
         this.balance = this.balance.add(balance);
-        this.transactions = new ObservableList<Transaction>(new ArrayList<Transaction>());
     }
 
     public String getName() {
         return name;
     }
 
-    public double getBalance() {
-        return balance.doubleValue();
+    public BigDecimal getBalance() {
+        return balance;
     }
 
-    public ObservableList<Transaction> getTransactions() {
-        return transactions;
-    }
-
-    public void addTransaction(Transaction transaction) {
-        transactions.add(transaction);
-        balance = balance.add(transaction.getAmount());
+    public void adjustBalance(BigDecimal amount) {
+        balance = balance.add(amount);
     }
 
     @Override

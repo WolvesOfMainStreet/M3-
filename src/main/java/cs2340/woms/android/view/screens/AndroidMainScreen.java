@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.widget.Button;
 import cs2340.woms.R;
 import cs2340.woms.android.model.AndroidBaseModel;
+import cs2340.woms.android.model.AndroidLocalDatabase;
+import cs2340.woms.android.model.AndroidLocalStorageModel;
 import cs2340.woms.android.view.RunnableClickListener;
 import cs2340.woms.model.BaseModel;
+import cs2340.woms.model.LocalStorageModel;
 import cs2340.woms.present.DependencyManager;
 import cs2340.woms.present.Presenter;
 import cs2340.woms.view.screens.AccountCreationScreen;
@@ -40,7 +43,7 @@ public class AndroidMainScreen extends AndroidBaseScreen implements MainScreen {
      * Initializes the environment as android by binding android specific
      * implementations.
      */
-    private static void initializeAndroidEnvironment() {
+    private void initializeAndroidEnvironment() {
         //-----Screens----------------------------------------------------------
         DependencyManager.bind(AccountCreationScreen.class, AndroidAccountCreationScreen.class);
         DependencyManager.bind(AccountManagementScreen.class, AndroidAccountManagementScreen.class);
@@ -51,6 +54,8 @@ public class AndroidMainScreen extends AndroidBaseScreen implements MainScreen {
         DependencyManager.bind(TransactionHistoryScreen.class, AndroidTransactionHistoryScreen.class);
 
         //-----Models-----------------------------------------------------------
+        AndroidLocalDatabase.create(this);
         DependencyManager.bind(BaseModel.class, AndroidBaseModel.class);
+        DependencyManager.bind(LocalStorageModel.class, AndroidLocalStorageModel.class);
     }
 }
