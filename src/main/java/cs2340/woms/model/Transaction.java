@@ -47,6 +47,13 @@ public class Transaction implements Comparable<Transaction> {
         this.timeEffective = timeEffective;
     }
 
+    public Transaction(BigDecimal amount, Date timeEffective, Date timeEntered) {
+        this.timeEntered = timeEntered;
+        this.amount = new BigDecimal(0, MathContext.DECIMAL32);
+        this.amount = this.amount.add(amount);
+        this.timeEffective = timeEffective;
+    }
+
     /**
      * Returns the time at which this transaction was entered into the
      * application.
