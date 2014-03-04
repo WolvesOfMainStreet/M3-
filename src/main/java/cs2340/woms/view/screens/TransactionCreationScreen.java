@@ -1,5 +1,7 @@
 package cs2340.woms.view.screens;
 
+import java.util.Date;
+
 /**
  * The transaction creation screen. The transaction creation screen has one
  * field for entering the amount the new transaction represents. This screen
@@ -30,4 +32,11 @@ public interface TransactionCreationScreen extends BaseScreen {
      * @return the value in the amount field.
      */
     String getAmountField();
+
+    /**
+     * Returns the date in the time effective date field. Should never be null.
+     *
+     * @return the date in the time effective date field.
+     */
+    Date getTimeEffectiveDate();
 }

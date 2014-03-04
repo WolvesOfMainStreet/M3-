@@ -1,8 +1,13 @@
 package cs2340.woms.android.view.screens;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import cs2340.woms.R;
 import cs2340.woms.android.view.RunnableClickListener;
 import cs2340.woms.present.Presenter;
@@ -36,5 +41,15 @@ public class AndroidTransactionCreationScreen extends AndroidBaseScreen implemen
     public String getAmountField() {
         EditText amountField = (EditText) this.findViewById(R.id.transactioncreateFieldAmount);
         return amountField.getText().toString();
+    }
+
+    @Override
+    public Date getTimeEffectiveDate() {
+        DatePicker date = (DatePicker) this.findViewById(R.id.transactioncreateDatePicker);
+        TimePicker time = (TimePicker) this.findViewById(R.id.transactioncreateTimePicker);
+
+        Calendar c = Calendar.getInstance();
+        c.set(date.getYear(), date.getMonth(), date.getDayOfMonth(), time.getCurrentHour(), time.getCurrentMinute());
+        return c.getTime();
     }
 }
