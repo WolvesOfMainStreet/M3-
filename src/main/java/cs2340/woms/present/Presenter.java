@@ -1,6 +1,7 @@
 package cs2340.woms.present;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import cs2340.woms.model.BaseModel;
 import cs2340.woms.model.FinanceAccount;
@@ -141,6 +142,7 @@ public final class Presenter {
             @Override
             public void run() {
                 String amountString = screen.getAmountField();
+                Date timeEffective = screen.getTimeEffectiveDate();
                 BigDecimal amount = null;
 
                 String error = null;
@@ -160,7 +162,7 @@ public final class Presenter {
                 if (error != null) {
                     screen.popup(error);
                 } else {
-                    Transaction newTransaction = new Transaction(amount);
+                    Transaction newTransaction = new Transaction(amount, timeEffective);
                     model.addTransaction(currentAccount, newTransaction);
                     screen.close();
                 }
