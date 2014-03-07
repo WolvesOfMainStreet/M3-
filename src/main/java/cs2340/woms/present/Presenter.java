@@ -7,6 +7,7 @@ import java.util.Map;
 
 import cs2340.woms.model.BaseModel;
 import cs2340.woms.model.Deposit;
+import cs2340.woms.model.ExpenseCategory;
 import cs2340.woms.model.FinanceAccount;
 import cs2340.woms.model.Transaction;
 import cs2340.woms.model.Withdrawal;
@@ -180,7 +181,7 @@ public final class Presenter {
                     if (transactionType.equals(Transaction.TYPE_DEPOSIT)) {
                         transaction = new Deposit(reason, amount, timeEffective, timeEntered);
                     } else if (transactionType.equals(Transaction.TYPE_WITHDRAWAL)) {
-                        transaction = new Withdrawal(reason, amount, timeEffective, timeEntered);
+                        transaction = new Withdrawal(ExpenseCategory.OTHER, reason, amount, timeEffective, timeEntered);
                     } else {
                         transaction = null;
                     }
