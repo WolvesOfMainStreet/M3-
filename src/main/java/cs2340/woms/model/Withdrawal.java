@@ -11,8 +11,10 @@ import java.util.Map;
 public class Withdrawal extends Transaction {
 
     public static final String SAVE_KEY_REASON = "reason";
+    public static final String SAVE_KEY_EXPENSE_TYPE = "expenseType";
 
     protected String reason;
+    protected ExpenseCategory type;
 
     /**
      * For serialization use, not for normal use.
@@ -25,6 +27,7 @@ public class Withdrawal extends Transaction {
      * Creates a new withdrawal with the given amount, time entered, and time
      * at which is should become effective.
      *
+     * @param type the category under which this withdrawal falls under.
      * @param reason the reason for the withdrawal.
      * @param amount the amount that is being withdrawn.
      * @param timeEntered the time at which this withdrawal was created by a
@@ -32,8 +35,11 @@ public class Withdrawal extends Transaction {
      * @param timeEffective the time at which this withdrawal should become
      * effective.
      */
-    public Withdrawal(String reason, BigDecimal amount, Date timeEntered, Date timeEffective) {
+    public Withdrawal(ExpenseCategory type, String reason, BigDecimal amount, Date timeEntered, Date timeEffective) {
         super(amount, timeEntered, timeEffective);
+        this.reason = reason;
+        this.type = type;
+
     }
 
     @Override
@@ -50,6 +56,7 @@ public class Withdrawal extends Transaction {
     public Map<String, String> write(Map<String, String> writeData) {
         writeData = super.write(writeData);
         writeData.put(SAVE_KEY_REASON, reason);
+        writeData.put(SAVE_KEY_EXPENSE_TYPE, type.name());
         return writeData;
     }
 
@@ -64,10 +71,24 @@ public class Withdrawal extends Transaction {
             reason = "Unknown";
         }
         this.reason = reason;
+
+        // Read expense type. Default to OTHER.
+        String type = readData.get(SAVE_KEY_EXPENSE_TYPE);
+        if (type == null) {
+            System.out.println("Error reading expense type.");
+            this.type = ExpenseCategory.OTHER;
+        } else {
+            try {
+                this.type = ExpenseCategory.valueOf(type);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Error getting saved expense type.");
+                this.type = ExpenseCategory.OTHER;
+            }
+        }
     }
 
     @Override
     public String toString() {
-        return "Withdraw: " + reason + ", " + super.toString();
+        return "Withdraw: " + type + ", " + reason + ", " + super.toString();
     }
 }
