@@ -39,8 +39,14 @@ public class AndroidTransactionHistoryScreen extends AndroidBaseScreen implement
     }
 
     @Override
-    public void setCreateTransactionButtonBehavior(Runnable behavior) {
-        Button createButton = (Button) this.findViewById(R.id.transactionhistoryButtonNewtransaction);
+    public void setCreateDepositButtonBehavior(Runnable behavior) {
+        Button createButton = (Button) this.findViewById(R.id.transactionhistoryButtonNewdeposit);
+        createButton.setOnClickListener(new RunnableClickListener(behavior));
+    }
+
+    @Override
+    public void setCreateWithdrawalButtonBehavior(Runnable behavior) {
+        Button createButton = (Button) this.findViewById(R.id.transactionhistoryButtonNewwithdrawal);
         createButton.setOnClickListener(new RunnableClickListener(behavior));
     }
 

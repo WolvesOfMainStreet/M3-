@@ -12,12 +12,20 @@ import cs2340.woms.view.ListSelectBehavior;
 public interface TransactionHistoryScreen extends BaseScreen {
 
     /**
-     * Sets the behavior for when the create transaction button is pressed.
+     * Sets the behavior for when the create deposit button is pressed.
      *
-     * @param behavior the behavior to execute when the create transaction
+     * @param behavior the behavior to execute when the create deposit
      * button is pressed.
      */
-    void setCreateTransactionButtonBehavior(Runnable behavior);
+    void setCreateDepositButtonBehavior(Runnable behavior);
+
+    /**
+     * Sets the behavior for when the create withdrawal button is pressed.
+     *
+     * @param behavior the behavior to execute when the create withdrawal
+     * button is pressed.
+     */
+    void setCreateWithdrawalButtonBehavior(Runnable behavior);
 
     /**
      * Get an observer for the list of transactions.
