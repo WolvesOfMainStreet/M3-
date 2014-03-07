@@ -2,6 +2,8 @@ package cs2340.woms.present;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import cs2340.woms.model.BaseModel;
 import cs2340.woms.model.Deposit;
@@ -191,8 +193,25 @@ public final class Presenter {
     }
 
     public static void initTransactionHistoryScreen(final TransactionHistoryScreen screen) {
-        screen.setCreateDepositButtonBehavior(new OpenScreen(screen, TransactionCreationScreen.class));
-        screen.setCreateWithdrawalButtonBehavior(new OpenScreen(screen, TransactionCreationScreen.class));
+        screen.setCreateDepositButtonBehavior(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, String> args = new HashMap<String, String>();
+                args.put(TransactionCreationScreen.TRANSACTION_TYPE, Transaction.TYPE_DEPOSIT);
+
+                screen.open(DependencyManager.getImplementation(TransactionCreationScreen.class), args);
+            }
+        });
+
+        screen.setCreateWithdrawalButtonBehavior(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, String> args = new HashMap<String, String>();
+                args.put(TransactionCreationScreen.TRANSACTION_TYPE, Transaction.TYPE_WITHDRAWAL);
+
+                screen.open(DependencyManager.getImplementation(TransactionCreationScreen.class), args);
+            }
+        });
 
         model.registerTransactionsObserver(currentAccount, screen.getTransactionListObserver());
     }
