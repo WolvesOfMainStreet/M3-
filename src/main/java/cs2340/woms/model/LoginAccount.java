@@ -1,11 +1,10 @@
 package cs2340.woms.model;
 
-
 /**
  * An account for logging into the financial application. Not to be confused
  * with an Account, which a LoginAccount can any number of.
  */
-public class LoginAccount {
+public class LoginAccount implements Displayable {
 
     // Username and password are read-only (May be changed in the future to
     // allow password changes/resets)
@@ -48,5 +47,19 @@ public class LoginAccount {
         string.append("Password: ");
         string.append(password);
         return string.toString();
+    }
+
+    @Override
+    public String oneLineString() {
+        return username;
+    }
+
+    @Override
+    public String[] multiLineString() {
+        return new String[] {
+                "User:",
+                "\tUsername: " + username,
+                "\tPassword: " + password
+        };
     }
 }

@@ -1,6 +1,8 @@
 package cs2340.woms.model;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -67,7 +69,19 @@ public class Deposit extends Transaction {
     }
 
     @Override
-    public String toString() {
-        return "Deposit: " + source + ", " + super.toString();
+    public String oneLineString() {
+        return SimpleDateFormat.getDateTimeInstance().format(timeEffective)
+                + " + "
+                + NumberFormat.getCurrencyInstance().format(this.amount.doubleValue());
+    }
+
+    @Override
+    public String[] multiLineString() {
+        return new String[] {
+                "Deposit:",
+                "\tAmount: " + NumberFormat.getCurrencyInstance().format(this.amount.doubleValue()),
+                "\tDate:   " + SimpleDateFormat.getDateTimeInstance().format(timeEffective),
+                "\tSource: " + source
+        };
     }
 }

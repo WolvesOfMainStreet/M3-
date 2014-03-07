@@ -10,7 +10,7 @@ import java.text.NumberFormat;
  * which are used for logging into the application and which can have any number
  * of FinanceAccounts.
  */
-public class FinanceAccount {
+public class FinanceAccount implements Displayable {
 
     private final String name;
     private BigDecimal balance;
@@ -51,14 +51,31 @@ public class FinanceAccount {
 
     @Override
     public String toString() {
-        StringBuilder string = new StringBuilder();
-        string.append("Name: ");
-        string.append(name);
-        string.append("\n");
+        return this.oneLineString();
+    }
 
-        string.append("\tBalance: ");
-        //TODO: add support for accounts in multiple currencies
-        string.append(NumberFormat.getCurrencyInstance().format(balance.doubleValue()));
-        return string.toString();
+    @Override
+    public String oneLineString() {
+        return name + ": " + getBalanceString();
+    }
+
+    @Override
+    public String[] multiLineString() {
+        return new String[] {
+                "Account:",
+                "\tName:    " + name,
+                "\tBalance: " + getBalanceString()
+        };
+    }
+
+    private String getBalanceString() {
+        String string;
+        if (balance.doubleValue() < 0) {
+            string = "- ";
+        } else {
+            string = "+ ";
+        }
+        string += NumberFormat.getCurrencyInstance().format(balance.doubleValue());
+        return  string;
     }
 }

@@ -1,6 +1,8 @@
 package cs2340.woms.model;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -47,6 +49,10 @@ public class Withdrawal extends Transaction {
         return Transaction.TYPE_WITHDRAWAL;
     }
 
+    public ExpenseCategory getExpenseCategory() {
+        return type;
+    }
+
     @Override
     public void applyToAccount(FinanceAccount account) {
         account.adjustBalance(amount.negate());
@@ -88,7 +94,20 @@ public class Withdrawal extends Transaction {
     }
 
     @Override
-    public String toString() {
-        return "Withdraw: " + type + ", " + reason + ", " + super.toString();
+    public String oneLineString() {
+        return SimpleDateFormat.getDateTimeInstance().format(timeEffective)
+                + " - "
+                + NumberFormat.getCurrencyInstance().format(this.amount.doubleValue());
+    }
+
+    @Override
+    public String[] multiLineString() {
+        return new String[] {
+                "Withdrawal:",
+                "\tAmount:   " + NumberFormat.getCurrencyInstance().format(this.amount.doubleValue()),
+                "\tDate:     " + SimpleDateFormat.getDateTimeInstance().format(timeEffective),
+                "\tCategory: " + type.name(),
+                "\tReason:   " + reason
+        };
     }
 }
