@@ -82,7 +82,7 @@ public class AndroidLocalStorageModel implements LocalStorageModel {
             observer.update(transactions);
         }
 
-        account.adjustBalance(transaction.getAmount());
+        transaction.applyToAccount(account);
         AndroidLocalDatabase.getLocalDatabase().updateAccount(currentUser, account);
         List<FinanceAccount> accounts = AndroidLocalDatabase.getLocalDatabase().getAccounts(currentUser);
         for (DataSetObserver<FinanceAccount> observer: accountObservers) {

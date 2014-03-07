@@ -113,7 +113,7 @@ public class AndroidBaseModel implements BaseModel {
 
         // Also update the account observers, since at least one account has changed
         // TODO: this can be improved by altering the model-account interactions
-        account.adjustBalance(transaction.getAmount());
+        transaction.applyToAccount(account);
         for (DataSetObserver<FinanceAccount> observer: accountObservers) {
             observer.update(accounts.get(currentUser));
         }
