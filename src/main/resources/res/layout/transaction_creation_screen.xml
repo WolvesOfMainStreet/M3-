@@ -45,7 +45,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:ems="10"
-        android:hint="@string/source"
         android:layout_below="@+id/transactioncreateFieldAmount"
         android:layout_marginTop="15dp"
     />
