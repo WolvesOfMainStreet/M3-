@@ -180,7 +180,7 @@ public final class Presenter {
                     if (transactionType.equals(Transaction.TYPE_DEPOSIT)) {
                         transaction = new Deposit(reason, amount, timeEffective, timeEntered);
                     } else if (transactionType.equals(Transaction.TYPE_WITHDRAWAL)) {
-                        transaction = new Withdrawal(amount, timeEffective, timeEntered);
+                        transaction = new Withdrawal(reason, amount, timeEffective, timeEntered);
                     } else {
                         transaction = null;
                     }
