@@ -21,5 +21,6 @@
     <string name="withdrawal">Withdrawal</string>
     <string name="new_deposit">New Deposit</string>
     <string name="new_withdrawal">New Withdrawal</string>
+    <string name="source">Source</string>
 
 </resources>

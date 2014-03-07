@@ -40,6 +40,13 @@ public interface TransactionCreationScreen extends BaseScreen {
     String getAmountField();
 
     /**
+     * Returns the value in the reason field. Should never be null.
+     *
+     * @return the value in the reason field.
+     */
+    String getReasonField();
+
+    /**
      * Returns the date in the time effective date field. Should never be null.
      *
      * @return the date in the time effective date field.

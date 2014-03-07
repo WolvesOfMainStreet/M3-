@@ -39,32 +39,24 @@
         <requestFocus />
     </EditText>
 
-    <DatePicker
-        android:id="@+id/transactioncreateDatePicker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleX="0.35"
-        android:scaleY="0.35"
-        android:layout_marginRight="-100dp"
-        android:layout_centerVertical="true" />
-
-    <TimePicker
-        android:id="@+id/transactioncreateTimePicker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleX="0.35"
-        android:scaleY="0.35"
-        android:layout_marginLeft="-50dp"
-        android:layout_centerVertical="true" />
-
-    <TextView
-        android:id="@+id/transactioncreateTextTimeeffective"
+    <EditText
+        android:id="@+id/transactioncreateFieldSource"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/transactioncreateTimePicker"
-        android:layout_marginBottom="15dp"
-        android:text="@string/transaction_time_effective"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:ems="10"
+        android:hint="@string/source"
+        android:layout_below="@+id/transactioncreateFieldAmount"
+        android:layout_marginTop="15dp"
+    />
+
+    <Button
+        android:id="@+id/transactioncreateButtonDatetime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:onClick="chooseDateTime"
+    />
 
 </RelativeLayout>
