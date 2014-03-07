@@ -148,6 +148,7 @@ public final class Presenter {
             @Override
             public void run() {
                 String amountString = screen.getAmountField();
+                String reason = screen.getReasonField();
                 Date timeEffective = screen.getTimeEffectiveDate();
                 Date timeEntered = new Date();
                 BigDecimal amount = null;
@@ -156,6 +157,12 @@ public final class Presenter {
 
                 if ("".equals(amountString)) {
                     error = "Must set the amount.";
+                } else if ("".equals(reason)) {
+                    if (transactionType.equals(Transaction.TYPE_DEPOSIT)) {
+                        error = "Must set the source of the deposit";
+                    } else if (transactionType.equals(Transaction.TYPE_WITHDRAWAL)) {
+                        error = "Must set the reason for the withdrawal";
+                    }
                 }
 
                 if (error == null) {
@@ -171,7 +178,7 @@ public final class Presenter {
                 } else {
                     Transaction transaction;
                     if (transactionType.equals(Transaction.TYPE_DEPOSIT)) {
-                        transaction = new Deposit(amount, timeEffective, timeEntered);
+                        transaction = new Deposit(reason, amount, timeEffective, timeEntered);
                     } else if (transactionType.equals(Transaction.TYPE_WITHDRAWAL)) {
                         transaction = new Withdrawal(amount, timeEffective, timeEntered);
                     } else {
