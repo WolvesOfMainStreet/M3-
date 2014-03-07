@@ -110,6 +110,7 @@ public abstract class Transaction implements SerializableData {
         String amount = readData.get(SAVE_KEY_AMOUNT);
         if (amount == null) {
             System.out.println("Error reading amount.");
+            this.amount = new BigDecimal(0, MathContext.DECIMAL32);
         } else {
             this.amount = new BigDecimal(amount, MathContext.DECIMAL32);
         }
