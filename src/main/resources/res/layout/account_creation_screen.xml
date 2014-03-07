@@ -29,7 +29,7 @@
         android:layout_centerVertical="true"
         android:ems="10"
         android:hint="@string/finance_account_start_balance"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal|numberSigned" />
 
     <Button
         android:id="@+id/accountcreateButtonCreate"
