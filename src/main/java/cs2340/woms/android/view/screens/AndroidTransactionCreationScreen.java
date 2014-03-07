@@ -31,11 +31,7 @@ public class AndroidTransactionCreationScreen extends AndroidBaseScreen implemen
     private static final String DATE_TIME_FORMAT = "%02d/%02d/%04d %02d:%02d";
 
     // Time effective fields
-    private int year   = -1;
-    private int month  = -1;
-    private int day    = -1;
-    private int hour   = -1;
-    private int minute = -1;
+    private int year, month, day, hour, minute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +47,13 @@ public class AndroidTransactionCreationScreen extends AndroidBaseScreen implemen
 
         setContentView(R.layout.transaction_creation_screen);
         Presenter.initTransactionCreationScreen(this, type);
+
+        EditText reasonField = (EditText) this.findViewById(R.id.transactioncreateFieldSource);
+        if (type.equals(Transaction.TYPE_DEPOSIT)) {
+            reasonField.setHint(R.string.source);
+        } else if (type.equals(Transaction.TYPE_WITHDRAWAL)) {
+            reasonField.setHint(R.string.reason);
+        }
 
         //-----Set up time effective chooser------------------------------------
 
