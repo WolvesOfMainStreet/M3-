@@ -7,8 +7,14 @@ import java.util.Date;
  * field for entering the amount the new transaction represents. This screen
  * also has two buttons, one for confirming the creation of the new transaction
  * and the other for canceling it.
+ * <p>
+ * This screen supports the following extra arguments:<li>
+ *     transactionType - the type of transaction being created.
+ * </li></p>
  */
 public interface TransactionCreationScreen extends BaseScreen {
+
+    String TRANSACTION_TYPE = "transactionType";
 
     /**
      * Sets the behavior for when the confirm button is pressed.

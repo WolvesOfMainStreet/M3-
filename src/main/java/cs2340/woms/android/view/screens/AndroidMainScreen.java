@@ -3,7 +3,6 @@ package cs2340.woms.android.view.screens;
 import android.os.Bundle;
 import android.widget.Button;
 import cs2340.woms.R;
-import cs2340.woms.android.model.AndroidBaseModel;
 import cs2340.woms.android.model.AndroidLocalDatabase;
 import cs2340.woms.android.model.AndroidLocalStorageModel;
 import cs2340.woms.android.view.RunnableClickListener;
@@ -55,7 +54,7 @@ public class AndroidMainScreen extends AndroidBaseScreen implements MainScreen {
 
         //-----Models-----------------------------------------------------------
         AndroidLocalDatabase.create(this);
-        DependencyManager.bind(BaseModel.class, AndroidBaseModel.class);
+        DependencyManager.bind(BaseModel.class, AndroidLocalStorageModel.class);
         DependencyManager.bind(LocalStorageModel.class, AndroidLocalStorageModel.class);
     }
 }

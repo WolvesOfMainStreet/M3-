@@ -1,13 +1,14 @@
 package cs2340.woms.android.model;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -20,7 +21,7 @@ import cs2340.woms.model.Transaction;
 
 public final class AndroidLocalDatabase extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "womsMainDB";
 
     private static AndroidLocalDatabase instance;
@@ -43,6 +44,8 @@ public final class AndroidLocalDatabase extends SQLiteOpenHelper {
     private static final String KEY_TRANSACTION_AMOUNT = "amount";
     private static final String KEY_TRANSACTION_TIME_ENTERED = "time_entered";
     private static final String KEY_TRANSACTION_TIME_EFFECTIVE = "time_effective";
+    private static final String KEY_TRANSACTION_CLASS = "class";
+    private static final String KEY_TRANSACTION_EXTRAS = "extras";
 
     //-----SQL Commands---------------------------------------------------------
 
@@ -66,9 +69,11 @@ public final class AndroidLocalDatabase extends SQLiteOpenHelper {
             "CREATE TABLE " + TABLE_TRANSACTION + "("
                 + KEY_TRANSACTION_PK + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + KEY_ACCOUNT_PK + " INTEGER,"
+                + KEY_TRANSACTION_CLASS + " TEXT NOT NULL,"
                 + KEY_TRANSACTION_AMOUNT + " TEXT NOT NULL,"
                 + KEY_TRANSACTION_TIME_ENTERED + " TEXT NOT NULL,"
                 + KEY_TRANSACTION_TIME_EFFECTIVE + " TEXT NOT NULL,"
+                + KEY_TRANSACTION_EXTRAS + " TEXT NOT NULL,"
                 + "FOREIGN KEY (" + KEY_ACCOUNT_PK + ") REFERENCES " + TABLE_ACCOUNT + "(" + KEY_ACCOUNT_PK + ")"
             + ")";
 
@@ -139,6 +144,13 @@ public final class AndroidLocalDatabase extends SQLiteOpenHelper {
         db.insert(TABLE_ACCOUNT, null, cv);
     }
 
+    /**
+     * Adds a new transaction to the SQL database.
+     *
+     * @param user the user the new transaction belongs to.
+     * @param account the account the transaction applies to.
+     * @param transaction the transaction to add.
+     */
     public void addTransaction(LoginAccount user, FinanceAccount account, Transaction transaction) {
         int accountID = getAccountID(user, account);
         if (accountID == -1) {
@@ -147,11 +159,46 @@ public final class AndroidLocalDatabase extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
+        // Get the serializable data for the transaction
+        Map<String, String> writeData = new HashMap<String, String>();
+        writeData = transaction.write(writeData);
+
+        //-----Get the standard transaction data, with appropriate defaults-----
+        String amount = writeData.remove(Transaction.SAVE_KEY_AMOUNT);
+        if (amount == null) {
+            System.out.println("Error getting amount from saved transaction data.");
+            amount = "0";
+        }
+
+        String timeEntered = writeData.remove(Transaction.SAVE_KEY_TIME_ENTERED);
+        if (timeEntered == null) {
+            System.out.println("Error getting time entered from saved transaction data.");
+            timeEntered = SimpleDateFormat.getDateTimeInstance().format(new Date());
+        }
+
+        String timeEffective = writeData.remove(Transaction.SAVE_KEY_TIME_EFFECTIVE);
+        if (timeEffective == null) {
+            System.out.println("Error getting time effective from saved transaction data.");
+            timeEffective = SimpleDateFormat.getDateTimeInstance().format(new Date());
+        }
+
+        //-----Get the extra transaction data-----------------------------------
+        StringBuilder extras = new StringBuilder();
+        for (Entry<String, String> e: writeData.entrySet()) {
+            extras.append(e.getKey());
+            extras.append(":");
+            extras.append(e.getValue());
+            extras.append("|");
+        }
+
+        //-----Write all data to sql tables-------------------------------------
         ContentValues cv = new ContentValues();
         cv.put(KEY_ACCOUNT_PK, accountID);
-        cv.put(KEY_TRANSACTION_AMOUNT, transaction.getAmount().toPlainString());
-        cv.put(KEY_TRANSACTION_TIME_ENTERED, date2String(transaction.getTimeEntered()));
-        cv.put(KEY_TRANSACTION_TIME_EFFECTIVE, date2String(transaction.getTimeEffective()));
+        cv.put(KEY_TRANSACTION_CLASS, transaction.getClass().getName());
+        cv.put(KEY_TRANSACTION_AMOUNT, amount);
+        cv.put(KEY_TRANSACTION_TIME_ENTERED, timeEntered);
+        cv.put(KEY_TRANSACTION_TIME_EFFECTIVE, timeEffective);
+        cv.put(KEY_TRANSACTION_EXTRAS, extras.toString());
 
         db.insert(TABLE_TRANSACTION, null, cv);
     }
@@ -181,6 +228,16 @@ public final class AndroidLocalDatabase extends SQLiteOpenHelper {
         return accounts;
     }
 
+    /**
+     * Returns a list of all transactions belonging to the given account owned
+     * by the given user. Returns an empty list if the given user is not in the
+     * database, if the given account is not in the database, or if the given
+     * account does not belong to the given user.
+     *
+     * @param user the user under which the given account belongs to.
+     * @param account the account to get all transactions from.
+     * @return a list of all transactions belonging to the given account.
+     */
     public List<Transaction> getTransactions(LoginAccount user, FinanceAccount account) {
         int accountID = getAccountID(user, account);
         if (accountID == -1) {
@@ -197,10 +254,39 @@ public final class AndroidLocalDatabase extends SQLiteOpenHelper {
         List<Transaction> transactions = new ArrayList<Transaction>();
         for (int i = 0; i < c.getCount(); i++) {
             c.moveToNext();
-            String amount = c.getString(c.getColumnIndex(KEY_TRANSACTION_AMOUNT));
-            String timeEntered = c.getString(c.getColumnIndex(KEY_TRANSACTION_TIME_ENTERED));
-            String timeEffective = c.getString(c.getColumnIndex(KEY_TRANSACTION_TIME_EFFECTIVE));
-            transactions.add(new Transaction(new BigDecimal(amount), string2Date(timeEffective), string2Date(timeEntered)));
+            Map<String, String> readData = new HashMap<String, String>();
+
+            String className = c.getString(c.getColumnIndex(KEY_TRANSACTION_CLASS));
+
+            readData.put(Transaction.SAVE_KEY_AMOUNT, c.getString(c.getColumnIndex(KEY_TRANSACTION_AMOUNT)));
+            readData.put(Transaction.SAVE_KEY_TIME_ENTERED, c.getString(c.getColumnIndex(KEY_TRANSACTION_TIME_ENTERED)));
+            readData.put(Transaction.SAVE_KEY_TIME_EFFECTIVE, c.getString(c.getColumnIndex(KEY_TRANSACTION_TIME_EFFECTIVE)));
+
+            String extras = c.getString(c.getColumnIndex(KEY_TRANSACTION_EXTRAS));
+            for (String extra: extras.split("\\|")) {
+                if (extra.equals("")) continue; // Skip empty entries
+                int splitIndex = extra.indexOf(":");
+                readData.put(extra.substring(0, splitIndex), extra.substring(splitIndex + 1));
+            }
+
+            // Create the transaction
+            Transaction transaction = null;
+            try {
+                @SuppressWarnings("unchecked")
+                Class<? extends Transaction> transactionClass = (Class<? extends Transaction>) Class.forName(className);
+                transaction = transactionClass.newInstance();
+                transaction.read(readData);
+            } catch (ClassNotFoundException e) {
+                System.out.println("Error finding transaction class name: " + className + ".");
+            } catch (InstantiationException e) {
+                System.out.println("Error creating transaction with class name: " + className + ".");
+            } catch (IllegalAccessException e) {
+                System.out.println("Error creating transaction with class name: " + className + ".");
+            }
+
+            if (transaction != null) {
+                transactions.add(transaction);
+            }
         }
 
         return transactions;
@@ -261,20 +347,6 @@ public final class AndroidLocalDatabase extends SQLiteOpenHelper {
         } else {
             c.moveToFirst();
             return c.getInt(c.getColumnIndex(KEY_ACCOUNT_PK));
-        }
-    }
-
-    private String date2String(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        return dateFormat.format(date);
-    }
-
-    private Date string2Date(String date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        try {
-            return dateFormat.parse(date);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
         }
     }
 }
