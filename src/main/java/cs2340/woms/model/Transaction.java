@@ -2,7 +2,6 @@ package cs2340.woms.model;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,7 +13,7 @@ import java.util.Map;
  * {@link SerializableData} interface. This class handles the serialization
  * of its amount, time entered, and time effective fields.
  */
-public abstract class Transaction implements SerializableData {
+public abstract class Transaction implements SerializableData, Displayable {
 
     // The keys that amount, time entered, and time effective are saved under.
     public static final String SAVE_KEY_AMOUNT = "amount";
@@ -147,10 +146,6 @@ public abstract class Transaction implements SerializableData {
 
     @Override
     public String toString() {
-        StringBuilder string = new StringBuilder();
-        string.append(SimpleDateFormat.getDateTimeInstance().format(timeEffective));
-        string.append(" : ");
-        string.append(NumberFormat.getCurrencyInstance().format(amount.doubleValue()));
-        return string.toString();
+        return this.oneLineString();
     }
 }
