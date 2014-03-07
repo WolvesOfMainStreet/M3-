@@ -1,5 +1,7 @@
 package cs2340.woms.view.screens;
 
+import java.util.Map;
+
 /**
  * The base screen interface. All screens should support the operations outlined
  * in this interface.
@@ -12,6 +14,14 @@ public interface BaseScreen {
      * @param screen the screen to open.
      */
     void open(Class<?> screen);
+
+    /**
+     * Opens the given screen on top of this one.
+     *
+     * @param screen the screen to open.
+     * @param args additional arguments to pass to the new screen.
+     */
+    void open(Class<?> screen, Map<String, String> args);
 
     /**
      * Closes this screen, opening its parent if it has one and closing the
