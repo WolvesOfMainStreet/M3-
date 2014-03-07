@@ -34,7 +34,7 @@
         android:layout_marginTop="45dp"
         android:ems="10"
         android:hint="@string/transaction_amount"
-        android:inputType="numberDecimal|numberSigned" >
+        android:inputType="numberDecimal" >
 
         <requestFocus />
     </EditText>

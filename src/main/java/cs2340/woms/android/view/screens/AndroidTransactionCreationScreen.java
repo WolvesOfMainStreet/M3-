@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import cs2340.woms.R;
 import cs2340.woms.android.view.RunnableClickListener;
+import cs2340.woms.model.Transaction;
 import cs2340.woms.present.Presenter;
 import cs2340.woms.view.screens.TransactionCreationScreen;
 
@@ -21,8 +22,17 @@ public class AndroidTransactionCreationScreen extends AndroidBaseScreen implemen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Get arguments
+        Bundle extras = this.getIntent().getExtras();
+        String type = extras.getString(TransactionCreationScreen.TRANSACTION_TYPE);
+        if (type == null) {
+            System.out.println("No transaction type specified, defaulting to deposit.");
+            type = Transaction.TYPE_DEPOSIT;
+        }
+
         setContentView(R.layout.transaction_creation_screen);
-        Presenter.initTransactionCreationScreen(this);
+        Presenter.initTransactionCreationScreen(this, type);
     }
 
     @Override

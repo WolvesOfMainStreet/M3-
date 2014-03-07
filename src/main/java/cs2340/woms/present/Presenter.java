@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import cs2340.woms.model.BaseModel;
+import cs2340.woms.model.Deposit;
 import cs2340.woms.model.FinanceAccount;
 import cs2340.woms.model.Transaction;
+import cs2340.woms.model.Withdrawal;
 import cs2340.woms.view.ListSelectBehavior;
 import cs2340.woms.view.screens.AccountCreationScreen;
 import cs2340.woms.view.screens.AccountManagementScreen;
@@ -137,12 +139,15 @@ public final class Presenter {
         screen.setCancelButtonBehavior(new CloseScreen(screen));
     }
 
-    public static void initTransactionCreationScreen(final TransactionCreationScreen screen) {
+    public static void initTransactionCreationScreen(
+            final TransactionCreationScreen screen,
+            final String transactionType) {
         screen.setConfirmButtonBehavior(new Runnable() {
             @Override
             public void run() {
                 String amountString = screen.getAmountField();
                 Date timeEffective = screen.getTimeEffectiveDate();
+                Date timeEntered = new Date();
                 BigDecimal amount = null;
 
                 String error = null;
@@ -162,8 +167,21 @@ public final class Presenter {
                 if (error != null) {
                     screen.popup(error);
                 } else {
-                    Transaction newTransaction = new Transaction(amount, timeEffective);
-                    model.addTransaction(currentAccount, newTransaction);
+                    Transaction transaction;
+                    if (transactionType.equals(Transaction.TYPE_DEPOSIT)) {
+                        transaction = new Deposit(amount, timeEffective, timeEntered);
+                    } else if (transactionType.equals(Transaction.TYPE_WITHDRAWAL)) {
+                        transaction = new Withdrawal(amount, timeEffective, timeEntered);
+                    } else {
+                        transaction = null;
+                    }
+
+                    if (transaction == null) {
+                        System.out.println("Invalid transaction type " + transactionType + ".");
+                    } else {
+                        model.addTransaction(currentAccount, transaction);
+                    }
+
                     screen.close();
                 }
             }
@@ -173,7 +191,8 @@ public final class Presenter {
     }
 
     public static void initTransactionHistoryScreen(final TransactionHistoryScreen screen) {
-        screen.setCreateTransactionButtonBehavior(new OpenScreen(screen, TransactionCreationScreen.class));
+        screen.setCreateDepositButtonBehavior(new OpenScreen(screen, TransactionCreationScreen.class));
+        screen.setCreateWithdrawalButtonBehavior(new OpenScreen(screen, TransactionCreationScreen.class));
 
         model.registerTransactionsObserver(currentAccount, screen.getTransactionListObserver());
     }

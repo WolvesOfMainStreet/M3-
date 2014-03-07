@@ -17,5 +17,9 @@
     <string name="new_transaction">New Transaction</string>
     <string name="transaction_amount">Amount</string>
     <string name="transaction_time_effective">Time Effective</string>
+    <string name="deposit">Deposit</string>
+    <string name="withdrawal">Withdrawal</string>
+    <string name="new_deposit">New Deposit</string>
+    <string name="new_withdrawal">New Withdrawal</string>
 
 </resources>

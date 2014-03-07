@@ -3,55 +3,61 @@ package cs2340.woms.model;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 /**
- * A class for holding transaction information.
+ * The base class for transactions. All subclasses should provide a public
+ * no argument constructor as per the the specification of the
+ * {@link SerializableData} interface. This class handles the serialization
+ * of its amount, time entered, and time effective fields.
  */
-public class Transaction implements Comparable<Transaction> {
+public abstract class Transaction implements SerializableData {
 
-    // The time at which the user creates the transaction on their phone.
-    private final Date timeEntered;
+    // The keys that amount, time entered, and time effective are saved under.
+    public static final String SAVE_KEY_AMOUNT = "amount";
+    public static final String SAVE_KEY_TIME_ENTERED = "timeEntered";
+    public static final String SAVE_KEY_TIME_EFFECTIVE = "timeEffective";
 
-    // The user defined time at which this transaction should become effective.
-    private Date timeEffective;
+    // The default categories of transactions.
+    public static final String TYPE_DEPOSIT = "deposit";
+    public static final String TYPE_WITHDRAWAL = "withdraw";
 
-    private BigDecimal amount;
+    protected BigDecimal amount;
+    protected Date timeEntered;
+    protected Date timeEffective;
 
     /**
-     * Creates a new Transaction with the given amount. The time entered and
-     * time at which this transaction become effective are both automatically
-     * initialized to the current time.
-     *
-     * @param amount the amount of money this transaction represents. Can be
-     * negative.
+     * For serialization use, not for normal use.
      */
-    public Transaction(BigDecimal amount) {
-        this(amount, new Date());
-    }
+    public Transaction() { }
 
     /**
-     * Creates a new Transaction with the given amount and time at which it
-     * becomes effective. The time entered is automatically initialized to the
-     * current time.
+     * Creates a new transaction with the given amount, time entered, and time
+     * at which is should become effective.
      *
-     * @param amount the amount of money this transaction represents. Can be
-     * negative.
+     * @param amount the amount this transaction represents.
+     * @param timeEntered the time at which this transaction was created by a
+     * user.
      * @param timeEffective the time at which this transaction should become
      * effective.
      */
-    public Transaction(BigDecimal amount, Date timeEffective) {
-        this.timeEntered = new Date(); // Current time
+    public Transaction(BigDecimal amount, Date timeEntered, Date timeEffective) {
         this.amount = new BigDecimal(0, MathContext.DECIMAL32);
         this.amount = this.amount.add(amount);
+        this.timeEntered = timeEntered;
         this.timeEffective = timeEffective;
     }
 
-    public Transaction(BigDecimal amount, Date timeEffective, Date timeEntered) {
-        this.timeEntered = timeEntered;
-        this.amount = new BigDecimal(0, MathContext.DECIMAL32);
-        this.amount = this.amount.add(amount);
-        this.timeEffective = timeEffective;
+    /**
+     * Returns the amount of money this transaction represents.
+     *
+     * @return the amount of money this transaction represents.
+     */
+    public BigDecimal getAmount() {
+        return amount;
     }
 
     /**
@@ -74,35 +80,76 @@ public class Transaction implements Comparable<Transaction> {
     }
 
     /**
-     * Returns the amount of money this transaction represents. Can be negative.
+     * Returns the type of transaction this is. Can be multiple types, in which
+     * case different types should be separated by a '|' symbol.
      *
-     * @return the amount of money this transaction represents.
+     * @return the type(s) of transaction this is.
      */
-    public BigDecimal getAmount() {
-        return amount;
+    public abstract String getType();
+
+    /**
+     * Applies this transaction to the given account.
+     *
+     * @param account the account to apply this transaction to.
+     */
+    public abstract void applyToAccount(FinanceAccount account);
+
+    @Override
+    public Map<String, String> write(Map<String, String> writeData) {
+        writeData.put(SAVE_KEY_AMOUNT, amount.toPlainString());
+        writeData.put(SAVE_KEY_TIME_ENTERED, SimpleDateFormat.getDateTimeInstance().format(timeEntered));
+        writeData.put(SAVE_KEY_TIME_EFFECTIVE, SimpleDateFormat.getDateTimeInstance().format(timeEffective));
+        return writeData;
+    }
+
+    @Override
+    public void read(Map<String, String> readData) {
+        // TODO: Add logging to application, replace println's with logging.
+
+        // Read amount. Default to 0.
+        String amount = readData.get(SAVE_KEY_AMOUNT);
+        if (amount == null) {
+            System.out.println("Error reading amount.");
+        } else {
+            this.amount = new BigDecimal(amount, MathContext.DECIMAL32);
+        }
+
+        // Read time entered. Default to current time.
+        String timeEntered = readData.get(SAVE_KEY_TIME_ENTERED);
+        if (timeEntered == null) {
+            System.out.println("Error reading time entered.");
+            this.timeEntered = new Date();
+        } else {
+            try {
+
+                this.timeEntered = SimpleDateFormat.getDateTimeInstance().parse(timeEntered);
+            } catch (ParseException e) {
+                System.out.println("Error parsing time entered.");
+                this.timeEntered = new Date();
+            }
+        }
+
+        // Read time effective. Default to current time.
+        String timeEffective = readData.get(SAVE_KEY_TIME_EFFECTIVE);
+        if (timeEffective == null) {
+            System.out.println("Error reading time effective.");
+            this.timeEffective = new Date();
+        } else {
+            try {
+                this.timeEffective = SimpleDateFormat.getDateTimeInstance().parse(timeEffective);
+            } catch (ParseException e) {
+                System.out.println("Error parsing time effective.");
+                this.timeEffective = new Date();
+            }
+        }
     }
 
     @Override
     public String toString() {
         StringBuilder string = new StringBuilder();
-        string.append(timeEffective);
+        string.append(SimpleDateFormat.getDateTimeInstance().format(timeEffective));
         string.append(" : ");
         string.append(NumberFormat.getCurrencyInstance().format(amount.doubleValue()));
         return string.toString();
-    }
-
-    /**
-     * Transactions are comparable based on effective date, allowing automatic
-     * sorting based on such.
-     */
-    @Override
-    public int compareTo(Transaction other) {
-        if (timeEffective.after(other.timeEffective)) {
-            return 1;
-        } else if (timeEffective.before(other.timeEffective)) {
-            return -1;
-        } else {
-            return 0;
-        }
     }
 }
