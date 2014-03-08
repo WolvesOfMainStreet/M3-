@@ -255,7 +255,7 @@ public final class Presenter {
                 public void run() {
                     Report report = new SpendingCategoryReport(
                             model.getCurrentUser(), screen.getStartPeriod(), screen.getEndPeriod());
-                    model.visit(report); // TODO: reverse the accept/visit names (they're backwards :/)
+                    model.accept(report);
                     screen.setReport(report);
                 }
             });
@@ -265,7 +265,7 @@ public final class Presenter {
                 public void run() {
                     Report report = new IncomeSourceReport(
                             model.getCurrentUser(), screen.getStartPeriod(), screen.getEndPeriod());
-                    model.visit(report);
+                    model.accept(report);
                     screen.setReport(report);
                 }
             });

@@ -44,15 +44,15 @@ public class SpendingCategoryReport implements Report {
     }
 
     @Override
-    public void accept(User user) {
+    public void visit(User user) {
         currentUser = user;
     }
 
     @Override
-    public void accept(Account account) { }
+    public void visit(Account account) { }
 
     @Override
-    public void accept(Transaction transaction) {
+    public void visit(Transaction transaction) {
         if (!user.equals(currentUser)
                 || !Transaction.TYPE_WITHDRAWAL.equals(transaction.getType())
                 || transaction.getTimeEffective().before(startPeriod)

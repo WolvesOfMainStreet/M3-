@@ -144,19 +144,19 @@ public class AndroidBaseModel implements BaseModel {
     }
 
     @Override
-    public void visit(Report report) {
+    public void accept(Report report) {
         for (User user: registeredUsers) {
-            report.accept(user);
+            report.visit(user);
 
             Set<Account> accounts = this.accounts.get(user);
             if (accounts != null) {
                 for (Account account: accounts) {
-                    report.accept(account);
+                    report.visit(account);
 
                     Set<Transaction> transactions = this.transactions.get(account);
                     if (transactions != null) {
                         for (Transaction transaction: transactions) {
-                            report.accept(transaction);
+                            report.visit(transaction);
                         }
                     }
                 }

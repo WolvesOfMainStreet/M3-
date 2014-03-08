@@ -80,7 +80,7 @@ public interface BaseModel {
      *
      * @param report the report that will visit every element of this model.
      */
-    void visit(Report report);
+    void accept(Report report);
 
     // TODO: add method for selectively visiting elements. Not needed now, as
     // the database is small, however if it grows to any decent size this will
