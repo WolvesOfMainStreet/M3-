@@ -3,15 +3,24 @@ package cs2340.woms.model;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.NumberFormat;
+import java.util.Map;
 
 /**
  * A financial account which stores information such as transactions and which
  * can generate reports based on them.
  */
-public class Account implements Displayable {
+public class Account implements Displayable, SerializableData {
 
-    private final String name;
+    public static final String SAVE_KEY_NAME = "account-name";
+    public static final String SAVE_KEY_BALANCE = "account-balance";
+
+    private String name;
     private BigDecimal balance;
+
+    /**
+     * For serialization, not for normal use.
+     */
+    public Account() { }
 
     /**
      * Creates a new FinanceAccount with the given name and a starting balance
@@ -35,14 +44,29 @@ public class Account implements Displayable {
         this.balance = this.balance.add(balance);
     }
 
+    /**
+     * Returns the full name of this account.
+     *
+     * @return the full name of this account.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the current balance of this account.
+     *
+     * @return the current balance of this account.
+     */
     public BigDecimal getBalance() {
         return balance;
     }
 
+    /**
+     * Adjust's this account's balance by the given amount.
+     *
+     * @param amount the amount to adjust this account's balance by.
+     */
     public void adjustBalance(BigDecimal amount) {
         balance = balance.add(amount);
     }
@@ -91,5 +115,31 @@ public class Account implements Displayable {
         }
         string += NumberFormat.getCurrencyInstance().format(balance.doubleValue());
         return  string;
+    }
+
+    @Override
+    public Map<String, String> write(Map<String, String> writeData) {
+        writeData.put(SAVE_KEY_NAME, name);
+        writeData.put(SAVE_KEY_BALANCE, balance.toPlainString());
+        return writeData;
+    }
+
+    @Override
+    public void read(Map<String, String> readData) {
+        // Read account name. Default to 'Unknown'.
+        String name = readData.get(SAVE_KEY_NAME);
+        if (name == null) {
+            System.err.println("Error reading account name, defaulting to 'Unknown'.");
+            name = "Unknown";
+        }
+        this.name = name;
+
+        // Read account balance. Default to 0.
+        String balance = readData.get(SAVE_KEY_BALANCE);
+        if (balance == null) {
+            System.err.println("Error reading balance for " + name + ", defaulting to 0.");
+            balance = "0";
+        }
+        this.balance = new BigDecimal(balance, MathContext.DECIMAL32);
     }
 }
