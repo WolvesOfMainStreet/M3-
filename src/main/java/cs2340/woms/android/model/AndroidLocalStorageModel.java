@@ -103,17 +103,17 @@ public class AndroidLocalStorageModel implements LocalStorageModel {
     }
 
     @Override
-    public void visit(Report report) {
+    public void accept(Report report) {
         AndroidLocalDatabase database = AndroidLocalDatabase.getLocalDatabase();
 
         for (User user: database.getUsers()) {
-            report.accept(user);
+            report.visit(user);
 
             for (Account account: database.getAccounts(user)) {
-                report.accept(account);
+                report.visit(account);
 
                 for (Transaction transaction: database.getTransactions(user, account)) {
-                    report.accept(transaction);
+                    report.visit(transaction);
                 }
             }
         }
