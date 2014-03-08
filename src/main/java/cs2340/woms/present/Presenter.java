@@ -18,6 +18,7 @@ import cs2340.woms.view.screens.BaseScreen;
 import cs2340.woms.view.screens.LoginScreen;
 import cs2340.woms.view.screens.MainScreen;
 import cs2340.woms.view.screens.RegistrationScreen;
+import cs2340.woms.view.screens.ReportScreen;
 import cs2340.woms.view.screens.TransactionCreationScreen;
 import cs2340.woms.view.screens.TransactionHistoryScreen;
 
@@ -222,6 +223,10 @@ public final class Presenter {
         });
 
         model.registerTransactionsObserver(currentAccount, screen.getTransactionListObserver());
+    }
+
+    public static void initReportScreen(final ReportScreen screen, final String[] report) {
+        screen.setReportText(report);
     }
 
      /**
