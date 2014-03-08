@@ -13,9 +13,12 @@ import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 import cs2340.woms.R;
 import cs2340.woms.android.view.RunnableClickListener;
@@ -158,5 +161,23 @@ public class AndroidTransactionCreationScreen extends AndroidBaseScreen implemen
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minute);
         return calendar.getTime();
+    }
+
+    @Override
+    public void setCategorySpinnerContents(String[] contents) {
+        Spinner categorySpinner = (Spinner) this.findViewById(R.id.transactioncreateSpinnerCategory);
+        categorySpinner.setVisibility(View.VISIBLE);
+        BaseAdapter adapter = new ArrayAdapter<String>(this, R.layout.account_listing, contents);
+        categorySpinner.setAdapter(adapter);
+    }
+
+    @Override
+    public String getCategory() {
+        Spinner categorySpinner = (Spinner) this.findViewById(R.id.transactioncreateSpinnerCategory);
+        if (categorySpinner.getVisibility() == View.VISIBLE) {
+            return (String) categorySpinner.getSelectedItem();
+        } else {
+            return null;
+        }
     }
 }

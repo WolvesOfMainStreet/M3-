@@ -46,15 +46,26 @@
         android:layout_centerHorizontal="true"
         android:ems="10"
         android:layout_below="@+id/transactioncreateFieldAmount"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
+    />
+
+    <Spinner
+        android:id="@+id/transactioncreateSpinnerCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/transactioncreateFieldSource"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:visibility="invisible"
     />
 
     <Button
         android:id="@+id/transactioncreateButtonDatetime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/transactioncreateSpinnerCategory"
+        android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:onClick="chooseDateTime"
     />
 
