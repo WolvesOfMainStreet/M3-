@@ -1,25 +1,48 @@
 package cs2340.woms.model;
 
+import java.util.Map;
+
 /**
- * An account for logging into the financial application. Not to be confused
- * with an Account, which a LoginAccount can any number of.
+ * A user of this application.
  */
-public class User implements Displayable {
+public class User implements Displayable, SerializableData {
 
-    // Username and password are read-only (May be changed in the future to
-    // allow password changes/resets)
-    private final String username;
-    private final String password;
+    public static final String SAVE_KEY_USERNAME = "user-username";
+    public static final String SAVE_KEY_PASSWORD = "user-password";
 
+    private String username;
+    private String password;
+
+    /**
+     * For serialization, not for normal use.
+     */
+    public User() { }
+
+    /**
+     * Creates a new user object with the given username and password.
+     *
+     * @param username the username of the user.
+     * @param password the password of the user.
+     */
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
+    /**
+     * Returns this user's username.
+     *
+     * @return this user's username.
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Returns this user's password.
+     *
+     * @return this user's password.
+     */
     public String getPassword() {
         return password;
     }
@@ -70,5 +93,31 @@ public class User implements Displayable {
                 "\tUsername: " + username,
                 "\tPassword: " + password
         };
+    }
+
+    @Override
+    public Map<String, String> write(Map<String, String> writeData) {
+        writeData.put(SAVE_KEY_USERNAME, username);
+        writeData.put(SAVE_KEY_PASSWORD, password);
+        return writeData;
+    }
+
+    @Override
+    public void read(Map<String, String> readData) {
+        // Read username. Default to 'unknown'.
+        String username = readData.get(SAVE_KEY_USERNAME);
+        if (username == null) {
+            System.err.println("Error reading username, defaulting to 'unknown'.");
+            username = "unknown";
+        }
+        this.username = username;
+
+        // Read password. Default to 'pass123'.
+        String password = readData.get(SAVE_KEY_PASSWORD);
+        if (password == null) {
+            System.err.println("Error reading password for " + username + ", defaulting to 'pass123'.");
+            password = "pass123";
+        }
+        this.password = password;
     }
 }
