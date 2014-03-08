@@ -54,7 +54,9 @@ public class SpendingCategoryReport implements Report {
     @Override
     public void accept(Transaction transaction) {
         if (!user.equals(currentUser)
-                || !Transaction.TYPE_WITHDRAWAL.equals(transaction.getType())) {
+                || !Transaction.TYPE_WITHDRAWAL.equals(transaction.getType())
+                || transaction.getTimeEffective().before(startPeriod)
+                || transaction.getTimeEffective().after(endPeriod)) {
             return;
         }
 
@@ -78,7 +80,7 @@ public class SpendingCategoryReport implements Report {
 
         for (ExpenseCategory type: ExpenseCategory.values()) {
             BigDecimal expense = expensesPerCategory.get(type);
-            lines.add(type.name() + ": " + NumberFormat.getCurrencyInstance().format(expense.doubleValue()));
+            lines.add("\t" + type.name() + ": " + NumberFormat.getCurrencyInstance().format(expense.doubleValue()));
         }
 
         lines.add("Total: " + NumberFormat.getCurrencyInstance().format(totalExpenses.doubleValue()));
