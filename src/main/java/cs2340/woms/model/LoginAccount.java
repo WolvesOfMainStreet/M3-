@@ -39,14 +39,23 @@ public class LoginAccount implements Displayable {
 
     @Override
     public String toString() {
-        StringBuilder string = new StringBuilder();
-        string.append("Username: ");
-        string.append(username);
-        string.append("\n");
+        return oneLineString();
+    }
 
-        string.append("Password: ");
-        string.append(password);
-        return string.toString();
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (o == null || !(o instanceof LoginAccount)) return false;
+
+        LoginAccount user = (LoginAccount)o;
+        return username.equals(user.username) && password.equals(user.password);
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = username.hashCode();
+        hashCode = hashCode * 31 + password.hashCode();
+        return hashCode;
     }
 
     @Override
