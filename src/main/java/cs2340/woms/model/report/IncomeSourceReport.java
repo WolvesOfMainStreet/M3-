@@ -66,10 +66,10 @@ public class IncomeSourceReport implements Report {
         BigDecimal income = sourceToIncome.get(deposit.getSource());
         if (income == null) {
             income = new BigDecimal(0, MathContext.DECIMAL32);
-            sourceToIncome.put(deposit.getSource(), income);
         }
 
-        income.add(deposit.getAmount());
+        income = income.add(deposit.getAmount());
+        sourceToIncome.put(deposit.getSource(), income);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class IncomeSourceReport implements Report {
             String source = entry.getKey();
             BigDecimal amount = entry.getValue();
             lines.add("\t" + source + ": " + NumberFormat.getCurrencyInstance().format(amount.doubleValue()));
-            total.add(amount);
+            total = total.add(amount);
         }
 
         lines.add("Total: " + NumberFormat.getCurrencyInstance().format(total.doubleValue()));
