@@ -16,15 +16,15 @@ import java.util.Map;
 public class SpendingCategoryReport implements Report {
 
     // The user which is currently being visited.
-    private LoginAccount currentUser;
+    private User currentUser;
 
-    private LoginAccount user;
+    private User user;
     private Date startPeriod;
     private Date endPeriod;
     private Map<ExpenseCategory, BigDecimal> expensesPerCategory;
     private BigDecimal totalExpenses;
 
-    public SpendingCategoryReport(LoginAccount user, Date startPeriod, Date endPeriod) {
+    public SpendingCategoryReport(User user, Date startPeriod, Date endPeriod) {
         this.user = user;
         this.startPeriod = startPeriod;
         this.endPeriod = endPeriod;
@@ -38,12 +38,12 @@ public class SpendingCategoryReport implements Report {
     }
 
     @Override
-    public void accept(LoginAccount user) {
+    public void accept(User user) {
         currentUser = user;
     }
 
     @Override
-    public void accept(FinanceAccount account) { }
+    public void accept(Account account) { }
 
     @Override
     public void accept(Transaction transaction) {

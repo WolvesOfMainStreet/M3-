@@ -6,11 +6,9 @@ import java.text.NumberFormat;
 
 /**
  * A financial account which stores information such as transactions and which
- * can generate reports based on them. Not to be confused with LoginAccounts,
- * which are used for logging into the application and which can have any number
- * of FinanceAccounts.
+ * can generate reports based on them.
  */
-public class FinanceAccount implements Displayable {
+public class Account implements Displayable {
 
     private final String name;
     private BigDecimal balance;
@@ -21,7 +19,7 @@ public class FinanceAccount implements Displayable {
      *
      * @param name the full name for this FinanceAccount.
      */
-    public FinanceAccount(String name) {
+    public Account(String name) {
         this(name, new BigDecimal(0));
     }
 
@@ -31,7 +29,7 @@ public class FinanceAccount implements Displayable {
      * @param name the full name for this FinanceAccount.
      * @param balance the starting balance for this FinanceAccount.
      */
-    public FinanceAccount(String name, BigDecimal balance) {
+    public Account(String name, BigDecimal balance) {
         this.name = name;
         this.balance = new BigDecimal(0, MathContext.DECIMAL32);
         this.balance = this.balance.add(balance);
@@ -57,9 +55,9 @@ public class FinanceAccount implements Displayable {
     @Override
     public boolean equals(Object o) {
         if (o == this) return true;
-        if (o == null || !(o instanceof FinanceAccount)) return false;
+        if (o == null || !(o instanceof Account)) return false;
 
-        FinanceAccount account = (FinanceAccount) o;
+        Account account = (Account) o;
         return name.equals(account.name) && balance.equals(account.balance);
     }
 

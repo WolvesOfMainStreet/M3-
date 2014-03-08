@@ -36,7 +36,7 @@ public interface BaseModel {
      *
      * @param account the account to add.
      */
-    void addAccount(FinanceAccount account);
+    void addAccount(Account account);
 
     /**
      * Registers an observer on the set of accounts owned by the current user.
@@ -44,7 +44,7 @@ public interface BaseModel {
      *
      * @param observer the observer to register.
      */
-    void registerAccountsObserver(DataSetObserver<FinanceAccount> observer);
+    void registerAccountsObserver(DataSetObserver<Account> observer);
 
     /**
      * Adds the given transaction to the given account owned by the current
@@ -54,7 +54,7 @@ public interface BaseModel {
      * @param account the account to add the transaction to.
      * @param transaction the transaction to add.
      */
-    void addTransaction(FinanceAccount account, Transaction transaction);
+    void addTransaction(Account account, Transaction transaction);
 
     /**
      * Registers an observer on the set of transactions in the given account
@@ -64,7 +64,7 @@ public interface BaseModel {
      * @param account the account whose transactions should be observed.
      * @param observer the observer to register.
      */
-    void registerTransactionsObserver(FinanceAccount account, DataSetObserver<Transaction> observer);
+    void registerTransactionsObserver(Account account, DataSetObserver<Transaction> observer);
 
     /**
      * Makes the given report visit every element of this model.

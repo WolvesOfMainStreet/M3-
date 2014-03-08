@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cs2340.woms.model.DataSetObserver;
-import cs2340.woms.model.FinanceAccount;
+import cs2340.woms.model.Account;
 import cs2340.woms.model.LocalStorageModel;
-import cs2340.woms.model.LoginAccount;
+import cs2340.woms.model.User;
 import cs2340.woms.model.Report;
 import cs2340.woms.model.Transaction;
 
@@ -17,14 +17,14 @@ import cs2340.woms.model.Transaction;
  */
 public class AndroidLocalStorageModel implements LocalStorageModel {
 
-    private LoginAccount currentUser;
+    private User currentUser;
 
-    private List<DataSetObserver<FinanceAccount>> accountObservers = new ArrayList<DataSetObserver<FinanceAccount>>();
+    private List<DataSetObserver<Account>> accountObservers = new ArrayList<DataSetObserver<Account>>();
     private List<DataSetObserver<Transaction>> transactionObservers = new ArrayList<DataSetObserver<Transaction>>();
 
     @Override
     public boolean login(String username, String password) {
-        LoginAccount user = new LoginAccount(username, password);
+        User user = new User(username, password);
 
         if (currentUser != null) {
             logout();
@@ -51,27 +51,27 @@ public class AndroidLocalStorageModel implements LocalStorageModel {
     }
 
     @Override
-    public void addAccount(FinanceAccount account) {
+    public void addAccount(Account account) {
         if (currentUser == null) {
             return;
         }
 
         AndroidLocalDatabase.getLocalDatabase().addAccount(currentUser, account);
 
-        List<FinanceAccount> accounts = AndroidLocalDatabase.getLocalDatabase().getAccounts(currentUser);
-        for (DataSetObserver<FinanceAccount> observer: accountObservers) {
+        List<Account> accounts = AndroidLocalDatabase.getLocalDatabase().getAccounts(currentUser);
+        for (DataSetObserver<Account> observer: accountObservers) {
             observer.update(accounts);
         }
     }
 
     @Override
-    public void registerAccountsObserver(DataSetObserver<FinanceAccount> observer) {
+    public void registerAccountsObserver(DataSetObserver<Account> observer) {
         accountObservers.add(observer);
         observer.update(AndroidLocalDatabase.getLocalDatabase().getAccounts(currentUser));
     }
 
     @Override
-    public void addTransaction(FinanceAccount account, Transaction transaction) {
+    public void addTransaction(Account account, Transaction transaction) {
         if (currentUser == null) {
             return;
         }
@@ -85,14 +85,14 @@ public class AndroidLocalStorageModel implements LocalStorageModel {
 
         transaction.applyToAccount(account);
         AndroidLocalDatabase.getLocalDatabase().updateAccount(currentUser, account);
-        List<FinanceAccount> accounts = AndroidLocalDatabase.getLocalDatabase().getAccounts(currentUser);
-        for (DataSetObserver<FinanceAccount> observer: accountObservers) {
+        List<Account> accounts = AndroidLocalDatabase.getLocalDatabase().getAccounts(currentUser);
+        for (DataSetObserver<Account> observer: accountObservers) {
             observer.update(accounts);
         }
     }
 
     @Override
-    public void registerTransactionsObserver(FinanceAccount account, DataSetObserver<Transaction> observer) {
+    public void registerTransactionsObserver(Account account, DataSetObserver<Transaction> observer) {
         transactionObservers.add(observer);
         observer.update(AndroidLocalDatabase.getLocalDatabase().getTransactions(currentUser, account));
     }
@@ -101,10 +101,10 @@ public class AndroidLocalStorageModel implements LocalStorageModel {
     public void visit(Report report) {
         AndroidLocalDatabase database = AndroidLocalDatabase.getLocalDatabase();
 
-        for (LoginAccount user: database.getUsers()) {
+        for (User user: database.getUsers()) {
             report.accept(user);
 
-            for (FinanceAccount account: database.getAccounts(user)) {
+            for (Account account: database.getAccounts(user)) {
                 report.accept(account);
 
                 for (Transaction transaction: database.getTransactions(user, account)) {

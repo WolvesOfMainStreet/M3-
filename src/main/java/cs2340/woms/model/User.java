@@ -4,14 +4,14 @@ package cs2340.woms.model;
  * An account for logging into the financial application. Not to be confused
  * with an Account, which a LoginAccount can any number of.
  */
-public class LoginAccount implements Displayable {
+public class User implements Displayable {
 
     // Username and password are read-only (May be changed in the future to
     // allow password changes/resets)
     private final String username;
     private final String password;
 
-    public LoginAccount(String username, String password) {
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -45,9 +45,9 @@ public class LoginAccount implements Displayable {
     @Override
     public boolean equals(Object o) {
         if (o == this) return true;
-        if (o == null || !(o instanceof LoginAccount)) return false;
+        if (o == null || !(o instanceof User)) return false;
 
-        LoginAccount user = (LoginAccount)o;
+        User user = (User)o;
         return username.equals(user.username) && password.equals(user.password);
     }
 

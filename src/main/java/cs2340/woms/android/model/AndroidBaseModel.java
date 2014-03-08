@@ -10,8 +10,8 @@ import java.util.Set;
 
 import cs2340.woms.model.BaseModel;
 import cs2340.woms.model.DataSetObserver;
-import cs2340.woms.model.FinanceAccount;
-import cs2340.woms.model.LoginAccount;
+import cs2340.woms.model.Account;
+import cs2340.woms.model.User;
 import cs2340.woms.model.Report;
 import cs2340.woms.model.Transaction;
 
@@ -22,13 +22,13 @@ import cs2340.woms.model.Transaction;
  */
 public class AndroidBaseModel implements BaseModel {
 
-    private LoginAccount currentUser;
-    private Set<LoginAccount> registeredUsers = new HashSet<LoginAccount>();
+    private User currentUser;
+    private Set<User> registeredUsers = new HashSet<User>();
 
-    private Map<LoginAccount, Set<FinanceAccount>> accounts = new HashMap<LoginAccount, Set<FinanceAccount>>();
-    private Map<FinanceAccount, Set<Transaction>> transactions = new HashMap<FinanceAccount, Set<Transaction>>();
+    private Map<User, Set<Account>> accounts = new HashMap<User, Set<Account>>();
+    private Map<Account, Set<Transaction>> transactions = new HashMap<Account, Set<Transaction>>();
 
-    private List<DataSetObserver<FinanceAccount>> accountObservers = new ArrayList<DataSetObserver<FinanceAccount>>();
+    private List<DataSetObserver<Account>> accountObservers = new ArrayList<DataSetObserver<Account>>();
     private List<DataSetObserver<Transaction>> transactionObservers = new ArrayList<DataSetObserver<Transaction>>();
 
     @Override
@@ -37,7 +37,7 @@ public class AndroidBaseModel implements BaseModel {
             logout();
         }
 
-        for (LoginAccount user: registeredUsers) {
+        for (User user: registeredUsers) {
             if (user.matches(username, password)) {
                 currentUser = user;
                 return true;
@@ -56,37 +56,37 @@ public class AndroidBaseModel implements BaseModel {
 
     @Override
     public boolean register(String username, String password) {
-        return registeredUsers.add(new LoginAccount(username, password));
+        return registeredUsers.add(new User(username, password));
     }
 
     @Override
-    public void addAccount(FinanceAccount account) {
+    public void addAccount(Account account) {
         if (currentUser == null) {
             return;
         }
 
-        Set<FinanceAccount> userAccounts = accounts.get(currentUser);
+        Set<Account> userAccounts = accounts.get(currentUser);
         if (userAccounts == null) {
-            userAccounts = new HashSet<FinanceAccount>();
+            userAccounts = new HashSet<Account>();
             accounts.put(currentUser, userAccounts);
         }
 
         userAccounts.add(account);
 
-        for (DataSetObserver<FinanceAccount> observer: accountObservers) {
+        for (DataSetObserver<Account> observer: accountObservers) {
             observer.update(userAccounts);
         }
     }
 
     @Override
-    public void registerAccountsObserver(DataSetObserver<FinanceAccount> observer) {
+    public void registerAccountsObserver(DataSetObserver<Account> observer) {
         if (currentUser == null) {
             return;
         }
 
         accountObservers.add(observer);
 
-        Set<FinanceAccount> userAccounts = accounts.get(currentUser);
+        Set<Account> userAccounts = accounts.get(currentUser);
         if (userAccounts == null) {
             userAccounts = Collections.emptySet();
         }
@@ -95,7 +95,7 @@ public class AndroidBaseModel implements BaseModel {
     }
 
     @Override
-    public void addTransaction(FinanceAccount account, Transaction transaction) {
+    public void addTransaction(Account account, Transaction transaction) {
         if (currentUser == null) {
             return;
         }
@@ -115,13 +115,13 @@ public class AndroidBaseModel implements BaseModel {
         // Also update the account observers, since at least one account has changed
         // TODO: this can be improved by altering the model-account interactions
         transaction.applyToAccount(account);
-        for (DataSetObserver<FinanceAccount> observer: accountObservers) {
+        for (DataSetObserver<Account> observer: accountObservers) {
             observer.update(accounts.get(currentUser));
         }
     }
 
     @Override
-    public void registerTransactionsObserver(FinanceAccount account, DataSetObserver<Transaction> observer) {
+    public void registerTransactionsObserver(Account account, DataSetObserver<Transaction> observer) {
         if (currentUser == null) {
             return;
         }
@@ -140,12 +140,12 @@ public class AndroidBaseModel implements BaseModel {
 
     @Override
     public void visit(Report report) {
-        for (LoginAccount user: registeredUsers) {
+        for (User user: registeredUsers) {
             report.accept(user);
 
-            Set<FinanceAccount> accounts = this.accounts.get(user);
+            Set<Account> accounts = this.accounts.get(user);
             if (accounts != null) {
-                for (FinanceAccount account: accounts) {
+                for (Account account: accounts) {
                     report.accept(account);
 
                     Set<Transaction> transactions = this.transactions.get(account);

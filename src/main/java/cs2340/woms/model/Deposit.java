@@ -44,7 +44,7 @@ public class Deposit extends Transaction {
     }
 
     @Override
-    public void applyToAccount(FinanceAccount account) {
+    public void applyToAccount(Account account) {
         account.adjustBalance(amount);
     }
 
