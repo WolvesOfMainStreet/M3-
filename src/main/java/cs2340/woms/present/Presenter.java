@@ -5,12 +5,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import cs2340.woms.model.Account;
 import cs2340.woms.model.BaseModel;
 import cs2340.woms.model.Deposit;
 import cs2340.woms.model.ExpenseCategory;
-import cs2340.woms.model.Account;
 import cs2340.woms.model.Transaction;
 import cs2340.woms.model.Withdrawal;
+import cs2340.woms.model.report.IncomeSourceReport;
+import cs2340.woms.model.report.Report;
+import cs2340.woms.model.report.SpendingCategoryReport;
 import cs2340.woms.view.ListSelectBehavior;
 import cs2340.woms.view.screens.AccountCreationScreen;
 import cs2340.woms.view.screens.AccountManagementScreen;
@@ -21,6 +24,7 @@ import cs2340.woms.view.screens.RegistrationScreen;
 import cs2340.woms.view.screens.ReportScreen;
 import cs2340.woms.view.screens.TransactionCreationScreen;
 import cs2340.woms.view.screens.TransactionHistoryScreen;
+import cs2340.woms.view.screens.UserOverviewScreen;
 
 /**
  * The presenter class. This class handles most of the main application logic
@@ -51,7 +55,7 @@ public final class Presenter {
                 String password = screen.getPasswordField();
 
                 if (model.login(username, password)) {
-                    screen.open(DependencyManager.getImplementation(AccountManagementScreen.class));
+                    screen.open(DependencyManager.getImplementation(UserOverviewScreen.class));
                 } else {
                     screen.popup("Incorrect username or password.");
                 }
@@ -225,8 +229,53 @@ public final class Presenter {
         model.registerTransactionsObserver(currentAccount, screen.getTransactionListObserver());
     }
 
-    public static void initReportScreen(final ReportScreen screen, final String[] report) {
-        screen.setReportText(report);
+    public static void initReportScreen(final ReportScreen screen, final String reportClass) {
+        if (SpendingCategoryReport.class.getName().equals(reportClass)) {
+            screen.setOnPeriodChangeBehavior(new Runnable() {
+                @Override
+                public void run() {
+                    Report report = new SpendingCategoryReport(
+                            model.getCurrentUser(), screen.getStartPeriod(), screen.getEndPeriod());
+                    model.visit(report); // TODO: reverse the accept/visit names (they're backwards :/)
+                    screen.setReport(report);
+                }
+            });
+        } else if (IncomeSourceReport.class.getName().equals(reportClass)) {
+            screen.setOnPeriodChangeBehavior(new Runnable() {
+                @Override
+                public void run() {
+                    Report report = new IncomeSourceReport(
+                            model.getCurrentUser(), screen.getStartPeriod(), screen.getEndPeriod());
+                    model.visit(report);
+                    screen.setReport(report);
+                }
+            });
+        } else {
+            System.err.println("Unsupported report " + reportClass + ", closing screen.");
+            screen.close();
+        }
+    }
+
+    public static void initUserOverviewScreen(final UserOverviewScreen screen) {
+        screen.setAccountsButtonBehavior(new OpenScreen(screen, AccountManagementScreen.class));
+
+        screen.setSpendingReportButtonBehavior(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, String> args = new HashMap<String, String>();
+                args.put(ReportScreen.REPORT_TYPE, SpendingCategoryReport.class.getName());
+                screen.open(DependencyManager.getImplementation(ReportScreen.class), args);
+            }
+        });
+
+        screen.setIncomeReportButtonBehavior(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, String> args = new HashMap<String, String>();
+                args.put(ReportScreen.REPORT_TYPE, IncomeSourceReport.class.getName());
+                screen.open(DependencyManager.getImplementation(ReportScreen.class), args);
+            }
+        });
     }
 
      /**

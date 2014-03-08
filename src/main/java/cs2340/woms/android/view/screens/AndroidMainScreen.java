@@ -15,8 +15,10 @@ import cs2340.woms.view.screens.AccountManagementScreen;
 import cs2340.woms.view.screens.LoginScreen;
 import cs2340.woms.view.screens.MainScreen;
 import cs2340.woms.view.screens.RegistrationScreen;
+import cs2340.woms.view.screens.ReportScreen;
 import cs2340.woms.view.screens.TransactionCreationScreen;
 import cs2340.woms.view.screens.TransactionHistoryScreen;
+import cs2340.woms.view.screens.UserOverviewScreen;
 
 /**
  * The android implementation of {@link cs2340.woms.view.screens.MainScreen}.
@@ -49,6 +51,8 @@ public class AndroidMainScreen extends AndroidBaseScreen implements MainScreen {
         DependencyManager.bind(LoginScreen.class, AndroidLoginScreen.class);
         DependencyManager.bind(MainScreen.class, AndroidMainScreen.class);
         DependencyManager.bind(RegistrationScreen.class, AndroidRegistrationScreen.class);
+        DependencyManager.bind(ReportScreen.class, AndroidReportScreen.class);
+        DependencyManager.bind(UserOverviewScreen.class, AndroidUserOverviewScreen.class);
         DependencyManager.bind(TransactionCreationScreen.class, AndroidTransactionCreationScreen.class);
         DependencyManager.bind(TransactionHistoryScreen.class, AndroidTransactionHistoryScreen.class);
 

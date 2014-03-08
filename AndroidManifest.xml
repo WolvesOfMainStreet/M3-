@@ -26,6 +26,8 @@
         <activity android:name=".android.view.screens.AndroidAccountManagementScreen" />
         <activity android:name=".android.view.screens.AndroidLoginScreen" />
         <activity android:name=".android.view.screens.AndroidRegistrationScreen" />
+        <activity android:name=".android.view.screens.AndroidReportScreen" />
+        <activity android:name=".android.view.screens.AndroidUserOverviewScreen" />
         <activity android:name=".android.view.screens.AndroidTransactionCreationScreen" />
         <activity android:name=".android.view.screens.AndroidTransactionHistoryScreen" />
     </application>
