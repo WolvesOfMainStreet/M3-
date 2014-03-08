@@ -43,6 +43,15 @@ public class Deposit extends Transaction {
         return Transaction.TYPE_DEPOSIT;
     }
 
+    /**
+     * Returns the user defined source of this deposit.
+     *
+     * @return this deposit's source.
+     */
+    public String getSource() {
+        return source;
+    }
+
     @Override
     public void applyToAccount(Account account) {
         account.adjustBalance(amount);
