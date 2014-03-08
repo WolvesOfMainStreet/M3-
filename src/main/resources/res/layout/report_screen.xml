@@ -11,10 +11,27 @@
         android:id="@+id/reportTextMain"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/reportButtonStartperiod"
         android:inputType="textMultiLine"
         android:scrollbars="vertical"
+    />
+
+    <Button
+        android:id="@+id/reportButtonStartperiod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:onClick="chooseStartPeriod"
+    />
+
+    <Button
+        android:id="@+id/reportButtonEndperiod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:onClick="chooseEndPeriod"
     />
 
 </RelativeLayout>

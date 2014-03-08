@@ -1,18 +1,17 @@
 package cs2340.woms.view.screens;
 
-/**
- * A report screen. A report screen consists of a multi-line text view in which
- * a report can be displayed.
- */
+import java.util.Date;
+
+import cs2340.woms.model.report.Report;
+
 public interface ReportScreen extends BaseScreen {
 
-    String REPORT = "report";
+    String REPORT_TYPE = "report";
 
-    /**
-     * Set the lines to display in the multi-line text view representing the
-     * report.
-     *
-     * @param lines the lines to display for the report.
-     */
-    void setReportText(String[] lines);
+    void setOnPeriodChangeBehavior(Runnable behavior);
+
+    Date getStartPeriod();
+    Date getEndPeriod();
+
+    void setReport(Report report);
 }

@@ -13,7 +13,7 @@ import java.util.Map;
  * {@link SerializableData} interface. This class handles the serialization
  * of its amount, time entered, and time effective fields.
  */
-public abstract class Transaction implements SerializableData, Displayable {
+public abstract class Transaction implements Displayable, SerializableData {
 
     // The keys that amount, time entered, and time effective are saved under.
     public static final String SAVE_KEY_AMOUNT = "amount";
