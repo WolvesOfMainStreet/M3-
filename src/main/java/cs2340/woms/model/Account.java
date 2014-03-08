@@ -113,7 +113,7 @@ public class Account implements Displayable, SerializableData {
         } else {
             string = "+ ";
         }
-        string += NumberFormat.getCurrencyInstance().format(balance.doubleValue());
+        string += NumberFormat.getCurrencyInstance().format(balance.abs().doubleValue());
         return  string;
     }
 
