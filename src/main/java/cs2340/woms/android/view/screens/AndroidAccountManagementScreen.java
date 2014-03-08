@@ -13,7 +13,7 @@ import cs2340.woms.R;
 import cs2340.woms.android.view.ItemClickListSelect;
 import cs2340.woms.android.view.RunnableClickListener;
 import cs2340.woms.model.DataSetObserver;
-import cs2340.woms.model.FinanceAccount;
+import cs2340.woms.model.Account;
 import cs2340.woms.present.Presenter;
 import cs2340.woms.view.ListSelectBehavior;
 import cs2340.woms.view.screens.AccountManagementScreen;
@@ -23,7 +23,7 @@ import cs2340.woms.view.screens.AccountManagementScreen;
  */
 public class AndroidAccountManagementScreen extends AndroidBaseScreen implements AccountManagementScreen {
 
-    private List<FinanceAccount> accountList;
+    private List<Account> accountList;
     private BaseAdapter accountListAdapter;
 
     @Override
@@ -31,8 +31,8 @@ public class AndroidAccountManagementScreen extends AndroidBaseScreen implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_management_screen);
 
-        accountList = new ArrayList<FinanceAccount>();
-        accountListAdapter = new ArrayAdapter<FinanceAccount>(this, R.layout.account_listing, accountList);
+        accountList = new ArrayList<Account>();
+        accountListAdapter = new ArrayAdapter<Account>(this, R.layout.account_listing, accountList);
         ((ListView) this.findViewById(R.id.accountmanageListAccount)).setAdapter(accountListAdapter);
 
         Presenter.initAccountManagementScreen(this);
@@ -45,10 +45,10 @@ public class AndroidAccountManagementScreen extends AndroidBaseScreen implements
     }
 
     @Override
-    public DataSetObserver<FinanceAccount> getAccountListObserver() {
-        return new DataSetObserver<FinanceAccount>() {
+    public DataSetObserver<Account> getAccountListObserver() {
+        return new DataSetObserver<Account>() {
             @Override
-            public void update(Collection<FinanceAccount> dataset) {
+            public void update(Collection<Account> dataset) {
                 //TODO: this can likely be done more efficiently
                 accountList.clear();
                 accountList.addAll(dataset);
@@ -58,8 +58,8 @@ public class AndroidAccountManagementScreen extends AndroidBaseScreen implements
     }
 
     @Override
-    public void setAccountListSelectBehavior(ListSelectBehavior<FinanceAccount> behavior) {
+    public void setAccountListSelectBehavior(ListSelectBehavior<Account> behavior) {
         ListView listview = (ListView) this.findViewById(R.id.accountmanageListAccount);
-        listview.setOnItemClickListener(new ItemClickListSelect<FinanceAccount>(behavior));
+        listview.setOnItemClickListener(new ItemClickListSelect<Account>(behavior));
     }
 }

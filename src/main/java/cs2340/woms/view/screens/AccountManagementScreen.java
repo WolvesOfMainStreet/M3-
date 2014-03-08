@@ -1,7 +1,7 @@
 package cs2340.woms.view.screens;
 
 import cs2340.woms.model.DataSetObserver;
-import cs2340.woms.model.FinanceAccount;
+import cs2340.woms.model.Account;
 import cs2340.woms.view.ListSelectBehavior;
 
 /**
@@ -24,12 +24,12 @@ public interface AccountManagementScreen extends BaseScreen {
      *
      * @return an observer for the list of accounts.
      */
-    DataSetObserver<FinanceAccount> getAccountListObserver();
+    DataSetObserver<Account> getAccountListObserver();
 
     /**
      * Sets the behavior for when an account is selected from the account list.
      *
      * @param behavior the behavior to execute when an account is selected.
      */
-    void setAccountListSelectBehavior(ListSelectBehavior<FinanceAccount> behavior);
+    void setAccountListSelectBehavior(ListSelectBehavior<Account> behavior);
 }

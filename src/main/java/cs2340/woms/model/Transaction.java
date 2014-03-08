@@ -91,7 +91,7 @@ public abstract class Transaction implements SerializableData, Displayable {
      *
      * @param account the account to apply this transaction to.
      */
-    public abstract void applyToAccount(FinanceAccount account);
+    public abstract void applyToAccount(Account account);
 
     @Override
     public Map<String, String> write(Map<String, String> writeData) {

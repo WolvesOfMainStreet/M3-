@@ -15,8 +15,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import cs2340.woms.model.FinanceAccount;
-import cs2340.woms.model.LoginAccount;
+import cs2340.woms.model.Account;
+import cs2340.woms.model.User;
 import cs2340.woms.model.Transaction;
 
 public final class AndroidLocalDatabase extends SQLiteOpenHelper {
@@ -113,7 +113,7 @@ public final class AndroidLocalDatabase extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean doesUserExist(LoginAccount user) {
+    public boolean doesUserExist(User user) {
         return getUserID(user) != -1;
     }
 
@@ -128,7 +128,7 @@ public final class AndroidLocalDatabase extends SQLiteOpenHelper {
         return rowID != -1;
     }
 
-    public void addAccount(LoginAccount user, FinanceAccount account) {
+    public void addAccount(User user, Account account) {
         int userID = getUserID(user);
         if (userID == -1) {
             return;
@@ -151,7 +151,7 @@ public final class AndroidLocalDatabase extends SQLiteOpenHelper {
      * @param account the account the transaction applies to.
      * @param transaction the transaction to add.
      */
-    public void addTransaction(LoginAccount user, FinanceAccount account, Transaction transaction) {
+    public void addTransaction(User user, Account account, Transaction transaction) {
         int accountID = getAccountID(user, account);
         if (accountID == -1) {
             return;
@@ -203,24 +203,24 @@ public final class AndroidLocalDatabase extends SQLiteOpenHelper {
         db.insert(TABLE_TRANSACTION, null, cv);
     }
 
-    public List<LoginAccount> getUsers() {
+    public List<User> getUsers() {
         String query = "SELECT * FROM " + TABLE_USER;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(query, null);
 
-        List<LoginAccount> users = new ArrayList<LoginAccount>(c.getCount());
+        List<User> users = new ArrayList<User>(c.getCount());
         for (int i = 0; i < c.getCount(); i++) {
             c.moveToNext();
             String username = c.getString(c.getColumnIndex(KEY_USER_USERNAME));
             String password = c.getString(c.getColumnIndex(KEY_USER_PASSWORD));
-            users.add(new LoginAccount(username, password));
+            users.add(new User(username, password));
         }
 
         return users;
     }
 
-    public List<FinanceAccount> getAccounts(LoginAccount user) {
+    public List<Account> getAccounts(User user) {
         int userID = getUserID(user);
         if (userID == -1) {
             return Collections.emptyList();
@@ -234,12 +234,12 @@ public final class AndroidLocalDatabase extends SQLiteOpenHelper {
 
         Cursor c = db.rawQuery(query, null);
 
-        List<FinanceAccount> accounts = new ArrayList<FinanceAccount>();
+        List<Account> accounts = new ArrayList<Account>();
         for (int i = 0; i < c.getCount(); i++) {
             c.moveToNext();
             String name = c.getString(c.getColumnIndex(KEY_ACCOUNT_NAME));
             String balance = c.getString(c.getColumnIndex(KEY_ACCOUNT_BALANCE));
-            accounts.add(new FinanceAccount(name, new BigDecimal(balance)));
+            accounts.add(new Account(name, new BigDecimal(balance)));
         }
 
         return accounts;
@@ -255,7 +255,7 @@ public final class AndroidLocalDatabase extends SQLiteOpenHelper {
      * @param account the account to get all transactions from.
      * @return a list of all transactions belonging to the given account.
      */
-    public List<Transaction> getTransactions(LoginAccount user, FinanceAccount account) {
+    public List<Transaction> getTransactions(User user, Account account) {
         int accountID = getAccountID(user, account);
         if (accountID == -1) {
             return Collections.emptyList();
@@ -309,7 +309,7 @@ public final class AndroidLocalDatabase extends SQLiteOpenHelper {
         return transactions;
     }
 
-    public void updateAccount(LoginAccount user, FinanceAccount account) {
+    public void updateAccount(User user, Account account) {
         int userID = getUserID(user);
         if (userID == -1) {
             return;
@@ -328,7 +328,7 @@ public final class AndroidLocalDatabase extends SQLiteOpenHelper {
         db.update(TABLE_ACCOUNT, cv, KEY_ACCOUNT_PK + "=" + accountID, null);
     }
 
-    private int getUserID(LoginAccount user) {
+    private int getUserID(User user) {
         String query = "SELECT " + KEY_USER_PK + " FROM " + TABLE_USER
                 + " WHERE " + KEY_USER_USERNAME + "='" + user.getUsername() + "'"
                 + " AND " + KEY_USER_PASSWORD + "='" + user.getPassword() + "'";
@@ -345,7 +345,7 @@ public final class AndroidLocalDatabase extends SQLiteOpenHelper {
         }
     }
 
-    private int getAccountID(LoginAccount user, FinanceAccount account) {
+    private int getAccountID(User user, Account account) {
         int userID = getUserID(user);
         if (userID == -1) {
             return -1;

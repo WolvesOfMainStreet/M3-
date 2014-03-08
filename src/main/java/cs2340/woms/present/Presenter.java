@@ -8,7 +8,7 @@ import java.util.Map;
 import cs2340.woms.model.BaseModel;
 import cs2340.woms.model.Deposit;
 import cs2340.woms.model.ExpenseCategory;
-import cs2340.woms.model.FinanceAccount;
+import cs2340.woms.model.Account;
 import cs2340.woms.model.Transaction;
 import cs2340.woms.model.Withdrawal;
 import cs2340.woms.view.ListSelectBehavior;
@@ -29,7 +29,7 @@ import cs2340.woms.view.screens.TransactionHistoryScreen;
 public final class Presenter {
 
     private static BaseModel model;
-    private static FinanceAccount currentAccount;
+    private static Account currentAccount;
 
     // No instances, all methods are class methods.
     private Presenter() { }
@@ -88,7 +88,7 @@ public final class Presenter {
                 if (error != null) {
                     screen.popup(error);
                 } else {
-                    FinanceAccount newAccount = new FinanceAccount(name, balance);
+                    Account newAccount = new Account(name, balance);
                     model.addAccount(newAccount);
                     screen.close();
                 }
@@ -101,9 +101,9 @@ public final class Presenter {
     public static void initAccountManagementScreen(final AccountManagementScreen screen) {
         screen.setCreateAccountButtonBehavior(new OpenScreen(screen, AccountCreationScreen.class));
 
-        screen.setAccountListSelectBehavior(new ListSelectBehavior<FinanceAccount>() {
+        screen.setAccountListSelectBehavior(new ListSelectBehavior<Account>() {
             @Override
-            public void select(FinanceAccount account) {
+            public void select(Account account) {
                 currentAccount = account;
                 screen.open(DependencyManager.getImplementation(TransactionHistoryScreen.class));
             }

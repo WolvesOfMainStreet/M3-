@@ -10,7 +10,7 @@ public interface Report extends Displayable {
      *
      * @param user the user object to get information from.
      */
-    void accept(LoginAccount user);
+    void accept(User user);
 
     /**
      * Accepts an account from which information can be gathered for this
@@ -18,7 +18,7 @@ public interface Report extends Displayable {
      *
      * @param account the account object to get information from.
      */
-    void accept(FinanceAccount account);
+    void accept(Account account);
 
     /**
      * Accepts a transaction from which information can be gathered for this
