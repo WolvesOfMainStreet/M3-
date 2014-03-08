@@ -3,11 +3,11 @@ package cs2340.woms.android.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import cs2340.woms.model.DataSetObserver;
 import cs2340.woms.model.Account;
+import cs2340.woms.model.DataSetObserver;
 import cs2340.woms.model.LocalStorageModel;
-import cs2340.woms.model.User;
 import cs2340.woms.model.Transaction;
+import cs2340.woms.model.User;
 import cs2340.woms.model.report.Report;
 
 /**
@@ -47,7 +47,7 @@ public class AndroidLocalStorageModel implements LocalStorageModel {
 
     @Override
     public boolean register(String username, String password) {
-        return AndroidLocalDatabase.getLocalDatabase().addUser(username, password);
+        return AndroidLocalDatabase.getLocalDatabase().addUser(new User(username, password));
     }
 
     @Override
