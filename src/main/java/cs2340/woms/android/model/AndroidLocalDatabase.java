@@ -203,6 +203,23 @@ public final class AndroidLocalDatabase extends SQLiteOpenHelper {
         db.insert(TABLE_TRANSACTION, null, cv);
     }
 
+    public List<LoginAccount> getUsers() {
+        String query = "SELECT * FROM " + TABLE_USER;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(query, null);
+
+        List<LoginAccount> users = new ArrayList<LoginAccount>(c.getCount());
+        for (int i = 0; i < c.getCount(); i++) {
+            c.moveToNext();
+            String username = c.getString(c.getColumnIndex(KEY_USER_USERNAME));
+            String password = c.getString(c.getColumnIndex(KEY_USER_PASSWORD));
+            users.add(new LoginAccount(username, password));
+        }
+
+        return users;
+    }
+
     public List<FinanceAccount> getAccounts(LoginAccount user) {
         int userID = getUserID(user);
         if (userID == -1) {
