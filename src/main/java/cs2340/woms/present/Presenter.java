@@ -150,11 +150,23 @@ public final class Presenter {
     public static void initTransactionCreationScreen(
             final TransactionCreationScreen screen,
             final String transactionType) {
+        // Set the spinner contents if type is withdrawal
+        if (Transaction.TYPE_WITHDRAWAL.equals(transactionType)) {
+            ExpenseCategory[] categories = ExpenseCategory.values();
+            String[] categoryStrings = new String[categories.length];
+            for (int i = 0; i < categories.length; i++) {
+                categoryStrings[i] = categories[i].name();
+            }
+
+            screen.setCategorySpinnerContents(categoryStrings);
+        }
+
         screen.setConfirmButtonBehavior(new Runnable() {
             @Override
             public void run() {
                 String amountString = screen.getAmountField();
                 String reason = screen.getReasonField();
+                String categoryString = screen.getCategory();
                 Date timeEffective = screen.getTimeEffectiveDate();
                 Date timeEntered = new Date();
                 BigDecimal amount = null;
@@ -186,7 +198,14 @@ public final class Presenter {
                     if (transactionType.equals(Transaction.TYPE_DEPOSIT)) {
                         transaction = new Deposit(reason, amount, timeEffective, timeEntered);
                     } else if (transactionType.equals(Transaction.TYPE_WITHDRAWAL)) {
-                        transaction = new Withdrawal(ExpenseCategory.OTHER, reason, amount, timeEffective, timeEntered);
+                        ExpenseCategory category;
+                        try {
+                            category = ExpenseCategory.valueOf(categoryString);
+                        } catch (Exception e) {
+                            category = ExpenseCategory.OTHER;
+                        }
+
+                        transaction = new Withdrawal(category, reason, amount, timeEffective, timeEntered);
                     } else {
                         transaction = null;
                     }

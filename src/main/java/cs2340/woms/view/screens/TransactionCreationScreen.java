@@ -52,4 +52,8 @@ public interface TransactionCreationScreen extends BaseScreen {
      * @return the date in the time effective date field.
      */
     Date getTimeEffectiveDate();
+
+    void setCategorySpinnerContents(String[] contents);
+
+    String getCategory();
 }
