@@ -46,6 +46,11 @@ public class AndroidLocalStorageModel implements LocalStorageModel {
     }
 
     @Override
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    @Override
     public boolean register(String username, String password) {
         return AndroidLocalDatabase.getLocalDatabase().addUser(new User(username, password));
     }

@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import cs2340.woms.model.Account;
 import cs2340.woms.model.BaseModel;
 import cs2340.woms.model.DataSetObserver;
-import cs2340.woms.model.Account;
-import cs2340.woms.model.User;
 import cs2340.woms.model.Transaction;
+import cs2340.woms.model.User;
 import cs2340.woms.model.report.Report;
 
 /**
@@ -52,6 +52,11 @@ public class AndroidBaseModel implements BaseModel {
         currentUser = null;
         accountObservers.clear();
         transactionObservers.clear();
+    }
+
+    @Override
+    public User getCurrentUser() {
+        return currentUser;
     }
 
     @Override
