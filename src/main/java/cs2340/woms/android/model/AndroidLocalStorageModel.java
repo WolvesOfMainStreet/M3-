@@ -7,6 +7,7 @@ import cs2340.woms.model.DataSetObserver;
 import cs2340.woms.model.FinanceAccount;
 import cs2340.woms.model.LocalStorageModel;
 import cs2340.woms.model.LoginAccount;
+import cs2340.woms.model.Report;
 import cs2340.woms.model.Transaction;
 
 /**
@@ -94,5 +95,22 @@ public class AndroidLocalStorageModel implements LocalStorageModel {
     public void registerTransactionsObserver(FinanceAccount account, DataSetObserver<Transaction> observer) {
         transactionObservers.add(observer);
         observer.update(AndroidLocalDatabase.getLocalDatabase().getTransactions(currentUser, account));
+    }
+
+    @Override
+    public void visit(Report report) {
+        AndroidLocalDatabase database = AndroidLocalDatabase.getLocalDatabase();
+
+        for (LoginAccount user: database.getUsers()) {
+            report.accept(user);
+
+            for (FinanceAccount account: database.getAccounts(user)) {
+                report.accept(account);
+
+                for (Transaction transaction: database.getTransactions(user, account)) {
+                    report.accept(transaction);
+                }
+            }
+        }
     }
 }

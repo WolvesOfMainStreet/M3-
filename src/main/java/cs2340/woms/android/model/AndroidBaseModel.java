@@ -12,6 +12,7 @@ import cs2340.woms.model.BaseModel;
 import cs2340.woms.model.DataSetObserver;
 import cs2340.woms.model.FinanceAccount;
 import cs2340.woms.model.LoginAccount;
+import cs2340.woms.model.Report;
 import cs2340.woms.model.Transaction;
 
 /**
@@ -135,5 +136,26 @@ public class AndroidBaseModel implements BaseModel {
         }
 
         observer.update(accountTransactions);
+    }
+
+    @Override
+    public void visit(Report report) {
+        for (LoginAccount user: registeredUsers) {
+            report.accept(user);
+
+            Set<FinanceAccount> accounts = this.accounts.get(user);
+            if (accounts != null) {
+                for (FinanceAccount account: accounts) {
+                    report.accept(account);
+
+                    Set<Transaction> transactions = this.transactions.get(account);
+                    if (transactions != null) {
+                        for (Transaction transaction: transactions) {
+                            report.accept(transaction);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
