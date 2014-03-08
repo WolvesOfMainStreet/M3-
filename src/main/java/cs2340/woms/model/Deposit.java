@@ -36,6 +36,7 @@ public class Deposit extends Transaction {
      */
     public Deposit(String source, BigDecimal amount, Date timeEntered, Date timeEffective) {
         super(amount, timeEntered, timeEffective);
+        this.source = source;
     }
 
     @Override
