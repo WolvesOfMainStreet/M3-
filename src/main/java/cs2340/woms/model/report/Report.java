@@ -1,4 +1,9 @@
-package cs2340.woms.model;
+package cs2340.woms.model.report;
+
+import cs2340.woms.model.Account;
+import cs2340.woms.model.Displayable;
+import cs2340.woms.model.Transaction;
+import cs2340.woms.model.User;
 
 /**
  * A report, summarizing some aspect of all the data stored in the model.

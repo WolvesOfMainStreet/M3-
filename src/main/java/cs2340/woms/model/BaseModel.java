@@ -1,5 +1,7 @@
 package cs2340.woms.model;
 
+import cs2340.woms.model.report.Report;
+
 /**
  * The base model interface. All models should implement this.
  */

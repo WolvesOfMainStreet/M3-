@@ -7,8 +7,8 @@ import cs2340.woms.model.DataSetObserver;
 import cs2340.woms.model.Account;
 import cs2340.woms.model.LocalStorageModel;
 import cs2340.woms.model.User;
-import cs2340.woms.model.Report;
 import cs2340.woms.model.Transaction;
+import cs2340.woms.model.report.Report;
 
 /**
  * The android implementation of {@link cs2340.woms.model.LocalStorageModel}.

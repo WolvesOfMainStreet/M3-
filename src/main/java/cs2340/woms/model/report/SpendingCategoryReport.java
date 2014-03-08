@@ -1,4 +1,4 @@
-package cs2340.woms.model;
+package cs2340.woms.model.report;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -9,6 +9,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cs2340.woms.model.Account;
+import cs2340.woms.model.ExpenseCategory;
+import cs2340.woms.model.Transaction;
+import cs2340.woms.model.User;
+import cs2340.woms.model.Withdrawal;
 
 /**
  * A report on a single user's expenses from a starting to an ending period.
