@@ -61,8 +61,11 @@ public class SpendingCategoryReport implements Report {
         }
 
         Withdrawal withdrawal = (Withdrawal) transaction;
-        expensesPerCategory.get(withdrawal.getExpenseCategory()).add(withdrawal.getAmount());
-        totalExpenses.add(withdrawal.getAmount());
+        BigDecimal amount = expensesPerCategory.get(withdrawal.getExpenseCategory());
+        amount = amount.add(withdrawal.getAmount());
+        expensesPerCategory.put(withdrawal.getExpenseCategory(), amount);
+
+        totalExpenses = totalExpenses.add(withdrawal.getAmount());
     }
 
     @Override
