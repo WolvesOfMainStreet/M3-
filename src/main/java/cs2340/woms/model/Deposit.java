@@ -84,4 +84,19 @@ public class Deposit extends Transaction {
                 "\tSource: " + source
         };
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!super.equals(o) || !(o instanceof Deposit)) return false;
+
+        Deposit deposit = (Deposit) o;
+        return source.equals(deposit.source);
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = super.hashCode();
+        hashCode = hashCode * 31 + source.hashCode();
+        return hashCode;
+    }
 }

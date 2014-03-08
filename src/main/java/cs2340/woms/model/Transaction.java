@@ -148,4 +148,23 @@ public abstract class Transaction implements SerializableData, Displayable {
     public String toString() {
         return this.oneLineString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (o == null || !(o instanceof Transaction)) return false;
+
+        Transaction transaction = (Transaction) o;
+        return amount.equals(transaction.amount)
+                && timeEntered.equals(transaction.timeEntered)
+                && timeEffective.equals(transaction.timeEffective);
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = amount.hashCode();
+        hashCode = hashCode * 31 + timeEntered.hashCode();
+        hashCode = hashCode * 31 + timeEffective.hashCode();
+        return hashCode;
+    }
 }

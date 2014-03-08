@@ -55,6 +55,22 @@ public class FinanceAccount implements Displayable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (o == null || !(o instanceof FinanceAccount)) return false;
+
+        FinanceAccount account = (FinanceAccount) o;
+        return name.equals(account.name) && balance.equals(account.balance);
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = name.hashCode();
+        hashCode = hashCode * 31 + balance.hashCode();
+        return hashCode;
+    }
+
+    @Override
     public String oneLineString() {
         return name + ": " + getBalanceString();
     }

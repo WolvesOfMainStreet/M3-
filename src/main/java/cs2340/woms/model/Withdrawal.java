@@ -110,4 +110,20 @@ public class Withdrawal extends Transaction {
                 "\tReason:   " + reason
         };
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!super.equals(o) || !(o instanceof Withdrawal)) return false;
+
+        Withdrawal withdrawal = (Withdrawal) o;
+        return reason.equals(withdrawal.reason) && type == withdrawal.type;
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = super.hashCode();
+        hashCode = hashCode * 31 + reason.hashCode();
+        hashCode = hashCode * 31 + type.hashCode();
+        return hashCode;
+    }
 }
