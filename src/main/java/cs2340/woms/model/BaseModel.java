@@ -23,6 +23,13 @@ public interface BaseModel {
     void logout();
 
     /**
+     * Returns the currently logged in user, or null if none is logged in.
+     *
+     * @return the current user.
+     */
+    User getCurrentUser();
+
+    /**
      * Attempts to register a new account, and returns whether this was
      * successful or not.
      *
