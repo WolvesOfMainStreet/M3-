@@ -35,6 +35,13 @@ public class AccountCreationPresenter {
             }
         }
 
+        if (error == null) {
+            Account account = new Account(name, balance);
+            if (ClientDatabase.get().getAllAccounts().contains(account)) {
+                error = "An account with that name already exists.";
+            }
+        }
+
         if (error != null) {
             screen.popup(error);
         } else {

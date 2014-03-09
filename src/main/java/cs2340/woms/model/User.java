@@ -70,15 +70,13 @@ public class User implements Displayable, SerializableData {
         if (o == this) return true;
         if (o == null || !(o instanceof User)) return false;
 
-        User user = (User)o;
-        return username.equals(user.username) && password.equals(user.password);
+        User user = (User) o;
+        return username.equals(user.username);
     }
 
     @Override
     public int hashCode() {
-        int hashCode = username.hashCode();
-        hashCode = hashCode * 31 + password.hashCode();
-        return hashCode;
+        return username.hashCode();
     }
 
     @Override
