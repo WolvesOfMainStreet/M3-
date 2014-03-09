@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import cs2340.woms.model.Account;
-import cs2340.woms.model.BaseModel;
+import cs2340.woms.model.ClientDatabase;
 import cs2340.woms.model.Deposit;
 import cs2340.woms.model.ExpenseCategory;
 import cs2340.woms.model.Transaction;
@@ -20,6 +20,7 @@ public class TransactionCreationPresenter {
     public TransactionCreationPresenter(TransactionCreationScreen screen, Account account, String transactionType) {
         this.screen = screen;
         this.transactionType = transactionType;
+        this.account = account;
 
         // Set the spinner contents if type is withdrawal
         if (Transaction.TYPE_WITHDRAWAL.equals(transactionType)) {
@@ -34,8 +35,6 @@ public class TransactionCreationPresenter {
     }
 
     public void onConfirmButtonPressed() {
-        BaseModel model = DependencyManager.getModel();
-
         String amountString = screen.getAmountField();
         String reason = screen.getReasonField();
         String categoryString = screen.getCategory();
@@ -85,7 +84,7 @@ public class TransactionCreationPresenter {
             if (transaction == null) {
                 System.err.println("Invalid transaction type " + transactionType + ".");
             } else {
-                model.addTransaction(account, transaction);
+                ClientDatabase.get().addTransaction(account, transaction);
             }
 
             screen.close();

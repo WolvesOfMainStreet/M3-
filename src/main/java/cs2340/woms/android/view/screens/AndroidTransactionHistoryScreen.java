@@ -1,6 +1,5 @@
 package cs2340.woms.android.view.screens;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -14,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import cs2340.woms.R;
 import cs2340.woms.model.Account;
+import cs2340.woms.model.ClientDatabase;
 import cs2340.woms.model.DataSetObserver;
 import cs2340.woms.model.Transaction;
 import cs2340.woms.present.TransactionHistoryPresenter;
@@ -34,18 +34,7 @@ public class AndroidTransactionHistoryScreen extends AndroidBaseScreen implement
         super.onCreate(savedInstanceState);
         setContentView(R.layout.transaction_history_screen);
 
-        // Get arguments
-        Bundle extras = this.getIntent().getExtras();
-        String accountName = extras.getString(TransactionHistoryScreen.ACCOUNT_NAME);
-        String accountBalance = extras.getString(TransactionHistoryScreen.ACCOUNT_BALANCE);
-        if (accountName == null) {
-            System.err.println("No account specified, closing screen.");
-            this.close();
-        } else if (accountBalance == null) {
-            System.err.println("No account balance given, closing screen.");
-            this.close();
-        }
-        Account account = new Account(accountName, new BigDecimal(accountBalance));
+        Account account = ClientDatabase.get().getCurrentAccount();
 
         transactionList = new ArrayList<Transaction>();
         transactionListAdapter = new ArrayAdapter<Transaction>(this, R.layout.account_listing, transactionList);

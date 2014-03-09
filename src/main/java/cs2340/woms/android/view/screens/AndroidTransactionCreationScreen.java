@@ -1,6 +1,5 @@
 package cs2340.woms.android.view.screens;
 
-import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -23,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import cs2340.woms.R;
 import cs2340.woms.model.Account;
+import cs2340.woms.model.ClientDatabase;
 import cs2340.woms.model.Transaction;
 import cs2340.woms.present.TransactionCreationPresenter;
 import cs2340.woms.view.screens.TransactionCreationScreen;
@@ -47,17 +47,11 @@ public class AndroidTransactionCreationScreen extends AndroidBaseScreen implemen
         // Get arguments
         Bundle extras = this.getIntent().getExtras();
         String type = extras.getString(TransactionCreationScreen.TRANSACTION_TYPE);
-        String accountName = extras.getString(TransactionCreationScreen.ACCOUNT_NAME);
-        String accountBalance = extras.getString(TransactionCreationScreen.ACCOUNT_BALANCE);
-        if (accountName == null || accountBalance == null) {
-            System.err.println("No account specified, closing screen.");
-            this.close();
-        }
         if (type == null) {
             System.err.println("No transaction type specified, defaulting to deposit.");
             type = Transaction.TYPE_DEPOSIT;
         }
-        Account account = new Account(accountName, new BigDecimal(accountBalance));
+        Account account = ClientDatabase.get().getCurrentAccount();
 
         EditText reasonField = (EditText) this.findViewById(R.id.transactioncreateFieldSource);
         if (type.equals(Transaction.TYPE_DEPOSIT)) {

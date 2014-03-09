@@ -3,6 +3,7 @@ package cs2340.woms.present;
 import java.math.BigDecimal;
 
 import cs2340.woms.model.Account;
+import cs2340.woms.model.ClientDatabase;
 import cs2340.woms.view.screens.AccountCreationScreen;
 
 public class AccountCreationPresenter {
@@ -38,7 +39,7 @@ public class AccountCreationPresenter {
             screen.popup(error);
         } else {
             Account account = new Account(name, balance);
-            DependencyManager.getModel().addAccount(account);
+            ClientDatabase.get().addAccount(account);
             screen.close();
         }
     }

@@ -1,5 +1,7 @@
 package cs2340.woms.present;
 
+import cs2340.woms.model.ClientDatabase;
+import cs2340.woms.model.User;
 import cs2340.woms.view.screens.LoginScreen;
 import cs2340.woms.view.screens.RegistrationScreen;
 import cs2340.woms.view.screens.UserOverviewScreen;
@@ -16,7 +18,7 @@ public class LoginPresenter {
         String username = screen.getUsernameField();
         String password = screen.getPasswordField();
 
-        if (DependencyManager.getModel().login(username, password)) {
+        if (ClientDatabase.get().login(new User(username, password))) {
             screen.open(DependencyManager.getImplementation(UserOverviewScreen.class));
         } else {
             screen.popup("Incorrect username or password.");
