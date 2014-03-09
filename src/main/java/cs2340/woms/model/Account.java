@@ -82,14 +82,12 @@ public class Account implements Displayable, SerializableData {
         if (o == null || !(o instanceof Account)) return false;
 
         Account account = (Account) o;
-        return name.equals(account.name) && balance.equals(account.balance);
+        return name.equals(account.name);
     }
 
     @Override
     public int hashCode() {
-        int hashCode = name.hashCode();
-        hashCode = hashCode * 31 + balance.hashCode();
-        return hashCode;
+        return name.hashCode();
     }
 
     @Override

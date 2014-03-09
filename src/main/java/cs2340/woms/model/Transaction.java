@@ -155,16 +155,11 @@ public abstract class Transaction implements Displayable, SerializableData {
         if (o == null || !(o instanceof Transaction)) return false;
 
         Transaction transaction = (Transaction) o;
-        return amount.equals(transaction.amount)
-                && timeEntered.equals(transaction.timeEntered)
-                && timeEffective.equals(transaction.timeEffective);
+        return timeEntered.equals(transaction.timeEntered);
     }
 
     @Override
     public int hashCode() {
-        int hashCode = amount.hashCode();
-        hashCode = hashCode * 31 + timeEntered.hashCode();
-        hashCode = hashCode * 31 + timeEffective.hashCode();
-        return hashCode;
+        return timeEntered.hashCode();
     }
 }
