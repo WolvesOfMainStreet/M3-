@@ -1,17 +1,16 @@
 package cs2340.woms.android.view.screens;
 
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.View;
 import cs2340.woms.R;
 import cs2340.woms.android.model.AndroidLocalDatabase;
 import cs2340.woms.android.model.AndroidLocalStorageModel;
-import cs2340.woms.android.view.RunnableClickListener;
 import cs2340.woms.model.BaseModel;
 import cs2340.woms.model.LocalStorageModel;
 import cs2340.woms.present.DependencyManager;
-import cs2340.woms.present.Presenter;
+import cs2340.woms.present.MainPresenter;
 import cs2340.woms.view.screens.AccountCreationScreen;
-import cs2340.woms.view.screens.AccountManagementScreen;
+import cs2340.woms.view.screens.AccountOverviewScreen;
 import cs2340.woms.view.screens.LoginScreen;
 import cs2340.woms.view.screens.MainScreen;
 import cs2340.woms.view.screens.RegistrationScreen;
@@ -25,19 +24,18 @@ import cs2340.woms.view.screens.UserOverviewScreen;
  */
 public class AndroidMainScreen extends AndroidBaseScreen implements MainScreen {
 
+    private MainPresenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_activity_matt);
-
+        setContentView(R.layout.main_screen);
         initializeAndroidEnvironment();
-        Presenter.initMainScreen(this);
+        this.presenter = new MainPresenter(this);
     }
 
-    @Override
-    public void setLoginButtonBehavior(Runnable behavior) {
-        Button loginButton = (Button) this.findViewById(R.id.mainButtonLogin);
-        loginButton.setOnClickListener(new RunnableClickListener(behavior));
+    public void onLoginButtonPressed(View view) {
+        presenter.onLoginButtonPressed();
     }
 
     /**
@@ -47,7 +45,7 @@ public class AndroidMainScreen extends AndroidBaseScreen implements MainScreen {
     private void initializeAndroidEnvironment() {
         //-----Screens----------------------------------------------------------
         DependencyManager.bind(AccountCreationScreen.class, AndroidAccountCreationScreen.class);
-        DependencyManager.bind(AccountManagementScreen.class, AndroidAccountManagementScreen.class);
+        DependencyManager.bind(AccountOverviewScreen.class, AndroidAccountOverviewScreen.class);
         DependencyManager.bind(LoginScreen.class, AndroidLoginScreen.class);
         DependencyManager.bind(MainScreen.class, AndroidMainScreen.class);
         DependencyManager.bind(RegistrationScreen.class, AndroidRegistrationScreen.class);

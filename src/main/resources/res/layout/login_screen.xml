@@ -37,7 +37,8 @@
         android:layout_marginTop="44dp"
         android:gravity="center_vertical|center_horizontal"
         android:text="@string/login"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:onClick="onLoginButtonPressed" />
 
     <Button
         android:id="@+id/loginButtonRegister"
@@ -46,6 +47,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="27dp"
-        android:text="@string/register_login_account" />
+        android:text="@string/register_login_account"
+        android:onClick="onRegisterButtonPressed" />
 
 </RelativeLayout>

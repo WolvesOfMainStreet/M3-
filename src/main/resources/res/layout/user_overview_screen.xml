@@ -12,7 +12,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:text="Accounts" />
+        android:text="Accounts"
+        android:onClick="onAccountsButtonPressed" />
 
     <Button
         android:id="@+id/useroverviewButtonSpendingreport"
@@ -20,7 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/useroverviewButtonAccounts"
         android:layout_marginTop="10dp"
-        android:text="Spending Report" />
+        android:text="Spending Report"
+        android:onClick="onSpendingReportButtonPressed" />
 
     <Button
         android:id="@+id/useroverviewButtonIncomereport"
@@ -28,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/useroverviewButtonSpendingreport"
         android:layout_marginTop="10dp"
-        android:text="Income Report" />
+        android:text="Income Report"
+        android:onClick="onIncomeReportButtonPressed" />
 
 </RelativeLayout>

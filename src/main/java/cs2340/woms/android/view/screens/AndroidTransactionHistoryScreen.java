@@ -1,27 +1,30 @@
 package cs2340.woms.android.view.screens;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import cs2340.woms.R;
-import cs2340.woms.android.view.ItemClickListSelect;
-import cs2340.woms.android.view.RunnableClickListener;
+import cs2340.woms.model.Account;
 import cs2340.woms.model.DataSetObserver;
 import cs2340.woms.model.Transaction;
-import cs2340.woms.present.Presenter;
-import cs2340.woms.view.ListSelectBehavior;
+import cs2340.woms.present.TransactionHistoryPresenter;
 import cs2340.woms.view.screens.TransactionHistoryScreen;
 
 /**
  * The android implementation of {@link cs2340.woms.view.screens.TransactionHistoryScreen}.
  */
 public class AndroidTransactionHistoryScreen extends AndroidBaseScreen implements TransactionHistoryScreen {
+
+    private TransactionHistoryPresenter presenter;
 
     private List<Transaction> transactionList;
     private BaseAdapter transactionListAdapter;
@@ -31,23 +34,43 @@ public class AndroidTransactionHistoryScreen extends AndroidBaseScreen implement
         super.onCreate(savedInstanceState);
         setContentView(R.layout.transaction_history_screen);
 
+        // Get arguments
+        Bundle extras = this.getIntent().getExtras();
+        String accountName = extras.getString(TransactionHistoryScreen.ACCOUNT_NAME);
+        String accountBalance = extras.getString(TransactionHistoryScreen.ACCOUNT_BALANCE);
+        if (accountName == null) {
+            System.err.println("No account specified, closing screen.");
+            this.close();
+        } else if (accountBalance == null) {
+            System.err.println("No account balance given, closing screen.");
+            this.close();
+        }
+        Account account = new Account(accountName, new BigDecimal(accountBalance));
+
         transactionList = new ArrayList<Transaction>();
         transactionListAdapter = new ArrayAdapter<Transaction>(this, R.layout.account_listing, transactionList);
-        ((ListView) this.findViewById(R.id.transactionhistoryListTransaction)).setAdapter(transactionListAdapter);
+        ListView listview = (ListView) this.findViewById(R.id.transactionhistoryListTransaction);
+        listview.setAdapter(transactionListAdapter);
+        listview.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                onTransactionSelected((Transaction) parent.getItemAtPosition(position));
+            }
+        });
 
-        Presenter.initTransactionHistoryScreen(this);
+        this.presenter = new TransactionHistoryPresenter(this, account);
     }
 
-    @Override
-    public void setCreateDepositButtonBehavior(Runnable behavior) {
-        Button createButton = (Button) this.findViewById(R.id.transactionhistoryButtonNewdeposit);
-        createButton.setOnClickListener(new RunnableClickListener(behavior));
+    public void onCreateDepositButtonPressed(View view) {
+        presenter.onCreateDepositButtonPressed();
     }
 
-    @Override
-    public void setCreateWithdrawalButtonBehavior(Runnable behavior) {
-        Button createButton = (Button) this.findViewById(R.id.transactionhistoryButtonNewwithdrawal);
-        createButton.setOnClickListener(new RunnableClickListener(behavior));
+    public void onCreateWithdrawalButtonPressed(View view) {
+        presenter.onCreateWithdrawalButtonPressed();
+    }
+
+    public void onTransactionSelected(Transaction transaction) {
+        presenter.onTransactionSelected(transaction);
     }
 
     @Override
@@ -61,11 +84,5 @@ public class AndroidTransactionHistoryScreen extends AndroidBaseScreen implement
                 transactionListAdapter.notifyDataSetChanged();
             }
         };
-    }
-
-    @Override
-    public void setTransactionListSelectBehavior(ListSelectBehavior<Transaction> behavior) {
-        ListView listview = (ListView) this.findViewById(R.id.transactionhistoryListTransaction);
-        listview.setOnItemClickListener(new ItemClickListSelect<Transaction>(behavior));
     }
 }

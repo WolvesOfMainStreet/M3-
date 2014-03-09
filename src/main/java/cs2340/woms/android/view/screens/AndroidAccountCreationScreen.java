@@ -1,11 +1,10 @@
 package cs2340.woms.android.view.screens;
 
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.View;
 import android.widget.EditText;
 import cs2340.woms.R;
-import cs2340.woms.android.view.RunnableClickListener;
-import cs2340.woms.present.Presenter;
+import cs2340.woms.present.AccountCreationPresenter;
 import cs2340.woms.view.screens.AccountCreationScreen;
 
 /**
@@ -13,23 +12,21 @@ import cs2340.woms.view.screens.AccountCreationScreen;
  */
 public class AndroidAccountCreationScreen extends AndroidBaseScreen implements AccountCreationScreen {
 
+    private AccountCreationPresenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_creation_screen);
-        Presenter.initAccountCreationScreen(this);
+        this.presenter = new AccountCreationPresenter(this);
     }
 
-    @Override
-    public void setConfirmButtonBehavior(Runnable behavior) {
-        Button confirmButton = (Button) this.findViewById(R.id.accountcreateButtonCreate);
-        confirmButton.setOnClickListener(new RunnableClickListener(behavior));
+    public void onConfirmButtonPressed(View view) {
+        presenter.onConfirmButtonPressed();
     }
 
-    @Override
-    public void setCancelButtonBehavior(Runnable behavior) {
-        Button cancelButton = (Button) this.findViewById(R.id.accountcreateButtonCancel);
-        cancelButton.setOnClickListener(new RunnableClickListener(behavior));
+    public void onCancelButtonPressed(View view) {
+        presenter.onCancelButtonPressed();
     }
 
     @Override

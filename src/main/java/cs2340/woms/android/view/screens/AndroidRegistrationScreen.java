@@ -1,11 +1,10 @@
 package cs2340.woms.android.view.screens;
 
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.View;
 import android.widget.EditText;
 import cs2340.woms.R;
-import cs2340.woms.android.view.RunnableClickListener;
-import cs2340.woms.present.Presenter;
+import cs2340.woms.present.RegistrationPresenter;
 import cs2340.woms.view.screens.RegistrationScreen;
 
 /**
@@ -13,22 +12,21 @@ import cs2340.woms.view.screens.RegistrationScreen;
  */
 public class AndroidRegistrationScreen extends AndroidBaseScreen implements RegistrationScreen {
 
+    private RegistrationPresenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registration_screen);
-        Presenter.initRegistrationScreen(this);
+        this.presenter = new RegistrationPresenter(this);
     }
 
-    @Override
-    public void setConfirmButtonBehavior(Runnable behavior) {
-        Button confirmButton = (Button) this.findViewById(R.id.registerButtonRegister);
-        confirmButton.setOnClickListener(new RunnableClickListener(behavior));
+    public void onConfirmButtonPressed(View view) {
+        presenter.onConfirmButtonPressed();
     }
 
-    @Override
-    public void setCancelButtonBehavior(Runnable behavior) {
-        // TODO: create cancel button
+    public void onCancelButtonPressed(View view) {
+        presenter.onCancelButtonPressed();
     }
 
     @Override

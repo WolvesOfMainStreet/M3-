@@ -1,11 +1,10 @@
 package cs2340.woms.android.view.screens;
 
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.View;
 import android.widget.EditText;
 import cs2340.woms.R;
-import cs2340.woms.android.view.RunnableClickListener;
-import cs2340.woms.present.Presenter;
+import cs2340.woms.present.LoginPresenter;
 import cs2340.woms.view.screens.LoginScreen;
 
 /**
@@ -13,23 +12,21 @@ import cs2340.woms.view.screens.LoginScreen;
  */
 public class AndroidLoginScreen extends AndroidBaseScreen implements LoginScreen {
 
+    private LoginPresenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen);
-        Presenter.initLoginScreen(this);
+        this.presenter = new LoginPresenter(this);
     }
 
-    @Override
-    public void setLoginButtonBehavior(Runnable behavior) {
-        Button loginButton = (Button) this.findViewById(R.id.loginButtonLogin);
-        loginButton.setOnClickListener(new RunnableClickListener(behavior));
+    public void onLoginButtonPressed(View view) {
+        presenter.onLoginButtonPressed();
     }
 
-    @Override
-    public void setRegisterButtonBehavior(Runnable behavior) {
-        Button loginButton = (Button) this.findViewById(R.id.loginButtonRegister);
-        loginButton.setOnClickListener(new RunnableClickListener(behavior));
+    public void onRegisterButtonPressed(View view) {
+        presenter.onRegisterButtonPressed();
     }
 
     @Override

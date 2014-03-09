@@ -8,9 +8,8 @@ public interface ReportScreen extends BaseScreen {
 
     String REPORT_TYPE = "report";
 
-    void setOnPeriodChangeBehavior(Runnable behavior);
-
     Date getStartPeriod();
+
     Date getEndPeriod();
 
     void setReport(Report report);

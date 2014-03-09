@@ -15,14 +15,14 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import cs2340.woms.R;
 import cs2340.woms.model.report.Report;
-import cs2340.woms.present.Presenter;
+import cs2340.woms.present.ReportPresenter;
 import cs2340.woms.view.screens.ReportScreen;
 
 public class AndroidReportScreen extends AndroidBaseScreen implements ReportScreen {
 
     private static final String DATE_FORMAT = "%1$tB %1$te, %1$tY";
 
-    private Runnable onDateChanged;
+    private ReportPresenter presenter;
 
     private Calendar startPeriod;
     private Calendar endPeriod;
@@ -40,7 +40,7 @@ public class AndroidReportScreen extends AndroidBaseScreen implements ReportScre
         }
 
         setContentView(R.layout.report_screen);
-        Presenter.initReportScreen(this, reportClass);
+        this.presenter = new ReportPresenter(this, reportClass);
 
         // Default period to one month ago to present
         Calendar start = Calendar.getInstance();
@@ -54,13 +54,17 @@ public class AndroidReportScreen extends AndroidBaseScreen implements ReportScre
         startPeriodButton.setText(String.format(DATE_FORMAT, startPeriod));
         endPeriodButton.setText(String.format(DATE_FORMAT, endPeriod));
 
-        onDateChanged.run();
+        onPeriodChanged();
+    }
+
+    public void onPeriodChanged() {
+        presenter.onPeriodChanged();
     }
 
     public void chooseStartPeriod(View view) {
         final Button startPeriodButton = (Button) view;
 
-        Dialog dateDialog = new DatePickerDialog(AndroidReportScreen.this, new OnDateSetListener() {
+        Dialog dateDialog = new DatePickerDialog(this, new OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 startPeriod.set(Calendar.YEAR, year);
@@ -73,7 +77,7 @@ public class AndroidReportScreen extends AndroidBaseScreen implements ReportScre
         dateDialog.setOnDismissListener(new OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                onDateChanged.run();
+                onPeriodChanged();
             }
         });
 
@@ -83,7 +87,7 @@ public class AndroidReportScreen extends AndroidBaseScreen implements ReportScre
     public void chooseEndPeriod(View view) {
         final Button endPeriodButton = (Button) view;
 
-        Dialog dateDialog = new DatePickerDialog(AndroidReportScreen.this, new OnDateSetListener() {
+        Dialog dateDialog = new DatePickerDialog(this, new OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 endPeriod.set(Calendar.YEAR, year);
@@ -96,7 +100,7 @@ public class AndroidReportScreen extends AndroidBaseScreen implements ReportScre
         dateDialog.setOnDismissListener(new OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                onDateChanged.run();
+                onPeriodChanged();
             }
         });
 
@@ -116,11 +120,6 @@ public class AndroidReportScreen extends AndroidBaseScreen implements ReportScre
             text.append(line);
         }
         reportText.setText(text.toString());
-    }
-
-    @Override
-    public void setOnPeriodChangeBehavior(Runnable behavior) {
-        this.onDateChanged = behavior;
     }
 
     @Override
