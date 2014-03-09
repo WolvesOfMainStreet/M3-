@@ -194,6 +194,10 @@ public final class ClientDatabase implements DatabaseConnection {
 
     @Override
     public boolean login(User user) {
+        if (currentUser != null) {
+            logout();
+        }
+
         boolean loggedIn = backingConnection.login(user);
         if (loggedIn) {
             currentUser = user;
@@ -212,7 +216,7 @@ public final class ClientDatabase implements DatabaseConnection {
 
         // Clear the cache
         transactions.clear();
-        accounts.clear();
+        accounts = null;
 
         // Clear the observers
         transactionObservers.clear();
