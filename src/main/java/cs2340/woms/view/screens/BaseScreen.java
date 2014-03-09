@@ -13,7 +13,7 @@ public interface BaseScreen {
      *
      * @param screen the screen to open.
      */
-    void open(Class<?> screen);
+    void open(Class<? extends BaseScreen> screen);
 
     /**
      * Opens the given screen on top of this one.
@@ -21,7 +21,7 @@ public interface BaseScreen {
      * @param screen the screen to open.
      * @param args additional arguments to pass to the new screen.
      */
-    void open(Class<?> screen, Map<String, String> args);
+    void open(Class<? extends BaseScreen> screen, Map<String, String> args);
 
     /**
      * Closes this screen, opening its parent if it has one and closing the

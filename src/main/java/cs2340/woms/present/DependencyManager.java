@@ -10,6 +10,7 @@ import cs2340.woms.model.BaseModel;
  */
 public final class DependencyManager {
 
+    // I would parameterize this if I could, to Map<Class<T>, Class<? extends T>>
     private static Map<Class<?>, Class<?>> bindings = new HashMap<Class<?>, Class<?>>();
     private static BaseModel model;
 
@@ -22,7 +23,7 @@ public final class DependencyManager {
      * @param interfaceClass the interface class to bind the implementation to.
      * @param implClass the implementation class to bind to the interface.
      */
-    public static void bind(Class<?> interfaceClass, Class<?> implClass) {
+    public static <T> void bind(Class<T> interfaceClass, Class<? extends T> implClass) {
         bindings.put(interfaceClass, implClass);
     }
 
@@ -33,8 +34,9 @@ public final class DependencyManager {
      * @return the most recently bound implementation, or null if no
      * implementation has been bound at all.
      */
-    public static Class<?> getImplementation(Class<?> interfaceClass) {
-        return bindings.get(interfaceClass);
+    @SuppressWarnings("unchecked")
+    public static <T> Class<? extends T> getImplementation(Class<T> interfaceClass) {
+        return (Class<? extends T>) bindings.get(interfaceClass);
     }
 
     /**
@@ -45,7 +47,7 @@ public final class DependencyManager {
      * of.
      * @return a new instance of the most recently bound implementation.
      */
-    public static Object createImplementation(Class<?> interfaceClass) {
+    public static <T> T createImplementation(Class<T> interfaceClass) {
         try {
             // For now, just use default constructor. Future versions may check
             // constructor arguments recursively against the bindings as well.
@@ -57,7 +59,7 @@ public final class DependencyManager {
 
     public static BaseModel getModel() {
         if (model == null) {
-            model = (BaseModel) createImplementation(BaseModel.class);
+            model = createImplementation(BaseModel.class);
             // TODO: do this only on initial creation
             model.register("admin", "pass123");
         }

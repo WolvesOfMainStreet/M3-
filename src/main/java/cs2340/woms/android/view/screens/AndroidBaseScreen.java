@@ -14,12 +14,12 @@ import cs2340.woms.view.screens.BaseScreen;
 public abstract class AndroidBaseScreen extends Activity implements BaseScreen {
 
     @Override
-    public void open(Class<?> screen) {
+    public void open(Class<? extends BaseScreen> screen) {
         this.startActivity(new Intent(this, screen));
     }
 
     @Override
-    public void open(Class<?> screen, Map<String, String> args) {
+    public void open(Class<? extends BaseScreen> screen, Map<String, String> args) {
         Intent openScreen = new Intent(this, screen);
         for (Entry<String, String> arg: args.entrySet()) {
             openScreen.putExtra(arg.getKey(), arg.getValue());
