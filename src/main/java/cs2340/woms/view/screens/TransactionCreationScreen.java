@@ -14,8 +14,6 @@ import java.util.Date;
  */
 public interface TransactionCreationScreen extends BaseScreen {
 
-    String ACCOUNT_NAME = "accountName";
-    String ACCOUNT_BALANCE = "accountBalance";
     String TRANSACTION_TYPE = "transactionType";
 
     /**

@@ -10,9 +10,6 @@ import cs2340.woms.model.Transaction;
  */
 public interface TransactionHistoryScreen extends BaseScreen {
 
-    String ACCOUNT_NAME = "accountName";
-    String ACCOUNT_BALANCE = "accountBalance";
-
     /**
      * Get an observer for the list of transactions.
      *

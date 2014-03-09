@@ -4,9 +4,8 @@ import android.os.Bundle;
 import android.view.View;
 import cs2340.woms.R;
 import cs2340.woms.android.model.AndroidLocalDatabase;
-import cs2340.woms.android.model.AndroidLocalStorageModel;
-import cs2340.woms.model.BaseModel;
-import cs2340.woms.model.LocalStorageModel;
+import cs2340.woms.android.model.AndroidLocalSQLConnection;
+import cs2340.woms.model.ClientDatabase;
 import cs2340.woms.present.DependencyManager;
 import cs2340.woms.present.MainPresenter;
 import cs2340.woms.view.screens.AccountCreationScreen;
@@ -56,7 +55,6 @@ public class AndroidMainScreen extends AndroidBaseScreen implements MainScreen {
 
         //-----Models-----------------------------------------------------------
         AndroidLocalDatabase.create(this);
-        DependencyManager.bind(BaseModel.class, AndroidLocalStorageModel.class);
-        DependencyManager.bind(LocalStorageModel.class, AndroidLocalStorageModel.class);
+        ClientDatabase.create(new AndroidLocalSQLConnection());
     }
 }

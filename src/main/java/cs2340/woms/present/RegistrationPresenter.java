@@ -1,6 +1,7 @@
 package cs2340.woms.present;
 
-import cs2340.woms.model.BaseModel;
+import cs2340.woms.model.ClientDatabase;
+import cs2340.woms.model.User;
 import cs2340.woms.view.screens.RegistrationScreen;
 
 public class RegistrationPresenter {
@@ -12,8 +13,6 @@ public class RegistrationPresenter {
     }
 
     public void onConfirmButtonPressed() {
-        BaseModel model = DependencyManager.getModel();
-
         String username = screen.getUsernameField();
         String password1 = screen.getPasswordField();
         String password2 = screen.getConfirmPasswordField();
@@ -26,7 +25,7 @@ public class RegistrationPresenter {
             error = "Password fields cannot be empty.";
         } else if (!password1.equals(password2)) {
             error = "Password fields do no match.";
-        } else if (!model.register(username, password1)) {
+        } else if (!ClientDatabase.get().register(new User(username, password1))) {
             error = "Could not create account with that username.";
         }
 
