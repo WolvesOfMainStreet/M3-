@@ -9,22 +9,6 @@ package cs2340.woms.view.screens;
 public interface RegistrationScreen extends BaseScreen {
 
     /**
-     * Sets the behavior for when the confirm button is pressed.
-     *
-     * @param behavior the behavior to execute when the confirm button is
-     * pressed.
-     */
-    void setConfirmButtonBehavior(Runnable behavior);
-
-    /**
-     * Sets the behavior for when the cancel button is pressed.
-     *
-     * @param behavior the behavior to execute when the cancel button is
-     * pressed.
-     */
-    void setCancelButtonBehavior(Runnable behavior);
-
-    /**
      * Returns the value in the username field. Should never be null.
      *
      * @return the value in the username field.

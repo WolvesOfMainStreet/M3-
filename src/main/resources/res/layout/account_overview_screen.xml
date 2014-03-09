@@ -6,24 +6,23 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".AccountManagementScreen" >
+    tools:context=".AccountOverviewScreen" >
 
     <ListView
         android:id="@+id/accountmanageListAccount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/accountmanageButtonNewaccount"
+        android:layout_below="@+id/accountmanageButtonCreateaccount"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp" >
-
-    </ListView>
+        android:layout_marginTop="15dp" />
 
     <Button
-        android:id="@+id/accountmanageButtonNewaccount"
+        android:id="@+id/accountmanageButtonCreateaccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/register_finance_account" />
+        android:text="@string/register_finance_account"
+        android:onClick="onCreateAccountButtonPressed" />
 
 </RelativeLayout>

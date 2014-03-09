@@ -32,13 +32,14 @@
         android:inputType="numberDecimal|numberSigned" />
 
     <Button
-        android:id="@+id/accountcreateButtonCreate"
+        android:id="@+id/accountcreateButtonConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/accountcreateButtonCancel"
         android:layout_alignBottom="@+id/accountcreateButtonCancel"
         android:layout_alignRight="@+id/accountcreateFieldBalance"
-        android:text="@string/confirm" />
+        android:text="@string/confirm"
+        android:onClick="onConfirmButtonPressed" />
 
     <Button
         android:id="@+id/accountcreateButtonCancel"
@@ -47,6 +48,7 @@
         android:layout_alignLeft="@+id/accountcreateFieldBalance"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="45dp"
-        android:text="@string/cancel" />
+        android:text="@string/cancel"
+        android:onClick="onCancelButtonPressed" />
 
 </RelativeLayout>

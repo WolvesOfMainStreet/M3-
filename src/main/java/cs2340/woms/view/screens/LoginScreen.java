@@ -9,21 +9,6 @@ package cs2340.woms.view.screens;
 public interface LoginScreen extends BaseScreen {
 
     /**
-     * Sets the behavior for when the login button is pressed.
-     *
-     * @param behavior the behavior to execute when the login button is pressed.
-     */
-    void setLoginButtonBehavior(Runnable behavior);
-
-    /**
-     * Sets the behavior for when the register button is pressed.
-     *
-     * @param behavior the behavior to execute when the register button is
-     * pressed.
-     */
-    void setRegisterButtonBehavior(Runnable behavior);
-
-    /**
      * Returns the value in the username field. Should never be null.
      *
      * @return the value in the username field.

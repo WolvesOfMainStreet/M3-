@@ -1,38 +1,33 @@
 package cs2340.woms.android.view.screens;
 
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.View;
 import cs2340.woms.R;
-import cs2340.woms.android.view.RunnableClickListener;
-import cs2340.woms.present.Presenter;
+import cs2340.woms.present.UserOverviewPresenter;
 import cs2340.woms.view.screens.UserOverviewScreen;
 
 public class AndroidUserOverviewScreen extends AndroidBaseScreen implements UserOverviewScreen {
+
+    private UserOverviewPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_overview_screen);
-        Presenter.initUserOverviewScreen(this);
+        this.presenter = new UserOverviewPresenter(this);
 
         // TODO: initialize accounts button with overview of accounts.
     }
 
-    @Override
-    public void setAccountsButtonBehavior(Runnable behavior) {
-        Button accountsButton = (Button) this.findViewById(R.id.useroverviewButtonAccounts);
-        accountsButton.setOnClickListener(new RunnableClickListener(behavior));
+    public void onAccountsButtonPressed(View view) {
+        presenter.onAccountsButtonPressed();
     }
 
-    @Override
-    public void setSpendingReportButtonBehavior(Runnable behavior) {
-        Button spendingReportButton = (Button) this.findViewById(R.id.useroverviewButtonSpendingreport);
-        spendingReportButton.setOnClickListener(new RunnableClickListener(behavior));
+    public void onSpendingReportButtonPressed(View view) {
+        presenter.onSpendingReportButtonPressed();
     }
 
-    @Override
-    public void setIncomeReportButtonBehavior(Runnable behavior) {
-        Button incomeReportButton = (Button) this.findViewById(R.id.useroverviewButtonIncomereport);
-        incomeReportButton.setOnClickListener(new RunnableClickListener(behavior));
+    public void onIncomeReportButtonPressed(View view) {
+        presenter.onIncomeReportButtonPressed();
     }
 }

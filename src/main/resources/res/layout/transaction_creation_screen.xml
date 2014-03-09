@@ -9,13 +9,14 @@
     tools:context=".TransactionCreationScreen" >
 
     <Button
-        android:id="@+id/transactioncreateButtonCreate"
+        android:id="@+id/transactioncreateButtonConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/transactioncreateButtonCancel"
         android:layout_alignBottom="@+id/transactioncreateButtonCancel"
         android:layout_alignRight="@+id/transactioncreateFieldAmount"
-        android:text="@string/confirm" />
+        android:text="@string/confirm"
+        android:onClick="onConfirmButtonPressed" />
 
     <Button
         android:id="@+id/transactioncreateButtonCancel"
@@ -24,7 +25,8 @@
         android:layout_alignLeft="@+id/transactioncreateFieldAmount"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="45dp"
-        android:text="@string/cancel" />
+        android:text="@string/cancel"
+        android:onClick="onCancelButtonPressed" />
 
     <EditText
         android:id="@+id/transactioncreateFieldAmount"

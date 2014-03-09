@@ -1,5 +1,6 @@
 package cs2340.woms.android.view.screens;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -21,9 +22,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import cs2340.woms.R;
-import cs2340.woms.android.view.RunnableClickListener;
+import cs2340.woms.model.Account;
 import cs2340.woms.model.Transaction;
-import cs2340.woms.present.Presenter;
+import cs2340.woms.present.TransactionCreationPresenter;
 import cs2340.woms.view.screens.TransactionCreationScreen;
 
 /**
@@ -33,23 +34,30 @@ public class AndroidTransactionCreationScreen extends AndroidBaseScreen implemen
 
     private static final String DATE_TIME_FORMAT = "%02d/%02d/%04d %02d:%02d";
 
+    private TransactionCreationPresenter presenter;
+
     // Time effective fields
     private int year, month, day, hour, minute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.transaction_creation_screen);
 
         // Get arguments
         Bundle extras = this.getIntent().getExtras();
         String type = extras.getString(TransactionCreationScreen.TRANSACTION_TYPE);
+        String accountName = extras.getString(TransactionCreationScreen.ACCOUNT_NAME);
+        String accountBalance = extras.getString(TransactionCreationScreen.ACCOUNT_BALANCE);
+        if (accountName == null || accountBalance == null) {
+            System.err.println("No account specified, closing screen.");
+            this.close();
+        }
         if (type == null) {
-            System.out.println("No transaction type specified, defaulting to deposit.");
+            System.err.println("No transaction type specified, defaulting to deposit.");
             type = Transaction.TYPE_DEPOSIT;
         }
-
-        setContentView(R.layout.transaction_creation_screen);
-        Presenter.initTransactionCreationScreen(this, type);
+        Account account = new Account(accountName, new BigDecimal(accountBalance));
 
         EditText reasonField = (EditText) this.findViewById(R.id.transactioncreateFieldSource);
         if (type.equals(Transaction.TYPE_DEPOSIT)) {
@@ -92,12 +100,22 @@ public class AndroidTransactionCreationScreen extends AndroidBaseScreen implemen
                 datetimeHandler.postDelayed(this, 60000);
             }
         });
+
+        this.presenter = new TransactionCreationPresenter(this, account, type);
+    }
+
+    public void onConfirmButtonPressed(View view) {
+        presenter.onConfirmButtonPressed();
+    }
+
+    public void onCancelButtonPressed(View view) {
+        presenter.onCancelButtonPressed();
     }
 
     public void chooseDateTime(View view) {
         final Button dateTimeButton = (Button) view;
 
-        final Dialog dateDialog = new DatePickerDialog(AndroidTransactionCreationScreen.this, new OnDateSetListener() {
+        final Dialog dateDialog = new DatePickerDialog(this, new OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int aYear, int aMonth, int aDay) {
                 year = aYear;
@@ -107,7 +125,7 @@ public class AndroidTransactionCreationScreen extends AndroidBaseScreen implemen
             }
         }, year, month, day);
 
-        final Dialog timeDialog = new TimePickerDialog(AndroidTransactionCreationScreen.this, new OnTimeSetListener() {
+        final Dialog timeDialog = new TimePickerDialog(this, new OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int aHour, int aMinute) {
                 hour = aHour;
@@ -124,18 +142,6 @@ public class AndroidTransactionCreationScreen extends AndroidBaseScreen implemen
                 timeDialog.show();
             }
         });
-    }
-
-    @Override
-    public void setConfirmButtonBehavior(Runnable behavior) {
-        Button confirmButton = (Button) this.findViewById(R.id.transactioncreateButtonCreate);
-        confirmButton.setOnClickListener(new RunnableClickListener(behavior));
-    }
-
-    @Override
-    public void setCancelButtonBehavior(Runnable behavior) {
-        Button cancelButton = (Button) this.findViewById(R.id.transactioncreateButtonCancel);
-        cancelButton.setOnClickListener(new RunnableClickListener(behavior));
     }
 
     @Override

@@ -3,12 +3,15 @@ package cs2340.woms.present;
 import java.util.HashMap;
 import java.util.Map;
 
+import cs2340.woms.model.BaseModel;
+
 /**
  * A basic dependency injection manager.
  */
 public final class DependencyManager {
 
     private static Map<Class<?>, Class<?>> bindings = new HashMap<Class<?>, Class<?>>();
+    private static BaseModel model;
 
     // No instances, all methods are class methods.
     private DependencyManager() { }
@@ -50,5 +53,14 @@ public final class DependencyManager {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static BaseModel getModel() {
+        if (model == null) {
+            model = (BaseModel) createImplementation(BaseModel.class);
+            // TODO: do this only on initial creation
+            model.register("admin", "pass123");
+        }
+        return model;
     }
 }

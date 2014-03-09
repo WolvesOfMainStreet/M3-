@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".android.view.screens.AndroidAccountCreationScreen" />
-        <activity android:name=".android.view.screens.AndroidAccountManagementScreen" />
+        <activity android:name=".android.view.screens.AndroidAccountOverviewScreen" />
         <activity android:name=".android.view.screens.AndroidLoginScreen" />
         <activity android:name=".android.view.screens.AndroidRegistrationScreen" />
         <activity android:name=".android.view.screens.AndroidReportScreen" />
