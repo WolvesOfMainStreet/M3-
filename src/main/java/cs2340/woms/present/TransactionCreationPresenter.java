@@ -11,12 +11,28 @@ import cs2340.woms.model.Transaction;
 import cs2340.woms.model.Withdrawal;
 import cs2340.woms.view.screens.TransactionCreationScreen;
 
+/**
+ * The presenter for the transaction creation screen.
+ */
 public class TransactionCreationPresenter {
 
+    /**The screen that this is presenting.*/
     protected TransactionCreationScreen screen;
+    /**The type of transaction being created. See {@link TransactionCreationScreen#TRANSACTION_TYPE}.*/
     protected String transactionType;
+    /**The account for which the new transaction is being created for.*/
     protected Account account;
 
+    /**
+     * Creates a new presenter for the given transaction creation screen. The
+     * new transaction will be of the specified type and will be created for
+     * the given account.
+     *
+     * @param screen the screen that this should present.
+     * @param account the account to create the transaction for.
+     * @param transactionType the type of transaction being created. See
+     * {@link TransactionCreationScreen#TRANSACTION_TYPE}.
+     */
     public TransactionCreationPresenter(TransactionCreationScreen screen, Account account, String transactionType) {
         this.screen = screen;
         this.transactionType = transactionType;
@@ -34,6 +50,12 @@ public class TransactionCreationPresenter {
         }
     }
 
+    /**
+     * Should be called whenever the confirm button is pressed. Will retrieve
+     * the user-defined information for the new transaction and create it for
+     * the account specified during construction. Will create a pop-up in the
+     * case of an error.
+     */
     public void onConfirmButtonPressed() {
         String amountString = screen.getAmountField();
         String reason = screen.getReasonField();
@@ -91,6 +113,10 @@ public class TransactionCreationPresenter {
         }
     }
 
+    /**
+     * Should be called whenever the cancel button is pressed. Will simply
+     *  close the transaction creation screen.
+     */
     public void onCancelButtonPressed() {
         screen.close();
     }
