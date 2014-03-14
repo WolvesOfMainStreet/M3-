@@ -2,6 +2,8 @@ package cs2340.woms.view.screens;
 
 import java.util.Date;
 
+import cs2340.woms.model.Transaction;
+
 /**
  * The transaction creation screen. The transaction creation screen has one
  * field for entering the amount the new transaction represents. This screen
@@ -14,6 +16,11 @@ import java.util.Date;
  */
 public interface TransactionCreationScreen extends BaseScreen {
 
+    /**
+     * A parameter name for the type of transaction that is being created. The
+     * associated argument should be one of {@link Transaction#TYPE_DEPOSIT} or
+     * {@link Transaction#TYPE_WITHDRAWAL}.
+     */
     String TRANSACTION_TYPE = "transactionType";
 
     /**
@@ -37,7 +44,18 @@ public interface TransactionCreationScreen extends BaseScreen {
      */
     Date getTimeEffectiveDate();
 
+    /**
+     * Sets the contents of the category spinner.
+     *
+     * @param contents an array of strings to be displayed by the category
+     * spinner.
+     */
     void setCategorySpinnerContents(String[] contents);
 
+    /**
+     * Returns the currently selected category.
+     *
+     * @return the currently selected category.
+     */
     String getCategory();
 }
