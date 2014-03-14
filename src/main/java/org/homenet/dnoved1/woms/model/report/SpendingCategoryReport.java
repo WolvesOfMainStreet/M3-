@@ -45,8 +45,8 @@ public class SpendingCategoryReport implements Report {
      */
     public SpendingCategoryReport(User user, Date startPeriod, Date endPeriod) {
         this.user = user;
-        this.startPeriod = startPeriod;
-        this.endPeriod = endPeriod;
+        this.startPeriod = (Date) startPeriod.clone();
+        this.endPeriod = (Date) endPeriod.clone();
 
         // Initialize each category with 0.
         expensesPerCategory = new HashMap<ExpenseCategory, BigDecimal>();

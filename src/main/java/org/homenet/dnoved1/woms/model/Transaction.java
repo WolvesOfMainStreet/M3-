@@ -54,8 +54,8 @@ public abstract class Transaction implements Displayable, SerializableData {
     public Transaction(BigDecimal amount, Date timeEntered, Date timeEffective) {
         this.amount = new BigDecimal(0, MathContext.DECIMAL32);
         this.amount = this.amount.add(amount);
-        this.timeEntered = timeEntered;
-        this.timeEffective = timeEffective;
+        this.timeEntered = (Date) timeEntered.clone();
+        this.timeEffective = (Date) timeEffective.clone();
     }
 
     /**
@@ -74,7 +74,7 @@ public abstract class Transaction implements Displayable, SerializableData {
      * @return the time at which this transaction was entered.
      */
     public Date getTimeEntered() {
-        return timeEntered;
+        return (Date) timeEntered.clone();
     }
 
     /**
@@ -83,7 +83,7 @@ public abstract class Transaction implements Displayable, SerializableData {
      * @return the time at which this transaction becomes effective.
      */
     public Date getTimeEffective() {
-        return timeEffective;
+        return (Date) timeEffective.clone();
     }
 
     /**

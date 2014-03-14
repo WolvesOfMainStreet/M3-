@@ -43,8 +43,8 @@ public class IncomeSourceReport implements Report {
      */
     public IncomeSourceReport(User user, Date start, Date end) {
         this.user = user;
-        this.start = start;
-        this.end = end;
+        this.start = (Date) start.clone();
+        this.end = (Date) end.clone();
         this.sourceToIncome = new HashMap<String, BigDecimal>();
     }
 
