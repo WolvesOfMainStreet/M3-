@@ -1,6 +1,6 @@
 package org.homenet.dnoved1.woms.android.view.screens;
 
-import org.homenet.dnoved1.R;
+import org.homenet.dnoved1.woms.R;
 import org.homenet.dnoved1.woms.present.RegistrationPresenter;
 import org.homenet.dnoved1.woms.view.screens.RegistrationScreen;
 

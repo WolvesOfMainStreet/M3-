@@ -1,6 +1,6 @@
 package org.homenet.dnoved1.woms.android.view.screens;
 
-import org.homenet.dnoved1.R;
+import org.homenet.dnoved1.woms.R;
 import org.homenet.dnoved1.woms.android.model.AndroidLocalDatabase;
 import org.homenet.dnoved1.woms.android.model.AndroidLocalSQLConnection;
 import org.homenet.dnoved1.woms.model.ClientDatabase;

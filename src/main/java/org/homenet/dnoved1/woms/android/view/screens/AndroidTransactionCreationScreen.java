@@ -3,7 +3,7 @@ package org.homenet.dnoved1.woms.android.view.screens;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.homenet.dnoved1.R;
+import org.homenet.dnoved1.woms.R;
 import org.homenet.dnoved1.woms.model.ClientDatabase;
 import org.homenet.dnoved1.woms.model.Transaction;
 import org.homenet.dnoved1.woms.present.TransactionCreationPresenter;
