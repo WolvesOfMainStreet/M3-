@@ -4,14 +4,28 @@ import cs2340.woms.model.ClientDatabase;
 import cs2340.woms.model.User;
 import cs2340.woms.view.screens.RegistrationScreen;
 
+/**
+ * The presenter for the registration screen.
+ */
 public class RegistrationPresenter {
 
+    /**The screen that this is presenting.*/
     protected RegistrationScreen screen;
 
+    /**
+     * Creates a new presenter for the given registration screen.
+     *
+     * @param screen the screen that this should present.
+     */
     public RegistrationPresenter(RegistrationScreen screen) {
         this.screen = screen;
     }
 
+    /**
+     * Should be called whenever the confirm button is pressed. Will retrieve
+     * the user-specified information for the new user to register and attempt
+     * to register them, creating a pop-up in the case of an error.
+     */
     public void onConfirmButtonPressed() {
         String username = screen.getUsernameField();
         String password1 = screen.getPasswordField();
@@ -36,6 +50,10 @@ public class RegistrationPresenter {
         }
     }
 
+    /**
+     * Should be called whenever the cancel button is pressed. Will simply
+     * close the registration screen.
+     */
     public void onCancelButtonPressed() {
         screen.close();
     }

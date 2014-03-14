@@ -6,14 +6,28 @@ import cs2340.woms.model.Account;
 import cs2340.woms.model.ClientDatabase;
 import cs2340.woms.view.screens.AccountCreationScreen;
 
+/**
+ * The presenter for the account creation screen.
+ */
 public class AccountCreationPresenter {
 
+    /**The screen that this is presenting.*/
     protected AccountCreationScreen screen;
 
+    /**
+     * Creates a new presenter for the given account creation screen.
+     *
+     * @param screen the screen that this should present.
+     */
     public AccountCreationPresenter(AccountCreationScreen screen) {
         this.screen = screen;
     }
 
+    /**
+     * Should be called whenever the confirm button is pressed. Will retrieve
+     * all the new account information and attempt to create a new account,
+     * creating a pop-up in the case of an error.
+     */
     public void onConfirmButtonPressed() {
         String name = screen.getNameField();
         String balanceString = screen.getBalanceField();
@@ -51,6 +65,10 @@ public class AccountCreationPresenter {
         }
     }
 
+    /**
+     * Should be called whenever the cancel button is pressed. Will simply
+     * close the screen.
+     */
     public void onCancelButtonPressed() {
         screen.close();
     }
