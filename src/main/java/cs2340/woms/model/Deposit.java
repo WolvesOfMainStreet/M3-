@@ -12,8 +12,10 @@ import java.util.Map;
  */
 public class Deposit extends Transaction {
 
+    /**The save key for this deposit's source field.*/
     public static final String SAVE_KEY_SOURCE = "source";
 
+    /**The user-defined source of this deposit.*/
     protected String source;
 
     /**
@@ -88,10 +90,10 @@ public class Deposit extends Transaction {
     @Override
     public String[] multiLineString() {
         return new String[] {
-                "Deposit:",
-                "\tAmount: " + NumberFormat.getCurrencyInstance().format(this.amount.doubleValue()),
-                "\tDate:   " + SimpleDateFormat.getDateTimeInstance().format(timeEffective),
-                "\tSource: " + source
+            "Deposit:",
+            "\tAmount: " + NumberFormat.getCurrencyInstance().format(this.amount.doubleValue()),
+            "\tDate:   " + SimpleDateFormat.getDateTimeInstance().format(timeEffective),
+            "\tSource: " + source
         };
     }
 }

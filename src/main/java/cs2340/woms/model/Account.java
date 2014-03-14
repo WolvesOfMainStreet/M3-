@@ -11,10 +11,14 @@ import java.util.Map;
  */
 public class Account implements Displayable, SerializableData {
 
+    /**The save key for this account's name field.*/
     public static final String SAVE_KEY_NAME = "account-name";
+    /**The save key for this account's balance field.*/
     public static final String SAVE_KEY_BALANCE = "account-balance";
 
+    /**The name of this account. Also the unique identifier for this object.*/
     private String name;
+    /**The current balance of this account.*/
     private BigDecimal balance;
 
     /**
@@ -78,8 +82,11 @@ public class Account implements Displayable, SerializableData {
 
     @Override
     public boolean equals(Object o) {
-        if (o == this) return true;
-        if (o == null || !(o instanceof Account)) return false;
+        if (o == this) {
+            return true;
+        } else if (o == null || !(o instanceof Account)) {
+            return false;
+        }
 
         Account account = (Account) o;
         return name.equals(account.name);
@@ -98,12 +105,18 @@ public class Account implements Displayable, SerializableData {
     @Override
     public String[] multiLineString() {
         return new String[] {
-                "Account:",
-                "\tName:    " + name,
-                "\tBalance: " + getBalanceString()
+            "Account:",
+            "\tName:    " + name,
+            "\tBalance: " + getBalanceString()
         };
     }
 
+    /**
+     * Returns this account's balance as a string formatted as either '+ $x.xx'
+     * or '- $x.xx', depending on whether it is positive or negative.
+     *
+     * @return this account's balance formatted as described above.
+     */
     private String getBalanceString() {
         String string;
         if (balance.doubleValue() < 0) {
