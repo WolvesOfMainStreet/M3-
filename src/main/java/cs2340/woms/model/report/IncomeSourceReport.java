@@ -21,11 +21,16 @@ import cs2340.woms.model.User;
  */
 public class IncomeSourceReport implements Report {
 
-    // The user which is currently being visited.
+    /**The user which is currently being visited.*/
     private User currentUser;
 
+    /**The user to generate this report for.*/
     private User user;
-    private Date start, end;
+    /**The starting period for this report.*/
+    private Date start;
+    /**The ending period for this report.*/
+    private Date end;
+    /**A map of income source to the amount attributed to it.*/
     private Map<String, BigDecimal> sourceToIncome;
 
     /**

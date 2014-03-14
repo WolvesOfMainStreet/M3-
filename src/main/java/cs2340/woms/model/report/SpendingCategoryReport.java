@@ -21,15 +21,28 @@ import cs2340.woms.model.Withdrawal;
  */
 public class SpendingCategoryReport implements Report {
 
-    // The user which is currently being visited.
+    /**The user which is currently being visited.*/
     private User currentUser;
 
+    /**The user to generate this report for.*/
     private User user;
+    /**The starting period for this report.*/
     private Date startPeriod;
+    /**The ending period for this report.*/
     private Date endPeriod;
+    /**A map of expense categories to the amount attributed to them.*/
     private Map<ExpenseCategory, BigDecimal> expensesPerCategory;
-    private BigDecimal totalExpenses;
 
+    /**
+     * Creates a new spending category report for the given user from the given
+     * start date and end date.
+     *
+     * @param user the user to generate the spending report from.
+     * @param startPeriod the starting period. Only transactions entered after
+     * this date will be considered.
+     * @param endPeriod the ending period. Only transactions entered before
+     * this date will be considered.
+     */
     public SpendingCategoryReport(User user, Date startPeriod, Date endPeriod) {
         this.user = user;
         this.startPeriod = startPeriod;
@@ -40,7 +53,6 @@ public class SpendingCategoryReport implements Report {
         for (ExpenseCategory type: ExpenseCategory.values()) {
             expensesPerCategory.put(type, new BigDecimal(0, MathContext.DECIMAL32));
         }
-        totalExpenses = new BigDecimal(0, MathContext.DECIMAL32);
     }
 
     @Override
@@ -64,8 +76,6 @@ public class SpendingCategoryReport implements Report {
         BigDecimal amount = expensesPerCategory.get(withdrawal.getExpenseCategory());
         amount = amount.add(withdrawal.getAmount());
         expensesPerCategory.put(withdrawal.getExpenseCategory(), amount);
-
-        totalExpenses = totalExpenses.add(withdrawal.getAmount());
     }
 
     @Override
@@ -81,9 +91,11 @@ public class SpendingCategoryReport implements Report {
         lines.add("\t" + SimpleDateFormat.getDateInstance().format(startPeriod)
                 + " - " + SimpleDateFormat.getDateInstance().format(endPeriod));
 
+        BigDecimal totalExpenses = BigDecimal.ZERO;
         for (ExpenseCategory type: ExpenseCategory.values()) {
             BigDecimal expense = expensesPerCategory.get(type);
             lines.add("\t" + type.name() + ": " + NumberFormat.getCurrencyInstance().format(expense.doubleValue()));
+            totalExpenses = totalExpenses.add(expense);
         }
 
         lines.add("Total: " + NumberFormat.getCurrencyInstance().format(totalExpenses.doubleValue()));
