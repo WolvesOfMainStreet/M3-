@@ -12,6 +12,7 @@ import cs2340.woms.view.screens.AccountCreationScreen;
  */
 public class AndroidAccountCreationScreen extends AndroidBaseScreen implements AccountCreationScreen {
 
+    /**The presenter for this screen.*/
     private AccountCreationPresenter presenter;
 
     @Override
@@ -21,10 +22,22 @@ public class AndroidAccountCreationScreen extends AndroidBaseScreen implements A
         this.presenter = new AccountCreationPresenter(this);
     }
 
+    /**
+     * Not for normal use. Is called by android whenever the confirm button is
+     * pressed, as defined in this screen's layout file.
+     *
+     * @param view the button that was pressed.
+     */
     public void onConfirmButtonPressed(View view) {
         presenter.onConfirmButtonPressed();
     }
 
+    /**
+     * Not for normal use. Is called by android whenever the cancel button is
+     * pressed, as defined in this screen's layout file.
+     *
+     * @param view the button that was pressed.
+     */
     public void onCancelButtonPressed(View view) {
         presenter.onCancelButtonPressed();
     }

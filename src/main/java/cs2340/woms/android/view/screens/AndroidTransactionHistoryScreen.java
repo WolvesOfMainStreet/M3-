@@ -24,9 +24,12 @@ import cs2340.woms.view.screens.TransactionHistoryScreen;
  */
 public class AndroidTransactionHistoryScreen extends AndroidBaseScreen implements TransactionHistoryScreen {
 
+    /**The presenter for this screen.*/
     private TransactionHistoryPresenter presenter;
 
+    /**The list of transactions to display.*/
     private List<Transaction> transactionList;
+    /**The list adapter for the list of transactions being displayed.*/
     private BaseAdapter transactionListAdapter;
 
     @Override
@@ -43,23 +46,31 @@ public class AndroidTransactionHistoryScreen extends AndroidBaseScreen implement
         listview.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                onTransactionSelected((Transaction) parent.getItemAtPosition(position));
+                presenter.onTransactionSelected((Transaction) parent.getItemAtPosition(position));
             }
         });
 
         this.presenter = new TransactionHistoryPresenter(this, account);
     }
 
+    /**
+     * Not for normal use. Is called by android whenever the create new deposit
+     * button is pressed, as defined in this screen's layout file.
+     *
+     * @param view the button that was pressed.
+     */
     public void onCreateDepositButtonPressed(View view) {
         presenter.onCreateDepositButtonPressed();
     }
 
+    /**
+     * Not for normal use. Is called by android whenever the create new
+     * withdrawal button is pressed, as defined in this screen's layout file.
+     *
+     * @param view the button that was pressed.
+     */
     public void onCreateWithdrawalButtonPressed(View view) {
         presenter.onCreateWithdrawalButtonPressed();
-    }
-
-    public void onTransactionSelected(Transaction transaction) {
-        presenter.onTransactionSelected(transaction);
     }
 
     @Override
