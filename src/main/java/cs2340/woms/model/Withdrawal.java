@@ -12,10 +12,14 @@ import java.util.Map;
  */
 public class Withdrawal extends Transaction {
 
+    /**The save key for this withdrawal's reason field.*/
     public static final String SAVE_KEY_REASON = "reason";
+    /**The save key for this withdrawal's expense type field.*/
     public static final String SAVE_KEY_EXPENSE_TYPE = "expenseType";
 
+    /**The user-defined reason for this withdrawal.*/
     protected String reason;
+    /**The type of expense this withdrawal is categorized as.*/
     protected ExpenseCategory type;
 
     /**
@@ -49,6 +53,11 @@ public class Withdrawal extends Transaction {
         return Transaction.TYPE_WITHDRAWAL;
     }
 
+    /**
+     * Returns this withdrawal's expense category.
+     *
+     * @return this withdrawal's expense category.
+     */
     public ExpenseCategory getExpenseCategory() {
         return type;
     }
@@ -103,11 +112,11 @@ public class Withdrawal extends Transaction {
     @Override
     public String[] multiLineString() {
         return new String[] {
-                "Withdrawal:",
-                "\tAmount:   " + NumberFormat.getCurrencyInstance().format(this.amount.doubleValue()),
-                "\tDate:     " + SimpleDateFormat.getDateTimeInstance().format(timeEffective),
-                "\tCategory: " + type.name(),
-                "\tReason:   " + reason
+            "Withdrawal:",
+            "\tAmount:   " + NumberFormat.getCurrencyInstance().format(this.amount.doubleValue()),
+            "\tDate:     " + SimpleDateFormat.getDateTimeInstance().format(timeEffective),
+            "\tCategory: " + type.name(),
+            "\tReason:   " + reason
         };
     }
 }

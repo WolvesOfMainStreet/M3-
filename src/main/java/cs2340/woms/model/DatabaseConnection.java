@@ -39,7 +39,7 @@ public interface DatabaseConnection {
      * @throws IllegalStateException if no user is currently logged in.
      */
     void removeUser()
-            throws IllegalStateException;
+        throws IllegalStateException;
 
     /**
      * Returns all of the currently logged in user's accounts.
@@ -48,7 +48,7 @@ public interface DatabaseConnection {
      * @throws IllegalStateException if no user is currently logged in.
      */
     Collection<Account> getAllAccounts()
-            throws IllegalStateException;
+        throws IllegalStateException;
 
     /**
      * Returns all of the currently logged in user's transactions for the given
@@ -61,7 +61,7 @@ public interface DatabaseConnection {
      * given account.
      */
     Collection<Transaction> getAllTransactions(Account account)
-            throws IllegalStateException, IllegalArgumentException;
+        throws IllegalStateException, IllegalArgumentException;
 
     /**
      * Adds the given account to the currently logged in user's accounts.
@@ -70,7 +70,7 @@ public interface DatabaseConnection {
      * @throws IllegalStateException if no user is currently logged in.
      */
     void addAccount(Account account)
-            throws IllegalStateException;
+        throws IllegalStateException;
 
     /**
      * Adds the given transaction to the given account belonging to the
@@ -83,7 +83,7 @@ public interface DatabaseConnection {
      * given account.
      */
     void addTransaction(Account account, Transaction transaction)
-            throws IllegalStateException, IllegalArgumentException;
+        throws IllegalStateException, IllegalArgumentException;
 
     /**
      * Removes the given account from the currently logged in user's accounts.
@@ -94,7 +94,7 @@ public interface DatabaseConnection {
      * given account.
      */
     void removeAccount(Account account)
-            throws IllegalStateException, IllegalArgumentException;
+        throws IllegalStateException, IllegalArgumentException;
 
     /**
      * Removes the given transaction from the given account belonging to the
@@ -107,7 +107,7 @@ public interface DatabaseConnection {
      * given account or the given account does not have the given transaction.
      */
     void removeTransaction(Account account, Transaction transaction)
-            throws IllegalStateException, IllegalArgumentException;
+        throws IllegalStateException, IllegalArgumentException;
 
     /**
      * Updates the currently logged in user's information to match the given
@@ -118,7 +118,7 @@ public interface DatabaseConnection {
      * @throws IllegalStateException if no user is currently logged in.
      */
     void updateUser(User nuw)
-            throws IllegalStateException;
+        throws IllegalStateException;
 
     /**
      * Updates the old account's information to match the new account's
@@ -133,7 +133,7 @@ public interface DatabaseConnection {
      * given account.
      */
     void updateAccount(Account old, Account nuw)
-            throws IllegalStateException, IllegalArgumentException;
+        throws IllegalStateException, IllegalArgumentException;
 
     /**
      * Updates the old transactions' information to match the new transactions'
@@ -149,7 +149,7 @@ public interface DatabaseConnection {
      * given account or the given account does not have the given transaction.
      */
     void updateTransaction(Account account, Transaction old, Transaction nuw)
-            throws IllegalStateException, IllegalArgumentException;
+        throws IllegalStateException, IllegalArgumentException;
 
     /**
      * Makes the given report visit every element of this database.

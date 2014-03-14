@@ -7,10 +7,14 @@ import java.util.Map;
  */
 public class User implements Displayable, SerializableData {
 
+    /**The save key for this user's username field.*/
     public static final String SAVE_KEY_USERNAME = "user-username";
+    /**The save key for this user's password field.*/
     public static final String SAVE_KEY_PASSWORD = "user-password";
 
+    /**This user's username. Also the unique identifies for this object.*/
     private String username;
+    /**This user's password.*/
     private String password;
 
     /**
@@ -67,8 +71,11 @@ public class User implements Displayable, SerializableData {
 
     @Override
     public boolean equals(Object o) {
-        if (o == this) return true;
-        if (o == null || !(o instanceof User)) return false;
+        if (o == this) {
+            return true;
+        } else if (o == null || !(o instanceof User)) {
+            return false;
+        }
 
         User user = (User) o;
         return username.equals(user.username);
@@ -87,9 +94,9 @@ public class User implements Displayable, SerializableData {
     @Override
     public String[] multiLineString() {
         return new String[] {
-                "User:",
-                "\tUsername: " + username,
-                "\tPassword: " + password
+            "User:",
+            "\tUsername: " + username,
+            "\tPassword: " + password
         };
     }
 

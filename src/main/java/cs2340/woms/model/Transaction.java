@@ -15,17 +15,25 @@ import java.util.Map;
  */
 public abstract class Transaction implements Displayable, SerializableData {
 
-    // The keys that amount, time entered, and time effective are saved under.
+    /**The save key for this transactions's amount field.*/
     public static final String SAVE_KEY_AMOUNT = "amount";
+    /**The save key for this transactions's time entered field.*/
     public static final String SAVE_KEY_TIME_ENTERED = "timeEntered";
+    /**The save key for this transactions's time effective field.*/
     public static final String SAVE_KEY_TIME_EFFECTIVE = "timeEffective";
 
     // The default categories of transactions.
+    // TODO: change to enumeration or use instanceof checks
+    /**A deposit type transaction.*/
     public static final String TYPE_DEPOSIT = "deposit";
+    /**A withdrawal type transaction.*/
     public static final String TYPE_WITHDRAWAL = "withdraw";
 
+    /**The amount of money this transaction represents.*/
     protected BigDecimal amount;
+    /**The time at which this transaction was created. Also the unique identifier for this object.*/
     protected Date timeEntered;
+    /**The time at which this transaction should become effective.*/
     protected Date timeEffective;
 
     /**
@@ -151,8 +159,11 @@ public abstract class Transaction implements Displayable, SerializableData {
 
     @Override
     public boolean equals(Object o) {
-        if (o == this) return true;
-        if (o == null || !(o instanceof Transaction)) return false;
+        if (o == this) {
+            return true;
+        } else if (o == null || !(o instanceof Transaction)) {
+            return false;
+        }
 
         Transaction transaction = (Transaction) o;
         return timeEntered.equals(transaction.timeEntered);

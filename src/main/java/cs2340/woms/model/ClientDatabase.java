@@ -24,7 +24,7 @@ public final class ClientDatabase implements DatabaseConnection {
     private User currentUser;
     /**The currently selected account.*/
     private Account currentAccount;
-    /**The currently selected transaction*/
+    /**The currently selected transaction.*/
     private Transaction currentTransaction;
 
     /**All of the observers on the current user's accounts.*/
@@ -298,9 +298,7 @@ public final class ClientDatabase implements DatabaseConnection {
     public void removeTransaction(Account account, Transaction transaction) throws IllegalStateException, IllegalArgumentException {
         checkUserLoggedIn();
         checkUserOwnsAccount(account);
-        if (!getAllTransactions(account).contains(transaction)) {
-            throw new IllegalArgumentException("Account " + account + " does not contain transaction " + transaction + ".");
-        }
+        checkAccountContainsTransaction(account, transaction);
 
         Collection<Transaction> accountTransactions = transactions.get(account);
         if (accountTransactions != null) {
@@ -332,9 +330,7 @@ public final class ClientDatabase implements DatabaseConnection {
     public void updateTransaction(Account account, Transaction old, Transaction nuw) throws IllegalStateException, IllegalArgumentException {
         checkUserLoggedIn();
         checkUserOwnsAccount(account);
-        if (!getAllTransactions(account).contains(old)) {
-            throw new IllegalArgumentException("Account " + account + " does not contain transaction " + old + ".");
-        }
+        checkAccountContainsTransaction(account, old);
 
         Collection<Transaction> accountTransactions = transactions.get(account);
         if (accountTransactions != null) {
@@ -370,7 +366,22 @@ public final class ClientDatabase implements DatabaseConnection {
      */
     private void checkUserOwnsAccount(Account account) throws IllegalArgumentException {
         if (!getAllAccounts().contains(account)) {
-            throw new IllegalArgumentException("Currently logged in user does not own account " + account + ".");
+            throw new IllegalArgumentException("Currently logged in user does not own account " + account + '.');
+        }
+    }
+
+    /**
+     * Checks that the given account contains the given transaction.
+     *
+     * @param account the account to that is being checked for ownership of the
+     * given transaction.
+     * @param transaction the transaction to check for ownership of.
+     * @throws IllegalArgumentException if the given account does not contain
+     * the given transaction.
+     */
+    private void checkAccountContainsTransaction(Account account, Transaction transaction) throws IllegalArgumentException {
+        if (!getAllTransactions(account).contains(transaction)) {
+            throw new IllegalArgumentException("Account " + account + " does not contain transaction " + transaction + '.');
         }
     }
 
@@ -378,10 +389,8 @@ public final class ClientDatabase implements DatabaseConnection {
      * Updates all account observers with the current set of accounts.
      */
     private void updateAccountObservers() {
-        Collection<Account> accounts = getAllAccounts();
-
         for (DataSetObserver<Account> observer: accountObservers) {
-            observer.update(accounts);
+            observer.update(getAllAccounts());
         }
     }
 
@@ -394,10 +403,8 @@ public final class ClientDatabase implements DatabaseConnection {
     private void updateTransactionObservers(Account account) {
         Collection<DataSetObserver<Transaction>> observers = transactionObservers.get(account);
         if (observers != null) {
-            Collection<Transaction> transactions = getAllTransactions(account);
-
             for (DataSetObserver<Transaction> observer: observers) {
-                observer.update(transactions);
+                observer.update(getAllTransactions(account));
             }
         }
     }
