@@ -111,6 +111,10 @@ public class AndroidTransactionCreationScreen extends AndroidBaseScreen implemen
      * @param view the button that was pressed.
      */
     public void chooseDateTime(View view) {
+        if (!(view instanceof Button)) {
+            throw new IllegalArgumentException("View must be a button.");
+        }
+
         final Button dateTimeButton = (Button) view;
 
         final Dialog dateDialog = new DatePickerDialog(this, new OnDateSetListener() {

@@ -70,6 +70,10 @@ public class AndroidReportScreen extends AndroidBaseScreen implements ReportScre
      * @param view the button that was pressed.
      */
     public void chooseStartPeriod(View view) {
+        if (!(view instanceof Button)) {
+            throw new IllegalArgumentException("View must be a button.");
+        }
+
         final Button startPeriodButton = (Button) view;
 
         Dialog dateDialog = new DatePickerDialog(this, new OnDateSetListener() {
@@ -99,6 +103,10 @@ public class AndroidReportScreen extends AndroidBaseScreen implements ReportScre
      * @param view the button that was pressed.
      */
     public void chooseEndPeriod(View view) {
+        if (!(view instanceof Button)) {
+            throw new IllegalArgumentException("View must be a button.");
+        }
+
         final Button endPeriodButton = (Button) view;
 
         Dialog dateDialog = new DatePickerDialog(this, new OnDateSetListener() {
