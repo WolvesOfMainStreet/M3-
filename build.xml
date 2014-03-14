@@ -68,6 +68,58 @@
     -->
     <import file="custom_rules.xml" optional="true" />
 
+    <!--Custom tasks start-->
+    <target name="checkstyle">
+        <taskdef resource="checkstyletask.properties"
+            classpath="${checkstyle.jar.path}"/>
+
+        <checkstyle config="${checkstyle.rules}" failOnViolation="false">
+            <fileset dir="src">
+                <include name="**/java/**/*.java" />
+            </fileset>
+            <formatter type="xml" toFile="bin/checkstyle.xml"/>
+        </checkstyle>
+    </target>
+
+    <target name="findbugs">
+        <taskdef name="findbugs"
+            classpath="${findbugs.path}/lib/findbugs-ant.jar"
+            classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
+
+        <findbugs home="${findbugs.path}/lib"
+                output="xml"
+                outputFile="bin/findbugs.xml" >
+            <auxClasspath path="${sdk.dir}/platforms/${target}/android.jar" />
+            <sourcePath path="src" />
+            <fileset dir="bin/classes">
+                <exclude name="**/R.class" />
+                <exclude name="**/R$*.class" />
+                <exclude name="**/BuildConfig.class" />
+            </fileset>
+        </findbugs>
+    </target>
+
+    <target name="pmd">
+        <path id="pmd.classpath">
+            <fileset dir="${pmd.path}" includes="**/*.jar" />
+        </path>
+
+        <taskdef name="pmd"
+            classpathref="pmd.classpath"
+            classname="net.sourceforge.pmd.ant.PMDTask"/>
+
+        <pmd shortFilenames="true">
+            <sourceLanguage name="java" version="1.7" />
+            <ruleset>${pmd.rules}</ruleset>
+            <formatter type="xml" toFile="bin/pmd.xml" />
+            <fileset dir="src">
+                <include name="**/java/**/*.java" />
+            </fileset>
+        </pmd>
+    </target>
+
+    <!--Custom tasks end-->
+
     <!-- Import the actual build file.
 
          To customize existing targets, there are two options:
