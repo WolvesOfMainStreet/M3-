@@ -12,6 +12,7 @@ import cs2340.woms.view.screens.RegistrationScreen;
  */
 public class AndroidRegistrationScreen extends AndroidBaseScreen implements RegistrationScreen {
 
+    /**The presenter for this screen.*/
     private RegistrationPresenter presenter;
 
     @Override
@@ -21,10 +22,22 @@ public class AndroidRegistrationScreen extends AndroidBaseScreen implements Regi
         this.presenter = new RegistrationPresenter(this);
     }
 
+    /**
+     * Not for normal use. Is called by android whenever the confirm button is
+     * pressed, as defined in this screen's layout file.
+     *
+     * @param view the button that was pressed.
+     */
     public void onConfirmButtonPressed(View view) {
         presenter.onConfirmButtonPressed();
     }
 
+    /**
+     * Not for normal use. Is called by android whenever the cancel button is
+     * pressed, as defined in this screen's layout file.
+     *
+     * @param view the button that was pressed.
+     */
     public void onCancelButtonPressed(View view) {
         presenter.onCancelButtonPressed();
     }

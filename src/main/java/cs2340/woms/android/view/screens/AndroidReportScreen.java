@@ -18,13 +18,20 @@ import cs2340.woms.model.report.Report;
 import cs2340.woms.present.ReportPresenter;
 import cs2340.woms.view.screens.ReportScreen;
 
+/**
+ * The android implementation of {@link cs2340.woms.view.screens.ReportScreen}.
+ */
 public class AndroidReportScreen extends AndroidBaseScreen implements ReportScreen {
 
+    /**The format string for displaying the selected start/end period dates.*/
     private static final String DATE_FORMAT = "%1$tB %1$te, %1$tY";
 
+    /**The presenter for this screen.*/
     private ReportPresenter presenter;
 
+    /**The user-selected starting period for this screen's report.*/
     private Calendar startPeriod;
+    /**The user-selected ending period for this screen's report.*/
     private Calendar endPeriod;
 
     @Override
@@ -53,14 +60,14 @@ public class AndroidReportScreen extends AndroidBaseScreen implements ReportScre
 
         startPeriodButton.setText(String.format(DATE_FORMAT, startPeriod));
         endPeriodButton.setText(String.format(DATE_FORMAT, endPeriod));
-
-        onPeriodChanged();
     }
 
-    public void onPeriodChanged() {
-        presenter.onPeriodChanged();
-    }
-
+    /**
+     * Not for normal use. Is called by android whenever the button displaying
+     * the starting period is pressed, as defined in this screen's layout file.
+     *
+     * @param view the button that was pressed.
+     */
     public void chooseStartPeriod(View view) {
         final Button startPeriodButton = (Button) view;
 
@@ -77,13 +84,19 @@ public class AndroidReportScreen extends AndroidBaseScreen implements ReportScre
         dateDialog.setOnDismissListener(new OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                onPeriodChanged();
+                presenter.onPeriodChanged();
             }
         });
 
         dateDialog.show();
     }
 
+    /**
+     * Not for normal use. Is called by android whenever the button displaying
+     * the ending period is pressed, as defined in this screen's layout file.
+     *
+     * @param view the button that was pressed.
+     */
     public void chooseEndPeriod(View view) {
         final Button endPeriodButton = (Button) view;
 
@@ -100,13 +113,19 @@ public class AndroidReportScreen extends AndroidBaseScreen implements ReportScre
         dateDialog.setOnDismissListener(new OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                onPeriodChanged();
+                presenter.onPeriodChanged();
             }
         });
 
         dateDialog.show();
     }
 
+    /**
+     * Convenience method for setting this screen's display to the given array
+     * of lines.
+     *
+     * @param lines the lines to display.
+     */
     private void setReportText(String[] lines) {
         TextView reportText = (TextView) this.findViewById(R.id.reportTextMain);
         StringBuilder text = new StringBuilder();

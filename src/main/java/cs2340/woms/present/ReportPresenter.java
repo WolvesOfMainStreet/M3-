@@ -27,6 +27,9 @@ public class ReportPresenter {
     public ReportPresenter(ReportScreen screen, String reportType) {
         this.screen = screen;
         this.reportType = reportType;
+
+        // Initialize screen with report
+        onPeriodChanged();
     }
 
     /**

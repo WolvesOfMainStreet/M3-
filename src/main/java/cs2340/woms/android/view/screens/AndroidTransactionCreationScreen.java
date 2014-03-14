@@ -21,7 +21,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import cs2340.woms.R;
-import cs2340.woms.model.Account;
 import cs2340.woms.model.ClientDatabase;
 import cs2340.woms.model.Transaction;
 import cs2340.woms.present.TransactionCreationPresenter;
@@ -32,12 +31,13 @@ import cs2340.woms.view.screens.TransactionCreationScreen;
  */
 public class AndroidTransactionCreationScreen extends AndroidBaseScreen implements TransactionCreationScreen {
 
-    private static final String DATE_TIME_FORMAT = "%02d/%02d/%04d %02d:%02d";
+    /**The format string for displaying the selected time effective for the new transaction.*/
+    private static final String DATE_TIME_FORMAT = "%1$tD %1$tR";
 
+    /**The presenter for this screen.*/
     private TransactionCreationPresenter presenter;
-
-    // Time effective fields
-    private int year, month, day, hour, minute;
+    /**The currently selected time effective for the new transaction.*/
+    private Calendar timeEffective;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,6 @@ public class AndroidTransactionCreationScreen extends AndroidBaseScreen implemen
             System.err.println("No transaction type specified, defaulting to deposit.");
             type = Transaction.TYPE_DEPOSIT;
         }
-        Account account = ClientDatabase.get().getCurrentAccount();
 
         EditText reasonField = (EditText) this.findViewById(R.id.transactioncreateFieldSource);
         if (type.equals(Transaction.TYPE_DEPOSIT)) {
@@ -63,70 +62,74 @@ public class AndroidTransactionCreationScreen extends AndroidBaseScreen implemen
         //-----Set up time effective chooser------------------------------------
 
         // Initialize date/time variables
-        Calendar calendar = Calendar.getInstance();
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
-        day = calendar.get(Calendar.DAY_OF_MONTH);
-        hour = calendar.get(Calendar.HOUR_OF_DAY);
-        minute = calendar.get(Calendar.MINUTE);
+        timeEffective = Calendar.getInstance();
 
         // Set up date/time button
         final Button dateTimeButton = (Button) this.findViewById(R.id.transactioncreateButtonDatetime);
         final Handler datetimeHandler = new Handler();
 
-        datetimeHandler.post(new Runnable() {
+        datetimeHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                minute++;
-                if (minute >= 60) {
-                    minute = 0;
-                    hour++;
-                }
-                if (hour >= 24) {
-                    hour = 0;
-                    day++;
-                }
-                // TODO: day/month/year handling. Much rarer, but still can happen
-
-                dateTimeButton.setText(String.format(DATE_TIME_FORMAT, month + 1, day, year, hour, minute));
+                timeEffective.add(Calendar.MINUTE, 1);
+                dateTimeButton.setText(String.format(DATE_TIME_FORMAT, timeEffective));
 
                 // Update every minute
                 datetimeHandler.postDelayed(this, 60000);
             }
-        });
+        }, 60000);
 
-        this.presenter = new TransactionCreationPresenter(this, account, type);
+        this.presenter = new TransactionCreationPresenter(this, ClientDatabase.get().getCurrentAccount(), type);
     }
 
+    /**
+     * Not for normal use. Is called by android whenever the confirm button is
+     * pressed, as defined in this screen's layout file.
+     *
+     * @param view the button that was pressed.
+     */
     public void onConfirmButtonPressed(View view) {
         presenter.onConfirmButtonPressed();
     }
 
+    /**
+     * Not for normal use. Is called by android whenever the cancel button is
+     * pressed, as defined in this screen's layout file.
+     *
+     * @param view the button that was pressed.
+     */
     public void onCancelButtonPressed(View view) {
         presenter.onCancelButtonPressed();
     }
 
+    /**
+     * Not for normal use. Is called by android whenever the button displaying
+     * the time effective for the new transaction is pressed, as defined in
+     * this screen's layout file.
+     *
+     * @param view the button that was pressed.
+     */
     public void chooseDateTime(View view) {
         final Button dateTimeButton = (Button) view;
 
         final Dialog dateDialog = new DatePickerDialog(this, new OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker view, int aYear, int aMonth, int aDay) {
-                year = aYear;
-                month = aMonth;
-                day = aDay;
-                dateTimeButton.setText(String.format(DATE_TIME_FORMAT, month + 1, day, year, hour, minute));
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                timeEffective.set(Calendar.YEAR, year);
+                timeEffective.set(Calendar.MONTH, monthOfYear);
+                timeEffective.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                dateTimeButton.setText(String.format(DATE_TIME_FORMAT, timeEffective));
             }
-        }, year, month, day);
+        }, timeEffective.get(Calendar.YEAR), timeEffective.get(Calendar.MONTH), timeEffective.get(Calendar.DAY_OF_MONTH));
 
         final Dialog timeDialog = new TimePickerDialog(this, new OnTimeSetListener() {
             @Override
-            public void onTimeSet(TimePicker view, int aHour, int aMinute) {
-                hour = aHour;
-                minute = aMinute;
-                dateTimeButton.setText(String.format(DATE_TIME_FORMAT, month + 1, day, year, hour, minute));
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                timeEffective.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                timeEffective.set(Calendar.MINUTE, minute);
+                dateTimeButton.setText(String.format(DATE_TIME_FORMAT, timeEffective));
             }
-        }, hour, minute, true);
+        }, timeEffective.get(Calendar.HOUR_OF_DAY), timeEffective.get(Calendar.MINUTE), true);
 
         dateDialog.show();
 
@@ -152,15 +155,7 @@ public class AndroidTransactionCreationScreen extends AndroidBaseScreen implemen
 
     @Override
     public Date getTimeEffectiveDate() {
-        Calendar calendar = Calendar.getInstance();
-
-        // Update with selected time values
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.DAY_OF_MONTH, day);
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minute);
-        return calendar.getTime();
+        return timeEffective.getTime();
     }
 
     @Override

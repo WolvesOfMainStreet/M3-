@@ -23,6 +23,7 @@ import cs2340.woms.view.screens.UserOverviewScreen;
  */
 public class AndroidMainScreen extends AndroidBaseScreen implements MainScreen {
 
+    /**The presenter for this screen.*/
     private MainPresenter presenter;
 
     @Override
@@ -33,6 +34,12 @@ public class AndroidMainScreen extends AndroidBaseScreen implements MainScreen {
         this.presenter = new MainPresenter(this);
     }
 
+    /**
+     * Not for normal use. Is called by android whenever the login button is
+     * pressed, as defined in this screen's layout file.
+     *
+     * @param view the button that was pressed.
+     */
     public void onLoginButtonPressed(View view) {
         presenter.onLoginButtonPressed();
     }

@@ -22,9 +22,12 @@ import cs2340.woms.view.screens.AccountOverviewScreen;
  */
 public class AndroidAccountOverviewScreen extends AndroidBaseScreen implements AccountOverviewScreen {
 
+    /**The presenter for this screen.*/
     private AccountOverviewPresenter presenter;
 
+    /**The list of accounts to display.*/
     private List<Account> accountList;
+    /**The list adapter for the list of accounts being displayed.*/
     private BaseAdapter accountListAdapter;
 
     @Override
@@ -32,6 +35,7 @@ public class AndroidAccountOverviewScreen extends AndroidBaseScreen implements A
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_overview_screen);
 
+        // Initialize the account list view
         accountList = new ArrayList<Account>();
         accountListAdapter = new ArrayAdapter<Account>(this, R.layout.account_listing, accountList);
         ListView listview = (ListView) this.findViewById(R.id.accountmanageListAccount);
@@ -39,19 +43,21 @@ public class AndroidAccountOverviewScreen extends AndroidBaseScreen implements A
         listview.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                onAccountSelected((Account) parent.getItemAtPosition(position));
+                presenter.onAccountSelected((Account) parent.getItemAtPosition(position));
             }
         });
 
         this.presenter = new AccountOverviewPresenter(this);
     }
 
+    /**
+     * Not for normal use. Is called by android whenever the create new account
+     * button is pressed, as defined in this screen's layout file.
+     *
+     * @param view the button that was pressed.
+     */
     public void onCreateAccountButtonPressed(View view) {
         presenter.onCreateAccountButtonPressed();
-    }
-
-    public void onAccountSelected(Account account) {
-        presenter.onAccountSelected(account);
     }
 
     @Override

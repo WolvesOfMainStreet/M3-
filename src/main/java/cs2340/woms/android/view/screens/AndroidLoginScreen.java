@@ -12,6 +12,7 @@ import cs2340.woms.view.screens.LoginScreen;
  */
 public class AndroidLoginScreen extends AndroidBaseScreen implements LoginScreen {
 
+    /**The presenter for this screen.*/
     private LoginPresenter presenter;
 
     @Override
@@ -21,10 +22,22 @@ public class AndroidLoginScreen extends AndroidBaseScreen implements LoginScreen
         this.presenter = new LoginPresenter(this);
     }
 
+    /**
+     * Not for normal use. Is called by android whenever the login button is
+     * pressed, as defined in this screen's layout file.
+     *
+     * @param view the button that was pressed.
+     */
     public void onLoginButtonPressed(View view) {
         presenter.onLoginButtonPressed();
     }
 
+    /**
+     * Not for normal use. Is called by android whenever the register new user
+     * button is pressed, as defined in this screen's layout file.
+     *
+     * @param view the button that was pressed.
+     */
     public void onRegisterButtonPressed(View view) {
         presenter.onRegisterButtonPressed();
     }
