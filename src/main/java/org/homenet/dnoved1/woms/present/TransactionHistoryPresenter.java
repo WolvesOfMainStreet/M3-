@@ -16,8 +16,6 @@ public class TransactionHistoryPresenter {
 
     /**The screen that this is presenting.*/
     protected TransactionHistoryScreen screen;
-    /**The account to get transactions from for display.*/
-    protected Account account;
 
     /**
      * Creates a new presenter for the given transaction history screen for
@@ -28,7 +26,6 @@ public class TransactionHistoryPresenter {
      */
     public TransactionHistoryPresenter(TransactionHistoryScreen screen, Account account) {
         this.screen = screen;
-        this.account = account;
         ClientDatabase.get().registerTransactionsObserver(account, screen.getTransactionListObserver());
     }
 
