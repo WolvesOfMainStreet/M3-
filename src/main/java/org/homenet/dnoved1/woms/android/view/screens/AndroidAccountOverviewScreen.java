@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.homenet.dnoved1.R;
+import org.homenet.dnoved1.woms.R;
 import org.homenet.dnoved1.woms.model.Account;
 import org.homenet.dnoved1.woms.model.DataSetObserver;
 import org.homenet.dnoved1.woms.present.AccountOverviewPresenter;
