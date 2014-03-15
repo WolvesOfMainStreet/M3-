@@ -38,6 +38,7 @@ public class AndroidReportScreen extends AndroidBaseScreen implements ReportScre
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.report_screen);
 
         // Get arguments
         Bundle extras = this.getIntent().getExtras();
@@ -46,9 +47,6 @@ public class AndroidReportScreen extends AndroidBaseScreen implements ReportScre
             System.err.println("No report specified, closing screen.");
             this.close();
         }
-
-        setContentView(R.layout.report_screen);
-        this.presenter = new ReportPresenter(this, reportClass);
 
         // Default period to one month ago to present
         Calendar start = Calendar.getInstance();
@@ -61,6 +59,8 @@ public class AndroidReportScreen extends AndroidBaseScreen implements ReportScre
 
         startPeriodButton.setText(String.format(DATE_FORMAT, startPeriod));
         endPeriodButton.setText(String.format(DATE_FORMAT, endPeriod));
+
+        this.presenter = new ReportPresenter(this, reportClass);
     }
 
     /**

@@ -69,6 +69,7 @@ public class AndroidTransactionCreationScreen extends AndroidBaseScreen implemen
         final Button dateTimeButton = (Button) this.findViewById(R.id.transactioncreateButtonDatetime);
         final Handler datetimeHandler = new Handler();
 
+        dateTimeButton.setText(String.format(DATE_TIME_FORMAT, timeEffective));
         datetimeHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -79,6 +80,7 @@ public class AndroidTransactionCreationScreen extends AndroidBaseScreen implemen
                 datetimeHandler.postDelayed(this, 60000);
             }
         }, 60000);
+        // TODO: stop auto updating time if it has been selected by the user.
 
         this.presenter = new TransactionCreationPresenter(this, ClientDatabase.get().getCurrentAccount(), type);
     }

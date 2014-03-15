@@ -279,6 +279,7 @@ public final class ClientDatabase implements DatabaseConnection {
         accountTransactions.add(transaction);
         updateTransactionObservers(account);
         transaction.applyToAccount(account);
+        updateAccount(account, account);
         updateAccountObservers();
         backingConnection.addTransaction(account, transaction);
     }
