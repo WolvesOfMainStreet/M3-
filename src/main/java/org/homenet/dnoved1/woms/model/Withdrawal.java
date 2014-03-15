@@ -62,6 +62,15 @@ public class Withdrawal extends Transaction {
         return type;
     }
 
+    /**
+     * Returns the reason for this withdrawal.
+     *
+     * @return the reason for this withdrawal.
+     */
+    public String getReason() {
+        return reason;
+    }
+
     @Override
     public void applyToAccount(Account account) {
         account.adjustBalance(amount.negate());
