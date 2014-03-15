@@ -1,7 +1,6 @@
 package org.homenet.dnoved1.woms.android.view.screens;
 
 import org.homenet.dnoved1.woms.R;
-import org.homenet.dnoved1.woms.android.model.AndroidLocalDatabase;
 import org.homenet.dnoved1.woms.android.model.AndroidLocalSQLConnection;
 import org.homenet.dnoved1.woms.model.ClientDatabase;
 import org.homenet.dnoved1.woms.present.DependencyManager;
@@ -62,7 +61,6 @@ public class AndroidMainScreen extends AndroidBaseScreen implements MainScreen {
         DependencyManager.bind(TransactionHistoryScreen.class, AndroidTransactionHistoryScreen.class);
 
         //-----Models-----------------------------------------------------------
-        AndroidLocalDatabase.create(this);
-        ClientDatabase.create(new AndroidLocalSQLConnection());
+        ClientDatabase.create(new AndroidLocalSQLConnection(this));
     }
 }
