@@ -18,8 +18,7 @@ public interface DatabaseConnection {
      * @param user the user to login.
      * @return a future that returns true if the user was successfully logged
      * in and false if they could not be.
-     * @throws IOException if some error occurs while while accessing the
-     * database.
+     * @throws IOException if some error occurs while accessing the database.
      */
     Future<Boolean> login(User user)
         throws IOException;
@@ -29,8 +28,7 @@ public interface DatabaseConnection {
      *
      * @return a future that can be checked to determine when a user has been
      * successfully logged out.
-     * @throws IOException if some error occurs while while accessing the
-     * database.
+     * @throws IOException if some error occurs while accessing the database.
      */
     Future<Void> logout()
         throws IOException;
@@ -41,8 +39,7 @@ public interface DatabaseConnection {
      * @param user the user to register.
      * @return a future that returns true if the user was successfully
      * registered and false if they were not.
-     * @throws IOException if some error occurs while while accessing the
-     * database.
+     * @throws IOException if some error occurs while accessing the database.
      */
     Future<Boolean> register(User user)
         throws IOException;
@@ -52,8 +49,7 @@ public interface DatabaseConnection {
      *
      * @return a future that can be checked to determine when a user has been
      * successfully removed.
-     * @throws IOException if some error occurs while while accessing the
-     * database.
+     * @throws IOException if some error occurs while accessing the database.
      * @throws IllegalStateException if no user is currently logged in.
      */
     Future<Void> removeUser()
@@ -63,8 +59,7 @@ public interface DatabaseConnection {
      * Returns all of the currently logged in user's accounts.
      *
      * @return a future that returns the currently logged in user's accounts.
-     * @throws IOException if some error occurs while while accessing the
-     * database.
+     * @throws IOException if some error occurs while accessing the database.
      * @throws IllegalStateException if no user is currently logged in.
      */
     Future<Collection<Account>> getAllAccounts()
@@ -76,8 +71,7 @@ public interface DatabaseConnection {
      *
      * @param account the account to get transactions for.
      * @return a future that returns all of the given account's transactions.
-     * @throws IOException if some error occurs while while accessing the
-     * database.
+     * @throws IOException if some error occurs while accessing the database.
      * @throws IllegalStateException if no user is currently logged in or the
      * logged in user does not own the given account.
      */
@@ -90,8 +84,7 @@ public interface DatabaseConnection {
      * @param account the account to add.
      * @return a future that can be checked to determine when the account has
      * been successfully added.
-     * @throws IOException if some error occurs while while accessing the
-     * database.
+     * @throws IOException if some error occurs while accessing the database.
      * @throws IllegalStateException if no user is currently logged in.
      */
     Future<Void> addAccount(Account account)
@@ -105,8 +98,7 @@ public interface DatabaseConnection {
      * @param transaction the transaction to add.
      * @return a future that can be checked to determine when the transaction
      * has been successfully added.
-     * @throws IOException if some error occurs while while accessing the
-     * database.
+     * @throws IOException if some error occurs while accessing the database.
      * @throws IllegalStateException if no user is currently logged in or the
      * logged in user does not own the given account.
      */
@@ -119,8 +111,7 @@ public interface DatabaseConnection {
      * @param account the account to remove.
      * @return a future that can be checked to determine when the account has
      * been successfully removed.
-     * @throws IOException if some error occurs while while accessing the
-     * database.
+     * @throws IOException if some error occurs while accessing the database.
      * @throws IllegalStateException if no user is currently logged in or the
      * logged in user does not own the given account.
      */
@@ -135,8 +126,7 @@ public interface DatabaseConnection {
      * @param transaction the transaction to add.
      * @return a future that can be checked to determine when the transaction
      * has been successfully removed.
-     * @throws IOException if some error occurs while while accessing the
-     * database.
+     * @throws IOException if some error occurs while accessing the database.
      * @throws IllegalStateException if no user is currently logged in, the
      * logged in user does not own the given account, or the given account does
      * not have the given transaction.
@@ -152,8 +142,7 @@ public interface DatabaseConnection {
      * should match.
      * @return a future that can be checked to determine when the user has
      * been successfully updated.
-     * @throws IOException if some error occurs while while accessing the
-     * database.
+     * @throws IOException if some error occurs while accessing the database.
      * @throws IllegalStateException if no user is currently logged in.
      */
     Future<Void> updateUser(User nuw)
@@ -169,8 +158,7 @@ public interface DatabaseConnection {
      * account.
      * @return a future that can be checked to determine when the account has
      * been successfully updated.
-     * @throws IOException if some error occurs while while accessing the
-     * database.
+     * @throws IOException if some error occurs while accessing the database.
      * @throws IllegalStateException if no user is currently logged in or the
      * logged in user does not own the given account.
      */
@@ -188,8 +176,7 @@ public interface DatabaseConnection {
      * transaction.
      * @return a future that can be checked to determine when the transaction
      * has been successfully updated.
-     * @throws IOException if some error occurs while while accessing the
-     * database.
+     * @throws IOException if some error occurs while accessing the database.
      * @throws IllegalStateException if no user is currently logged in, the
      * logged in user does not own the given account, or the given account does
      * not have the given transaction.
@@ -203,8 +190,7 @@ public interface DatabaseConnection {
      * @param report the report to accept.
      * @return a future that returns the report after it has visited every
      * element.
-     * @throws IOException if some error occurs while while accessing the
-     * database.
+     * @throws IOException if some error occurs while accessing the database.
      */
     Future<Report> accept(Report report)
         throws IOException;
