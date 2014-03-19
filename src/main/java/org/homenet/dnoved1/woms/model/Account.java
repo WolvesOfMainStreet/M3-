@@ -20,16 +20,6 @@ public class Account implements Displayable, Serializable {
     private BigDecimal balance;
 
     /**
-     * Creates a new FinanceAccount with the given name and a starting balance
-     * of 0.
-     *
-     * @param name the full name for this FinanceAccount.
-     */
-    public Account(String name) {
-        this(name, new BigDecimal(0));
-    }
-
-    /**
      * Creates a new FinanceAccount with the given name and starting balance.
      *
      * @param name the full name for this FinanceAccount.
