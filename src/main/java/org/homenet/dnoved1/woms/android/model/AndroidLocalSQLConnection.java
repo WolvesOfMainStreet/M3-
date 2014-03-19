@@ -3,9 +3,10 @@ package org.homenet.dnoved1.woms.android.model;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
+import java.util.concurrent.Future;
 
+import org.homenet.dnoved1.woms.ImmediateFuture;
 import org.homenet.dnoved1.woms.model.Account;
 import org.homenet.dnoved1.woms.model.DatabaseConnection;
 import org.homenet.dnoved1.woms.model.Deposit;
@@ -25,6 +26,9 @@ import android.database.sqlite.SQLiteOpenHelper;
  * A database connection to an android phone's local SQLite database.
  */
 public class AndroidLocalSQLConnection implements DatabaseConnection {
+
+    // TODO: consider running database requests in a separate thread. Not
+    //       necessary as long as the total data remains relatively small.
 
     /**The current local sqlite database version.*/
     private static final int DATABASE_VERSION = 5;
@@ -140,7 +144,7 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
     }
 
     @Override
-    public boolean login(User user) {
+    public Future<Boolean> login(User user) {
         if (currentUser != null) {
             logout();
         }
@@ -160,31 +164,34 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
             currentUser = user;
         }
 
-        return loggedIn;
+        return new ImmediateFuture<Boolean>(Boolean.valueOf(loggedIn));
     }
 
     @Override
-    public void logout() {
+    public Future<Void> logout() {
         currentUser = null;
+        return ImmediateFuture.VOID_FUTURE;
     }
 
     @Override
-    public boolean register(User user) {
+    public Future<Boolean> register(User user) {
         ContentValues cv = new ContentValues();
         cv.put(KEY_USER_USERNAME, user.getUsername());
         cv.put(KEY_USER_PASSWORD, user.getPassword());
 
         SQLiteDatabase db = sqlitedb.getWritableDatabase();
         long rowID = db.insert(TABLE_USER, null, cv);
-        return rowID != -1;
+        boolean success = rowID != -1;
+        return new ImmediateFuture<Boolean>(Boolean.valueOf(success));
     }
 
     @Override
-    public void removeUser() throws IllegalStateException {
+    public Future<Void> removeUser() throws IllegalStateException {
         checkUserLoggedIn();
 
         // First delete all the user's accounts
-        for (Account account: getAllAccounts()) {
+        Collection<Account> accounts = ((ImmediateFuture<Collection<Account>>) getAllAccounts()).get();
+        for (Account account: accounts) {
             removeAccount(account);
         }
 
@@ -195,15 +202,16 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
         SQLiteDatabase db = sqlitedb.getWritableDatabase();
         db.delete(TABLE_USER, String.format(WHERE_STRING, whereArgs), null);
         logout();
+        return ImmediateFuture.VOID_FUTURE;
     }
 
     @Override
-    public Collection<Account> getAllAccounts() throws IllegalStateException {
+    public Future<Collection<Account>> getAllAccounts() throws IllegalStateException {
         checkUserLoggedIn();
 
         int userID = getUserID(currentUser);
         if (userID == -1) {
-            return Collections.emptyList();
+            throw new IllegalStateException("Current user cannot be found in database.");
         }
 
         Object[] whereArgs = new Object[] {
@@ -227,16 +235,16 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
             }
         }
 
-        return accounts;
+        return new ImmediateFuture<Collection<Account>>(accounts);
     }
 
     @Override
-    public Collection<Transaction> getAllTransactions(Account account) throws IllegalStateException, IllegalArgumentException {
+    public Future<Collection<Transaction>> getAllTransactions(Account account) throws IllegalStateException {
         checkUserLoggedIn();
 
         int accountID = getAccountID(currentUser, account);
         if (accountID == -1) {
-            return Collections.emptyList();
+            throw new IllegalStateException("Current user does not own account " + account);
         }
 
         Object[] selectionArgs = new Object[] {
@@ -283,16 +291,16 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
             }
         }
 
-        return transactions;
+        return new ImmediateFuture<Collection<Transaction>>(transactions);
     }
 
     @Override
-    public void addAccount(Account account) throws IllegalStateException {
+    public Future<Void> addAccount(Account account) throws IllegalStateException {
         checkUserLoggedIn();
 
         int userID = getUserID(currentUser);
         if (userID == -1) {
-            return;
+            throw new IllegalStateException("Current user cannot be found in database.");
         }
 
         String name = account.getName();
@@ -305,15 +313,16 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
 
         SQLiteDatabase db = sqlitedb.getWritableDatabase();
         db.insert(TABLE_ACCOUNT, null, cv);
+        return ImmediateFuture.VOID_FUTURE;
     }
 
     @Override
-    public void addTransaction(Account account, Transaction transaction) throws IllegalStateException, IllegalArgumentException {
+    public Future<Void> addTransaction(Account account, Transaction transaction) throws IllegalStateException {
         checkUserLoggedIn();
 
         int accountID = getAccountID(currentUser, account);
         if (accountID == -1) {
-            throw new IllegalArgumentException();
+            throw new IllegalStateException("Current user does not own account " + account);
         }
 
         // Get the serializable data for the transaction
@@ -356,19 +365,22 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
             SQLiteDatabase db = sqlitedb.getWritableDatabase();
             db.insert(TABLE_TRANSACTION, null, cv);
         }
+
+        return ImmediateFuture.VOID_FUTURE;
     }
 
     @Override
-    public void removeAccount(Account account) throws IllegalStateException, IllegalArgumentException {
+    public Future<Void> removeAccount(Account account) throws IllegalStateException {
         checkUserLoggedIn();
 
         int userID = getUserID(currentUser);
         if (userID == -1) {
-            throw new IllegalArgumentException();
+            throw new IllegalStateException("Current user cannot be found in database.");
         }
 
         // First delete all transactions
-        for (Transaction transaction: getAllTransactions(account)) {
+        Collection<Transaction> transactions = ((ImmediateFuture<Collection<Transaction>>) getAllTransactions(account)).get();
+        for (Transaction transaction: transactions) {
             removeTransaction(account, transaction);
         }
 
@@ -378,15 +390,16 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
 
         SQLiteDatabase db = sqlitedb.getWritableDatabase();
         db.delete(TABLE_ACCOUNT, String.format(WHERE_INT_STRING, whereArgs), null);
+        return ImmediateFuture.VOID_FUTURE;
     }
 
     @Override
-    public void removeTransaction(Account account, Transaction transaction) throws IllegalStateException, IllegalArgumentException {
+    public Future<Void> removeTransaction(Account account, Transaction transaction) throws IllegalStateException {
         checkUserLoggedIn();
 
         int accountID = getAccountID(currentUser, account);
         if (accountID == -1) {
-            throw new IllegalArgumentException();
+            throw new IllegalStateException("Current user does not own account " + account);
         }
 
         Object[] whereArgs = new Object[] {
@@ -396,15 +409,16 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
 
         SQLiteDatabase db = sqlitedb.getWritableDatabase();
         db.delete(TABLE_TRANSACTION, String.format(WHERE_DOUBLE_INT, whereArgs), null);
+        return ImmediateFuture.VOID_FUTURE;
     }
 
     @Override
-    public void updateUser(User nuw) throws IllegalStateException {
+    public Future<Void> updateUser(User nuw) throws IllegalStateException {
         checkUserLoggedIn();
 
         int userID = getUserID(currentUser);
         if (userID == -1) {
-            throw new IllegalArgumentException();
+            throw new IllegalStateException("Current user cannot be found in database.");
         }
 
         Object[] whereArgs = new Object[] {
@@ -417,15 +431,16 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
 
         SQLiteDatabase db = sqlitedb.getWritableDatabase();
         db.update(TABLE_USER, cv, String.format(WHERE_INT, whereArgs), null);
+        return ImmediateFuture.VOID_FUTURE;
     }
 
     @Override
-    public void updateAccount(Account old, Account nuw) throws IllegalStateException, IllegalArgumentException {
+    public Future<Void> updateAccount(Account old, Account nuw) throws IllegalStateException {
         checkUserLoggedIn();
 
         int accountID = getAccountID(currentUser, old);
         if (accountID == -1) {
-            throw new IllegalArgumentException();
+            throw new IllegalStateException("Current user does not own account " + old);
         }
 
         Object[] whereArgs = new Object[] {
@@ -438,15 +453,19 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
 
         SQLiteDatabase db = sqlitedb.getWritableDatabase();
         db.update(TABLE_ACCOUNT, cv, String.format(WHERE_INT, whereArgs), null);
+        return ImmediateFuture.VOID_FUTURE;
     }
 
     @Override
-    public void updateTransaction(Account account, Transaction old, Transaction nuw) throws IllegalStateException, IllegalArgumentException {
+    public Future<Void> updateTransaction(Account account, Transaction old, Transaction nuw) throws IllegalStateException {
         checkUserLoggedIn();
 
         int transactionID = this.getTransactionID(currentUser, account, old);
         if (transactionID == -1) {
-            throw new IllegalArgumentException();
+            throw new IllegalStateException(
+                    "Current user does not own account "
+                    + account
+                    + ", or that account does not have transaction " + old);
         }
 
         Object[] whereArgs = new Object[] {
@@ -472,28 +491,31 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
             cv.put(KEY_TRANSACTION_WITHDRAWAL_CATEGORY, withdrawal.getExpenseCategory().name());
         } else {
             System.err.println("Unknown transaction class " + nuw.getClass().getName() + '.');
-            return;
+            return ImmediateFuture.VOID_FUTURE;
         }
 
         SQLiteDatabase db = sqlitedb.getWritableDatabase();
         db.update(TABLE_TRANSACTION, cv, String.format(WHERE_INT, whereArgs), null);
+        return ImmediateFuture.VOID_FUTURE;
     }
 
     @Override
-    public Report accept(Report report) {
+    public Future<Report> accept(Report report) {
         for (User user: getAllUsers()) {
             report.visit(user);
 
-            for (Account account: getAllAccounts()) {
+            Collection<Account> accounts = ((ImmediateFuture<Collection<Account>>) getAllAccounts()).get();
+            for (Account account: accounts) {
                 report.visit(account);
 
-                for (Transaction transaction: getAllTransactions(account)) {
+                Collection<Transaction> transactions = ((ImmediateFuture<Collection<Transaction>>) getAllTransactions(account)).get();
+                for (Transaction transaction: transactions) {
                     report.visit(transaction);
                 }
             }
         }
 
-        return report;
+        return new ImmediateFuture<Report>(report);
     }
 
     /**
