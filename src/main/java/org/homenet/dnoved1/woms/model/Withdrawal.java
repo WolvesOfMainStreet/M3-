@@ -12,6 +12,9 @@ import java.util.Map;
  */
 public class Withdrawal extends Transaction {
 
+    /**Serial version.*/
+    private static final long serialVersionUID = 1L;
+
     /**The save key for this withdrawal's reason field.*/
     public static final String SAVE_KEY_REASON = "reason";
     /**The save key for this withdrawal's expense type field.*/
