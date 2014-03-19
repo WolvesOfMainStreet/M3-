@@ -55,19 +55,6 @@ public class User implements Displayable, Serializable, SerializableData {
         return password;
     }
 
-    /**
-     * A convenience method for checking if a username and password matches
-     * this account.
-     *
-     * @param username the username to check.
-     * @param password the password to check.
-     * @return true if the given username and password match this account,
-     * false if they do not.
-     */
-    public boolean matches(String username, String password) {
-        return this.username.equals(username) && this.password.equals(password);
-    }
-
     @Override
     public String toString() {
         return oneLineString();
