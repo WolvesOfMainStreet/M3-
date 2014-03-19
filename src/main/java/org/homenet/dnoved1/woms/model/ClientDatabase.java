@@ -1,16 +1,31 @@
 package org.homenet.dnoved1.woms.model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
+import org.homenet.dnoved1.woms.Consumer;
+import org.homenet.dnoved1.woms.ImmediateFuture;
+import org.homenet.dnoved1.woms.Pair;
 import org.homenet.dnoved1.woms.model.report.Report;
 
 /**
- * The client database for applications.
+ * The client database for applications. Depends on some other database
+ * connection for getting the actual data, but will keep a cache of accounts
+ * and transactions for the currently logged in user.
  */
 public final class ClientDatabase implements DatabaseConnection {
+
+    // TODO: make sure synchronized access to accounts, transactions, etc is
+    //       correct.
+    // TODO: do something with all the possible exceptions that occur inside
+    //       Runnables and Consumers.
 
     /**The current instance of the client database.*/
     private static ClientDatabase instance;
@@ -19,6 +34,27 @@ public final class ClientDatabase implements DatabaseConnection {
      * The backing connection that the client database uses to get its data.
      */
     private DatabaseConnection backingConnection;
+
+    /**
+     * A separate thread that will constantly check if requested futures are
+     * done, caching the result when they are.
+     *
+     * @see #futureConsumers
+     * @see ConsumerFeeder
+     */
+    private Thread futureUnwrapper;
+
+    /**
+     * A list of requested futures and consumers of those futures' results
+     * created by this class. A list of pairs is used instead of a map so
+     * that access can be made without synchronizing. This is possible by
+     * iterating over a snapshot of the list and only removing during that
+     * iteration.
+     *
+     * @see #futureUnwrapper
+     * @see ConsumerFeeder
+     */
+    private List<Pair<Future<?>, Consumer<?>>> futureConsumers;
 
     /**The currently logged in user.*/
     private User currentUser;
@@ -38,6 +74,9 @@ public final class ClientDatabase implements DatabaseConnection {
      */
     private Collection<Account> accounts;
 
+    /**A lock for {@link #accounts}, since it is null when it is empty.*/
+    private Object accountLock = new Object();
+
     /**
      * A map of the currently logged in user's accounts to a cache of its
      * transactions. Each account's transaction cache may be null until they
@@ -55,16 +94,28 @@ public final class ClientDatabase implements DatabaseConnection {
         this.transactions = new HashMap<Account, Collection<Transaction>>();
         this.accountObservers = new ArrayList<DataSetObserver<Account>>();
         this.transactionObservers = new HashMap<Account, Collection<DataSetObserver<Transaction>>>();
+
+        // Use a linked list for easy removals in the middle of the list.
+        this.futureConsumers = new LinkedList<Pair<Future<?>, Consumer<?>>>();
+        this.futureUnwrapper = new Thread(new ConsumerFeeder());
+        // Daemon so that it will stop when the application stops.
+        this.futureUnwrapper.setDaemon(true);
+        this.futureUnwrapper.start();
     }
 
     /**
      * Creates the client database and connects it to the given backing
-     * connection. The client database can be recreated any number of times.
+     * connection.
      *
      * @param connection the backing connection the client database will use to
      * get its data from.
+     * @throws IllegalStateException if the client database has previously been
+     * created.
      */
-    public static void create(DatabaseConnection connection) {
+    public static synchronized void create(DatabaseConnection connection) throws IllegalStateException {
+        if (instance != null) {
+            throw new IllegalStateException("Client has already been created.");
+        }
         instance = new ClientDatabase(connection);
     }
 
@@ -169,9 +220,21 @@ public final class ClientDatabase implements DatabaseConnection {
      *
      * @param observer the observer to register.
      */
-    public void registerAccountsObserver(DataSetObserver<Account> observer) {
+    public void registerAccountsObserver(final DataSetObserver<Account> observer) {
         accountObservers.add(observer);
-        observer.update(getAllAccounts());
+
+        try {
+            addFutureConsumer(getAllAccounts(), new Consumer<Collection<Account>>() {
+                @Override
+                public void accept(Collection<Account> t) {
+                    observer.update(t);
+                }
+            });
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -182,33 +245,56 @@ public final class ClientDatabase implements DatabaseConnection {
      * @param account the account whose transactions should be observed.
      * @param observer the observer to register.
      */
-    public void registerTransactionsObserver(Account account, DataSetObserver<Transaction> observer) {
+    public void registerTransactionsObserver(final Account account, final DataSetObserver<Transaction> observer) {
         Collection<DataSetObserver<Transaction>> observers = transactionObservers.get(account);
         if (observers == null) {
             observers = new ArrayList<DataSetObserver<Transaction>>();
             transactionObservers.put(account, observers);
         }
         observers.add(observer);
-        observer.update(getAllTransactions(account));
+
+        try {
+            addFutureConsumer(getAllTransactions(account), new Consumer<Collection<Transaction>>() {
+                @Override
+                public void accept(Collection<Transaction> t) {
+                    observer.update(t);
+                }
+            });
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public boolean login(User user) {
+    public Future<Boolean> login(final User user) throws IOException {
         if (currentUser != null) {
             logout();
         }
 
-        boolean loggedIn = backingConnection.login(user);
-        if (loggedIn) {
-            currentUser = user;
-            return true;
-        } else {
-            return false;
-        }
+        Future<Boolean> result = backingConnection.login(user);
+        Consumer<Boolean> consumer = new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean loggedIn) {
+                // TODO: may need synchronization on a current user lock
+
+                // currentUser may not be null at this point if some other
+                // login request completed first. If so, don't overwrite.
+                if (currentUser == null && loggedIn) {
+                    currentUser = user;
+                }
+            }
+        };
+
+        addFutureConsumer(result, consumer);
+        return result;
     }
 
     @Override
-    public void logout() {
+    public Future<Void> logout() throws IOException {
+        Future<Void> result = backingConnection.logout();
+
         // Clear the current selections
         clearCurrentTransaction();
         clearCurrentAccount();
@@ -222,177 +308,339 @@ public final class ClientDatabase implements DatabaseConnection {
         transactionObservers.clear();
         accountObservers.clear();
 
-        backingConnection.logout();
+        return result;
     }
 
     @Override
-    public boolean register(User user) {
+    public Future<Boolean> register(final User user) throws IOException {
         return backingConnection.register(user);
     }
 
     @Override
-    public void removeUser() throws IllegalStateException {
-        checkUserLoggedIn();
-        backingConnection.removeUser();
+    public Future<Void> removeUser() throws IOException, IllegalStateException {
+        Future<Void> result = backingConnection.removeUser();
+        logout();
+        return result;
     }
 
     @Override
-    public Collection<Account> getAllAccounts() throws IllegalStateException {
-        checkUserLoggedIn();
-        if (accounts == null) {
-            accounts = backingConnection.getAllAccounts();
+    public synchronized Future<Collection<Account>> getAllAccounts() throws IOException, IllegalStateException {
+        // If we already have a cache of the accounts, return that immediately.
+        // Otherwise get the results from the backing connection. When the
+        // result is retrieved, add the accounts to the cache.
+
+        synchronized (accountLock) {
+            if (accounts != null) {
+                return new ImmediateFuture<Collection<Account>>(accounts);
+            } else {
+                Future<Collection<Account>> result = backingConnection.getAllAccounts();
+                Consumer<Collection<Account>> consumer = new Consumer<Collection<Account>>() {
+                    @Override
+                    public void accept(Collection<Account> t) {
+                        // The account cache may no longer be null at this
+                        // point if some other request completed first. Most
+                        // likely this other request was made after this one,
+                        // so don't overwrite, but log it.
+                        synchronized (accountLock) {
+                            if (accounts != null) {
+                                System.err.println(
+                                    "Account cache no longer empty. Currently the cache holds\n"
+                                    + accounts
+                                    + "\nwhile this request contains\n" + t);
+                            } else {
+                                accounts = new ArrayList<Account>();
+                                accounts.addAll(t);
+                            }
+                        }
+                    }
+                };
+
+                addFutureConsumer(result, consumer);
+                return result;
+            }
         }
-        return accounts;
     }
 
     @Override
-    public Collection<Transaction> getAllTransactions(Account account) throws IllegalStateException, IllegalArgumentException {
-        checkUserLoggedIn();
-        checkUserOwnsAccount(account);
+    public Future<Collection<Transaction>> getAllTransactions(final Account account) throws IOException, IllegalStateException {
+        // If we already have a cache of the transactions, return that
+        // immediately. Otherwise get the results from the backing connection.
+        // When the result is retrieved, add the transactions to the cache.
 
-        Collection<Transaction> accountTransactions = transactions.get(account);
-        if (accountTransactions == null) {
-            accountTransactions = backingConnection.getAllTransactions(account);
-            transactions.put(account, accountTransactions);
+        synchronized (transactions) {
+            Collection<Transaction> accountTransactions = transactions.get(account);
+            if (accountTransactions != null) {
+                return new ImmediateFuture<Collection<Transaction>>(accountTransactions);
+            } else {
+                Future<Collection<Transaction>> result = backingConnection.getAllTransactions(account);
+                Consumer<Collection<Transaction>> consumer = new Consumer<Collection<Transaction>>() {
+                    @Override
+                    public void accept(Collection<Transaction> t) {
+                        // The transaction cache may no longer be null at this
+                        // point if some other request completed first. Most
+                        // likely this other request was made after this one,
+                        // so don't overwrite, but log it.
+                        synchronized (transactions) {
+                            Collection<Transaction> accountTransactions = transactions.get(account);
+                            if (accountTransactions != null) {
+                                System.err.println(
+                                    "Transaction cache no longer empty. Currently the cache holds\n"
+                                    + accountTransactions
+                                    + "\nwhile this request contains\n" + t);
+                            } else {
+                                accountTransactions = new ArrayList<Transaction>();
+                                accountTransactions.addAll(t);
+                                transactions.put(account, accountTransactions);
+                            }
+                        }
+                    }
+                };
+
+                addFutureConsumer(result, consumer);
+                return result;
+            }
         }
-        return accountTransactions;
     }
 
     @Override
-    public void addAccount(Account account) throws IllegalStateException {
-        checkUserLoggedIn();
-        accounts.add(account);
-        updateAccountObservers();
-        backingConnection.addAccount(account);
-    }
+    public Future<Void> addAccount(final Account account) throws IOException, IllegalStateException {
+        Future<Void> result = backingConnection.addAccount(account);
 
-    @Override
-    public void addTransaction(Account account, Transaction transaction) throws IllegalStateException, IllegalArgumentException {
-        checkUserLoggedIn();
-        checkUserOwnsAccount(account);
+        Runnable behavior = new Runnable() {
+            @Override
+            public void run() {
+                synchronized (accountLock) {
+                    try {
+                        accounts.add(account);
+                        updateAccountObservers();
+                    } catch (IllegalStateException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
 
-        Collection<Transaction> accountTransactions = transactions.get(account);
-        if (accountTransactions == null) {
-            accountTransactions = new ArrayList<Transaction>();
-            transactions.put(account, accountTransactions);
+        // If the accounts cache is null, get the accounts from the backing
+        // connection first. Once that has completed, add the new account.
+
+        synchronized (accountLock) {
+            if (accounts == null) {
+                addFutureConsumer(getAllAccounts(), new AccountsDependentBehavior(behavior));
+            } else {
+                behavior.run();
+            }
         }
-        accountTransactions.add(transaction);
-        updateTransactionObservers(account);
-        transaction.applyToAccount(account);
-        updateAccount(account, account);
-        updateAccountObservers();
-        backingConnection.addTransaction(account, transaction);
+
+        return result;
     }
 
     @Override
-    public void removeAccount(Account account) throws IllegalStateException, IllegalArgumentException {
-        checkUserLoggedIn();
-        checkUserOwnsAccount(account);
+    public Future<Void> addTransaction(final Account account, final Transaction transaction) throws IOException, IllegalStateException {
+        Future<Void> result = backingConnection.addTransaction(account, transaction);
 
-        accounts.remove(account);
-        transactions.remove(account);
-        updateAccountObservers();
-        backingConnection.removeAccount(account);
-    }
+        Runnable behavior = new Runnable() {
+            @Override
+            public void run() {
+                synchronized (transactions) {
+                    try {
+                        Collection<Transaction> accountTransactions = transactions.get(account);
+                        accountTransactions.add(transaction);
+                        updateTransactionObservers(account);
 
-    @Override
-    public void removeTransaction(Account account, Transaction transaction) throws IllegalStateException, IllegalArgumentException {
-        checkUserLoggedIn();
-        checkUserOwnsAccount(account);
-        checkAccountContainsTransaction(account, transaction);
+                        transaction.applyToAccount(account);
+                        updateAccount(account, account);
+                        updateAccountObservers();
+                    } catch (IllegalStateException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
 
-        Collection<Transaction> accountTransactions = transactions.get(account);
-        if (accountTransactions != null) {
-            accountTransactions.remove(transaction);
+        // If the transaction cache is null, get the transactions from the
+        // backing connection first. Once that has completed, add the new
+        // transaction.
+
+        synchronized (transactions) {
+            Collection<Transaction> accountTransactions = transactions.get(account);
+            if (accountTransactions == null) {
+                addFutureConsumer(getAllTransactions(account), new TransactionsDependentBehavior(account, behavior));
+            } else {
+                behavior.run();
+            }
         }
-        updateTransactionObservers(account);
-        backingConnection.removeTransaction(account, transaction);
+
+        return result;
     }
 
     @Override
-    public void updateUser(User nuw) throws IllegalStateException {
-        checkUserLoggedIn();
+    public Future<Void> removeAccount(final Account account) throws IOException, IllegalStateException {
+        Future<Void> result = backingConnection.removeAccount(account);
+
+        Runnable behavior = new Runnable() {
+            @Override
+            public void run() {
+                synchronized (accountLock) {
+                    try {
+                        accounts.remove(account);
+                        transactions.remove(account);
+                        updateAccountObservers();
+                    } catch (IllegalStateException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+
+        // If the accounts cache is null, get the accounts from the backing
+        // connection first. Once that has completed, add the new account.
+
+        synchronized (accountLock) {
+            if (accounts == null) {
+                addFutureConsumer(getAllAccounts(), new AccountsDependentBehavior(behavior));
+            } else {
+                behavior.run();
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public Future<Void> removeTransaction(final Account account, final Transaction transaction) throws IOException, IllegalStateException {
+        Future<Void> result = backingConnection.removeTransaction(account, transaction);
+
+        Runnable behavior = new Runnable() {
+            @Override
+            public void run() {
+                synchronized (transactions) {
+                    try {
+                        Collection<Transaction> accountTransactions = transactions.get(account);
+                        accountTransactions.remove(transaction);
+                        updateTransactionObservers(account);
+                    } catch (IllegalStateException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+
+        // If the transaction cache is null, get the transactions from the
+        // backing connection first. Once that has completed, add the new
+        // transaction.
+
+        synchronized (transactions) {
+            Collection<Transaction> accountTransactions = transactions.get(account);
+            if (accountTransactions == null) {
+                addFutureConsumer(getAllTransactions(account), new TransactionsDependentBehavior(account, behavior));
+            } else {
+                behavior.run();
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public Future<Void> updateUser(final User nuw) throws IOException, IllegalStateException {
+        Future<Void> result = backingConnection.updateUser(nuw);
         currentUser = nuw;
-        backingConnection.updateUser(nuw);
+        return result;
     }
 
     @Override
-    public void updateAccount(Account old, Account nuw) throws IllegalStateException, IllegalArgumentException {
-        checkUserLoggedIn();
-        checkUserOwnsAccount(old);
+    public Future<Void> updateAccount(final Account old, final Account nuw) throws IOException, IllegalStateException {
+        Future<Void> result = backingConnection.updateAccount(old, nuw);
 
-        accounts.remove(old);
-        accounts.add(nuw);
-        updateAccountObservers();
-        backingConnection.updateAccount(old, nuw);
-    }
+        Runnable behavior = new Runnable() {
+            @Override
+            public void run() {
+                synchronized (accountLock) {
+                    try {
+                        accounts.remove(old);
+                        accounts.add(nuw);
+                        updateAccountObservers();
+                    } catch (IllegalStateException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
 
-    @Override
-    public void updateTransaction(Account account, Transaction old, Transaction nuw) throws IllegalStateException, IllegalArgumentException {
-        checkUserLoggedIn();
-        checkUserOwnsAccount(account);
-        checkAccountContainsTransaction(account, old);
-
-        Collection<Transaction> accountTransactions = transactions.get(account);
-        if (accountTransactions != null) {
-            accountTransactions.remove(old);
-            accountTransactions.add(nuw);
+        synchronized (accountLock) {
+            if (accounts == null) {
+                addFutureConsumer(getAllAccounts(), new AccountsDependentBehavior(behavior));
+            } else {
+                behavior.run();
+            }
         }
-        updateTransactionObservers(account);
-        backingConnection.updateTransaction(account, old, nuw);
+
+        return result;
     }
 
     @Override
-    public Report accept(Report report) {
+    public Future<Void> updateTransaction(final Account account, final Transaction old, final Transaction nuw) throws IOException, IllegalStateException {
+        Future<Void> result = backingConnection.updateTransaction(account, old, nuw);
+
+        Runnable behavior = new Runnable() {
+            @Override
+            public void run() {
+                synchronized (transactions) {
+                    try {
+                        Collection<Transaction> accountTransactions = transactions.get(account);
+                        accountTransactions.remove(old);
+                        accountTransactions.add(nuw);
+                        updateTransactionObservers(account);
+                    } catch (IllegalStateException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+
+        synchronized (transactions) {
+            Collection<Transaction> accountTransactions = transactions.get(account);
+            if (accountTransactions == null) {
+                addFutureConsumer(getAllTransactions(account), new TransactionsDependentBehavior(account, behavior));
+            } else {
+                behavior.run();
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public Future<Report> accept(final Report report) throws IOException {
         return backingConnection.accept(report);
     }
 
     /**
-     * Checks that a user is currently logged in.
-     *
+     * Updates all account observers with the current set of accounts.
+     * @throws IOException if some error occurs while accessing the database.
      * @throws IllegalStateException if no user is currently logged in.
      */
-    private void checkUserLoggedIn() throws IllegalStateException {
-        if (currentUser == null) {
-            throw new IllegalStateException("No user currently logged in.");
-        }
-    }
-
-    /**
-     * Checks that the currently logged in user owns the given account.
-     *
-     * @param account the account to check for ownership of.
-     * @throws IllegalArgumentException if the current user does not own the
-     * given account.
-     */
-    private void checkUserOwnsAccount(Account account) throws IllegalArgumentException {
-        if (!getAllAccounts().contains(account)) {
-            throw new IllegalArgumentException("Currently logged in user does not own account " + account + '.');
-        }
-    }
-
-    /**
-     * Checks that the given account contains the given transaction.
-     *
-     * @param account the account to that is being checked for ownership of the
-     * given transaction.
-     * @param transaction the transaction to check for ownership of.
-     * @throws IllegalArgumentException if the given account does not contain
-     * the given transaction.
-     */
-    private void checkAccountContainsTransaction(Account account, Transaction transaction) throws IllegalArgumentException {
-        if (!getAllTransactions(account).contains(transaction)) {
-            throw new IllegalArgumentException("Account " + account + " does not contain transaction " + transaction + '.');
-        }
-    }
-
-    /**
-     * Updates all account observers with the current set of accounts.
-     */
-    private void updateAccountObservers() {
-        for (DataSetObserver<Account> observer: accountObservers) {
-            observer.update(getAllAccounts());
-        }
+    private void updateAccountObservers() throws IllegalStateException, IOException {
+        addFutureConsumer(getAllAccounts(), new Consumer<Collection<Account>>() {
+            @Override
+            public void accept(Collection<Account> t) {
+                for (DataSetObserver<Account> observer: accountObservers) {
+                    observer.update(t);
+                }
+            }
+        });
     }
 
     /**
@@ -400,13 +648,183 @@ public final class ClientDatabase implements DatabaseConnection {
      * account's transactions.
      *
      * @param account the account whose transactions are being observed.
+     * @throws IOException if some error occurs while accessing the database.
+     * @throws IllegalStateException if no user is currently logged in or the
+     * logged in user does not own the given account.
      */
-    private void updateTransactionObservers(Account account) {
-        Collection<DataSetObserver<Transaction>> observers = transactionObservers.get(account);
-        if (observers != null) {
-            for (DataSetObserver<Transaction> observer: observers) {
-                observer.update(getAllTransactions(account));
+    private void updateTransactionObservers(final Account account) throws IllegalStateException, IOException {
+        addFutureConsumer(getAllTransactions(account), new Consumer<Collection<Transaction>>() {
+            @Override
+            public void accept(Collection<Transaction> t) {
+                Collection<DataSetObserver<Transaction>> observers = transactionObservers.get(account);
+                if (observers != null) {
+                    for (DataSetObserver<Transaction> observer: observers) {
+                        observer.update(t);
+                    }
+                }
             }
+        });
+    }
+
+    /**
+     * Adds a future and its associated consumer to {@link #futureConsumers}.
+     *
+     * @param future the future who's result the consumer will accept.
+     * @param consumer the consumer which will accept the future's result.
+     * @param <T> the kind of result the future should return and the parameter
+     * the consumer accepts.
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private <T> void addFutureConsumer(Future<T> future, Consumer<T> consumer) {
+        Pair futureConsumer = new Pair<Future<T>, Consumer<T>>(future, consumer);
+        futureConsumers.add(futureConsumer);
+    }
+
+    /**
+     * A consumer of the set of all accounts for the current user. This
+     * consumer will cache these accounts if the cache is empty. Additionally,
+     * it will execute some other behavior which is dependent on a cache of the
+     * accounts.
+     */
+    private class AccountsDependentBehavior implements Consumer<Collection<Account>> {
+
+        /**The behavior to execute once the accounts have been retrieved.*/
+        private Runnable behavior;
+
+        /**
+         * Creates a new account dependent behavior with the given behavior.
+         *
+         * @param behavior the account dependent behavior. Must not be null.
+         */
+        private AccountsDependentBehavior(Runnable behavior) {
+            this.behavior = behavior;
+        }
+
+        @Override
+        public void accept(Collection<Account> t) {
+            // The account cache should not be empty at this point.
+            // If it is, add all the accounts and log the error.
+            synchronized (accountLock) {
+                if (accounts == null) {
+                    System.err.println("Accounts cache null while adding account.");
+                    accounts = new ArrayList<Account>();
+                    accounts.addAll(t);
+                }
+            }
+
+            behavior.run();
+        }
+    }
+
+    /**
+     * A consumer of the set of all transactions of an account for the current
+     * user. This consumer will cache these transactions if the cache for the
+     * account is empty. Additionally, it will execute some other behavior
+     * which is dependent on a cache of the account's transactions.
+     */
+    private class TransactionsDependentBehavior implements Consumer<Collection<Transaction>> {
+
+        /**The account to get transactions for.*/
+        private Account account;
+        /**The behavior to execute once the transactions have been retrieved.*/
+        private Runnable behavior;
+
+        /**
+         * Creates a new transaction dependent behavior with the given
+         * behavior.
+         *
+         * @param account the account who to get transactions for.
+         * @param behavior the transaction dependent behavior. Must not be
+         * null.
+         */
+        private TransactionsDependentBehavior(Account account, Runnable behavior) {
+            this.account = account;
+            this.behavior = behavior;
+        }
+
+        @Override
+        public void accept(Collection<Transaction> t) {
+            // The transaction cache should not be empty at this point.
+            // If it is, add all the transactions and log the error.
+
+            synchronized (transactions) {
+                Collection<Transaction> accountTransactions = transactions.get(account);
+                if (accountTransactions == null) {
+                    System.err.println("Transactions cache null while adding transaction.");
+                    accountTransactions = new ArrayList<Transaction>();
+                    transactions.put(account, accountTransactions);
+                    accountTransactions.addAll(t);
+                }
+            }
+
+            behavior.run();
+        }
+    }
+
+    /**
+     * A runnable which feeds futures to their associated consumers. Intended
+     * to be run from a separate thread.
+     */
+    private class ConsumerFeeder implements Runnable {
+
+        /**Determines how long the thread running this should sleep between iterations.*/
+        private static final long WAIT_PERIOD = 100;
+
+        @Override
+        public void run() {
+            while (true) {
+                int sizeNow = futureConsumers.size();
+                int index = 0;
+
+                while (index < sizeNow) {
+                    Pair<Future<?>, Consumer<?>> futureConsumer = futureConsumers.get(index);
+                    Future<?> future = futureConsumer.first;
+
+                    if (future.isCancelled()) {
+                        futureConsumers.remove(index);
+                        sizeNow -= 1;
+                    } else if (future.isDone()) {
+                        try {
+                            feed(futureConsumer);
+                        } catch (InterruptedException e) {
+                            // Shouldn't happen, as the result is already done.
+                            // If it does happen however, just continue.
+                        } catch (ExecutionException e) {
+                            // TODO: This needs to be handled, but here is not
+                            //       the appropriate place.
+                            e.printStackTrace();
+                        }
+
+                        futureConsumers.remove(index);
+                        sizeNow -= 1;
+                    } else {
+                        // Only increment if the future is not done (if it is
+                        // done, it will be removed, so the index should be the same)
+                        index += 1;
+                    }
+                }
+
+                try {
+                    Thread.sleep(WAIT_PERIOD);
+                } catch (InterruptedException e) {
+                    // Just continue with the next iteration.
+                }
+            }
+        }
+
+        /**
+         * Feeds the result of a future to a matching consumer.
+         *
+         * @param futureConsumer a pair matching a future to its consumer.
+         * @param <T> a generic parameter to allow casting from ? to Object.
+         * @throws InterruptedException see {@link Future#get()}.
+         * @throws ExecutionException see {@link Future#get()}.
+         */
+        @SuppressWarnings("unchecked")
+        private <T> void feed(Pair<Future<?>, Consumer<?>> futureConsumer) throws InterruptedException, ExecutionException {
+            Future<T> future = (Future<T>) futureConsumer.first;
+            Consumer<T> consumer = (Consumer<T>) futureConsumer.second;
+            consumer.accept(future.get());
         }
     }
 }
