@@ -1,5 +1,6 @@
 package org.homenet.dnoved1.woms.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.NumberFormat;
@@ -9,7 +10,10 @@ import java.util.Map;
  * A financial account which stores information such as transactions and which
  * can generate reports based on them.
  */
-public class Account implements Displayable, SerializableData {
+public class Account implements Displayable, Serializable, SerializableData {
+
+    /**Serial version.*/
+    private static final long serialVersionUID = 1L;
 
     /**The save key for this account's name field.*/
     public static final String SAVE_KEY_NAME = "account-name";

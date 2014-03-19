@@ -12,6 +12,9 @@ import java.util.Map;
  */
 public class Deposit extends Transaction {
 
+    /**Serial version.*/
+    private static final long serialVersionUID = 1L;
+
     /**The save key for this deposit's source field.*/
     public static final String SAVE_KEY_SOURCE = "source";
 

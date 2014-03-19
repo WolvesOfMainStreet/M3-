@@ -1,5 +1,6 @@
 package org.homenet.dnoved1.woms.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.ParseException;
@@ -13,7 +14,10 @@ import java.util.Map;
  * {@link SerializableData} interface. This class handles the serialization
  * of its amount, time entered, and time effective fields.
  */
-public abstract class Transaction implements Displayable, SerializableData {
+public abstract class Transaction implements Displayable, Serializable, SerializableData {
+
+    /**Serial version.*/
+    protected static final long serialVersionUID = 1L;
 
     /**The save key for this transactions's amount field.*/
     public static final String SAVE_KEY_AMOUNT = "amount";

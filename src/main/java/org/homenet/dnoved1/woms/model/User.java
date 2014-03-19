@@ -1,11 +1,15 @@
 package org.homenet.dnoved1.woms.model;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * A user of this application.
  */
-public class User implements Displayable, SerializableData {
+public class User implements Displayable, Serializable, SerializableData {
+
+    /**Serial version.*/
+    private static final long serialVersionUID = 1L;
 
     /**The save key for this user's username field.*/
     public static final String SAVE_KEY_USERNAME = "user-username";
