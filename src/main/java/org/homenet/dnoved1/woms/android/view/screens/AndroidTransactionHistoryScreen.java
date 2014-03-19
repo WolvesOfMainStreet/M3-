@@ -42,7 +42,7 @@ public class AndroidTransactionHistoryScreen extends AndroidBaseScreen implement
 
         transactionList = new ArrayList<Transaction>();
         transactionListAdapter = new ArrayAdapter<Transaction>(this, R.layout.account_listing, transactionList);
-        ListView listview = (ListView) this.findViewById(R.id.transactionhistoryListTransaction);
+        ListView listview = getTransactionList();
         listview.setAdapter(transactionListAdapter);
         listview.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -78,12 +78,26 @@ public class AndroidTransactionHistoryScreen extends AndroidBaseScreen implement
     public DataSetObserver<Transaction> getTransactionListObserver() {
         return new DataSetObserver<Transaction>() {
             @Override
-            public void update(Collection<Transaction> dataset) {
-                //TODO: this can likely be done more efficiently
-                transactionList.clear();
-                transactionList.addAll(dataset);
-                transactionListAdapter.notifyDataSetChanged();
+            public void update(final Collection<Transaction> dataset) {
+                getTransactionList().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        //TODO: this can likely be done more efficiently
+                        transactionList.clear();
+                        transactionList.addAll(dataset);
+                        transactionListAdapter.notifyDataSetChanged();
+                    }
+                });
             }
         };
+    }
+
+    /**
+     * Returns the list view displaying this screen's transactions.
+     *
+     * @return the transaction list view.
+     */
+    private ListView getTransactionList() {
+        return (ListView) this.findViewById(R.id.transactionhistoryListTransaction);
     }
 }

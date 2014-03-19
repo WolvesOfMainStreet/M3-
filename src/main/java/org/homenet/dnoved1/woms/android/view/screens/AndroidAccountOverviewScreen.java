@@ -39,7 +39,7 @@ public class AndroidAccountOverviewScreen extends AndroidBaseScreen implements A
         // Initialize the account list view
         accountList = new ArrayList<Account>();
         accountListAdapter = new ArrayAdapter<Account>(this, R.layout.account_listing, accountList);
-        ListView listview = (ListView) this.findViewById(R.id.accountmanageListAccount);
+        ListView listview = getAccountList();
         listview.setAdapter(accountListAdapter);
         listview.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -65,12 +65,26 @@ public class AndroidAccountOverviewScreen extends AndroidBaseScreen implements A
     public DataSetObserver<Account> getAccountListObserver() {
         return new DataSetObserver<Account>() {
             @Override
-            public void update(Collection<Account> dataset) {
-                //TODO: this can likely be done more efficiently
-                accountList.clear();
-                accountList.addAll(dataset);
-                accountListAdapter.notifyDataSetChanged();
+            public void update(final Collection<Account> dataset) {
+                getAccountList().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        //TODO: this can likely be done more efficiently
+                        accountList.clear();
+                        accountList.addAll(dataset);
+                        accountListAdapter.notifyDataSetChanged();
+                    }
+                });
             }
         };
+    }
+
+    /**
+     * Returns the list view displaying this screen's accounts.
+     *
+     * @return the account list view.
+     */
+    private ListView getAccountList() {
+        return (ListView) this.findViewById(R.id.accountmanageListAccount);
     }
 }
