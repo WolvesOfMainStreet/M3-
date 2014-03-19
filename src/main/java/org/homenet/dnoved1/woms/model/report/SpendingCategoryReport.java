@@ -66,7 +66,7 @@ public class SpendingCategoryReport implements Report {
     @Override
     public void visit(Transaction transaction) {
         if (!user.equals(currentUser)
-                || !Transaction.TYPE_WITHDRAWAL.equals(transaction.getType())
+                || !(transaction instanceof Withdrawal)
                 || transaction.getTimeEffective().before(startPeriod)
                 || transaction.getTimeEffective().after(endPeriod)) {
             return;
