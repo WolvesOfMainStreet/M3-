@@ -1,30 +1,19 @@
 package org.homenet.dnoved1.woms.model;
 
 import java.io.Serializable;
-import java.util.Map;
 
 /**
  * A user of this application.
  */
-public class User implements Displayable, Serializable, SerializableData {
+public class User implements Displayable, Serializable {
 
     /**Serial version.*/
     private static final long serialVersionUID = 1L;
-
-    /**The save key for this user's username field.*/
-    public static final String SAVE_KEY_USERNAME = "user-username";
-    /**The save key for this user's password field.*/
-    public static final String SAVE_KEY_PASSWORD = "user-password";
 
     /**This user's username. Also the unique identifies for this object.*/
     private String username;
     /**This user's password.*/
     private String password;
-
-    /**
-     * For serialization, not for normal use.
-     */
-    public User() { }
 
     /**
      * Creates a new user object with the given username and password.
@@ -89,31 +78,5 @@ public class User implements Displayable, Serializable, SerializableData {
             "\tUsername: " + username,
             "\tPassword: " + password
         };
-    }
-
-    @Override
-    public Map<String, String> write(Map<String, String> writeData) {
-        writeData.put(SAVE_KEY_USERNAME, username);
-        writeData.put(SAVE_KEY_PASSWORD, password);
-        return writeData;
-    }
-
-    @Override
-    public void read(Map<String, String> readData) {
-        // Read username. Default to 'unknown'.
-        String username = readData.get(SAVE_KEY_USERNAME);
-        if (username == null) {
-            System.err.println("Error reading username, defaulting to 'unknown'.");
-            username = "unknown";
-        }
-        this.username = username;
-
-        // Read password. Default to 'pass123'.
-        String password = readData.get(SAVE_KEY_PASSWORD);
-        if (password == null) {
-            System.err.println("Error reading password for " + username + ", defaulting to 'pass123'.");
-            password = "pass123";
-        }
-        this.password = password;
     }
 }

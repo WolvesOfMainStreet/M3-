@@ -4,31 +4,20 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.NumberFormat;
-import java.util.Map;
 
 /**
  * A financial account which stores information such as transactions and which
  * can generate reports based on them.
  */
-public class Account implements Displayable, Serializable, SerializableData {
+public class Account implements Displayable, Serializable {
 
     /**Serial version.*/
     private static final long serialVersionUID = 1L;
-
-    /**The save key for this account's name field.*/
-    public static final String SAVE_KEY_NAME = "account-name";
-    /**The save key for this account's balance field.*/
-    public static final String SAVE_KEY_BALANCE = "account-balance";
 
     /**The name of this account. Also the unique identifier for this object.*/
     private String name;
     /**The current balance of this account.*/
     private BigDecimal balance;
-
-    /**
-     * For serialization, not for normal use.
-     */
-    public Account() { }
 
     /**
      * Creates a new FinanceAccount with the given name and a starting balance
@@ -130,31 +119,5 @@ public class Account implements Displayable, Serializable, SerializableData {
         }
         string += NumberFormat.getCurrencyInstance().format(balance.abs().doubleValue());
         return  string;
-    }
-
-    @Override
-    public Map<String, String> write(Map<String, String> writeData) {
-        writeData.put(SAVE_KEY_NAME, name);
-        writeData.put(SAVE_KEY_BALANCE, balance.toPlainString());
-        return writeData;
-    }
-
-    @Override
-    public void read(Map<String, String> readData) {
-        // Read account name. Default to 'Unknown'.
-        String name = readData.get(SAVE_KEY_NAME);
-        if (name == null) {
-            System.err.println("Error reading account name, defaulting to 'Unknown'.");
-            name = "Unknown";
-        }
-        this.name = name;
-
-        // Read account balance. Default to 0.
-        String balance = readData.get(SAVE_KEY_BALANCE);
-        if (balance == null) {
-            System.err.println("Error reading balance for " + name + ", defaulting to 0.");
-            balance = "0";
-        }
-        this.balance = new BigDecimal(balance, MathContext.DECIMAL32);
     }
 }
