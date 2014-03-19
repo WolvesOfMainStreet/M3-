@@ -39,8 +39,8 @@ public class Withdrawal extends Transaction {
     }
 
     @Override
-    public String getType() {
-        return Transaction.TYPE_WITHDRAWAL;
+    public Transaction.Type getType() {
+        return Transaction.Type.WITHDRAWAL;
     }
 
     /**

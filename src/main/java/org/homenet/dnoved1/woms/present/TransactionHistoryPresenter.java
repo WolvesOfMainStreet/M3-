@@ -35,7 +35,7 @@ public class TransactionHistoryPresenter {
      */
     public void onCreateDepositButtonPressed() {
         Map<String, String> args = new HashMap<String, String>();
-        args.put(TransactionCreationScreen.TRANSACTION_TYPE, Transaction.TYPE_DEPOSIT);
+        args.put(TransactionCreationScreen.TRANSACTION_TYPE, Transaction.Type.DEPOSIT.name());
         screen.open(DependencyManager.getImplementation(TransactionCreationScreen.class), args);
     }
 
@@ -45,7 +45,7 @@ public class TransactionHistoryPresenter {
      */
     public void onCreateWithdrawalButtonPressed() {
         Map<String, String> args = new HashMap<String, String>();
-        args.put(TransactionCreationScreen.TRANSACTION_TYPE, Transaction.TYPE_WITHDRAWAL);
+        args.put(TransactionCreationScreen.TRANSACTION_TYPE, Transaction.Type.WITHDRAWAL.name());
         screen.open(DependencyManager.getImplementation(TransactionCreationScreen.class), args);
     }
 

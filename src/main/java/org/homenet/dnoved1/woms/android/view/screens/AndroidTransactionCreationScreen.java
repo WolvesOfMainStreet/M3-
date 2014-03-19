@@ -47,16 +47,26 @@ public class AndroidTransactionCreationScreen extends AndroidBaseScreen implemen
 
         // Get arguments
         Bundle extras = this.getIntent().getExtras();
-        String type = extras.getString(TransactionCreationScreen.TRANSACTION_TYPE);
-        if (type == null) {
-            System.err.println("No transaction type specified, defaulting to deposit.");
-            type = Transaction.TYPE_DEPOSIT;
+        String typeString = extras.getString(TransactionCreationScreen.TRANSACTION_TYPE);
+        if (typeString == null) {
+            System.err.println("No transaction type specified, closing screen.");
+            this.close();
+            return;
+        }
+
+        Transaction.Type type;
+        try {
+            type = Transaction.Type.valueOf(typeString);
+        } catch (IllegalArgumentException e) {
+            System.err.println("Unknown transaction type " + typeString + ", closing screen.");
+            this.close();
+            return;
         }
 
         EditText reasonField = (EditText) this.findViewById(R.id.transactioncreateFieldSource);
-        if (type.equals(Transaction.TYPE_DEPOSIT)) {
+        if (type == Transaction.Type.DEPOSIT) {
             reasonField.setHint(R.string.source);
-        } else if (type.equals(Transaction.TYPE_WITHDRAWAL)) {
+        } else if (type == Transaction.Type.WITHDRAWAL) {
             reasonField.setHint(R.string.reason);
         }
 

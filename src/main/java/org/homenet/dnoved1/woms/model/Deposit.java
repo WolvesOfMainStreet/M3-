@@ -34,8 +34,8 @@ public class Deposit extends Transaction {
     }
 
     @Override
-    public String getType() {
-        return Transaction.TYPE_DEPOSIT;
+    public Transaction.Type getType() {
+        return Transaction.Type.DEPOSIT;
     }
 
     /**

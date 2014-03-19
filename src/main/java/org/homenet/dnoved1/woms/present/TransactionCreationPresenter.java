@@ -19,7 +19,7 @@ public class TransactionCreationPresenter {
     /**The screen that this is presenting.*/
     protected TransactionCreationScreen screen;
     /**The type of transaction being created. See {@link TransactionCreationScreen#TRANSACTION_TYPE}.*/
-    protected String transactionType;
+    protected Transaction.Type transactionType;
     /**The account for which the new transaction is being created for.*/
     protected Account account;
 
@@ -33,13 +33,13 @@ public class TransactionCreationPresenter {
      * @param transactionType the type of transaction being created. See
      * {@link TransactionCreationScreen#TRANSACTION_TYPE}.
      */
-    public TransactionCreationPresenter(TransactionCreationScreen screen, Account account, String transactionType) {
+    public TransactionCreationPresenter(TransactionCreationScreen screen, Account account, Transaction.Type transactionType) {
         this.screen = screen;
         this.transactionType = transactionType;
         this.account = account;
 
         // Set the spinner contents if type is withdrawal
-        if (Transaction.TYPE_WITHDRAWAL.equals(transactionType)) {
+        if (transactionType == Transaction.Type.WITHDRAWAL) {
             ExpenseCategory[] categories = ExpenseCategory.values();
             String[] categoryStrings = new String[categories.length];
             for (int i = 0; i < categories.length; i++) {
@@ -59,58 +59,56 @@ public class TransactionCreationPresenter {
     public void onConfirmButtonPressed() {
         String amountString = screen.getAmountField();
         String reason = screen.getReasonField();
-        String categoryString = screen.getCategory();
+
+        // Check that input fields are not null
+        if ("".equals(amountString)) {
+            screen.popup("Must set the amount.");
+            return;
+        }
+        if ("".equals(reason)) {
+            if (transactionType == Transaction.Type.DEPOSIT) {
+                screen.popup("Must set the source of the deposit");
+            } else if (transactionType == Transaction.Type.WITHDRAWAL) {
+                screen.popup("Must set the reason for the withdrawal");
+            }
+            return;
+        }
+
+        // Check that amount is a number.
+        BigDecimal amount;
+        try {
+            amount = new BigDecimal(amountString);
+        } catch (NumberFormatException e) {
+            screen.popup("Amount field is not a number.");
+            return;
+        }
+
         Date timeEffective = screen.getTimeEffectiveDate();
         Date timeEntered = new Date();
-        BigDecimal amount = null;
 
-        String error = null;
-
-        if ("".equals(amountString)) {
-            error = "Must set the amount.";
-        } else if ("".equals(reason)) {
-            if (transactionType.equals(Transaction.TYPE_DEPOSIT)) {
-                error = "Must set the source of the deposit";
-            } else if (transactionType.equals(Transaction.TYPE_WITHDRAWAL)) {
-                error = "Must set the reason for the withdrawal";
-            }
-        }
-
-        if (error == null) {
-            try {
-                amount = new BigDecimal(amountString);
-            } catch (NumberFormatException e) {
-                error = "Amount field is not a number.";
-            }
-        }
-
-        if (error != null) {
-            screen.popup(error);
-        } else {
-            Transaction transaction;
-            if (transactionType.equals(Transaction.TYPE_DEPOSIT)) {
+        Transaction transaction;
+        switch (transactionType) {
+            case DEPOSIT:
                 transaction = new Deposit(reason, amount, timeEffective, timeEntered);
-            } else if (transactionType.equals(Transaction.TYPE_WITHDRAWAL)) {
+                break;
+            case WITHDRAWAL:
                 ExpenseCategory category;
                 try {
-                    category = ExpenseCategory.valueOf(categoryString);
-                } catch (Exception e) {
+                    category = ExpenseCategory.valueOf(screen.getCategory());
+                } catch (IllegalArgumentException e) {
                     category = ExpenseCategory.OTHER;
                 }
 
                 transaction = new Withdrawal(category, reason, amount, timeEffective, timeEntered);
-            } else {
-                transaction = null;
-            }
-
-            if (transaction == null) {
+                break;
+            default:
+                // Should never happen
                 System.err.println("Invalid transaction type " + transactionType + ".");
-            } else {
-                ClientDatabase.get().addTransaction(account, transaction);
-            }
-
-            screen.close();
+                return;
         }
+
+        ClientDatabase.get().addTransaction(account, transaction);
+        screen.close();
     }
 
     /**

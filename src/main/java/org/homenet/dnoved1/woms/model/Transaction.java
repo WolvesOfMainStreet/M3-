@@ -16,13 +16,6 @@ public abstract class Transaction implements Displayable, Serializable {
     /**Serial version.*/
     protected static final long serialVersionUID = 1L;
 
-    // The default categories of transactions.
-    // TODO: change to enumeration or use instanceof checks
-    /**A deposit type transaction.*/
-    public static final String TYPE_DEPOSIT = "deposit";
-    /**A withdrawal type transaction.*/
-    public static final String TYPE_WITHDRAWAL = "withdraw";
-
     /**The amount of money this transaction represents.*/
     protected BigDecimal amount;
     /**The time at which this transaction was created. Also the unique identifier for this object.*/
@@ -81,7 +74,7 @@ public abstract class Transaction implements Displayable, Serializable {
      *
      * @return the type(s) of transaction this is.
      */
-    public abstract String getType();
+    public abstract Type getType();
 
     /**
      * Applies this transaction to the given account.
@@ -110,5 +103,15 @@ public abstract class Transaction implements Displayable, Serializable {
     @Override
     public int hashCode() {
         return timeEntered.hashCode();
+    }
+
+    /**
+     * An enumeration of the kinds of transactions.
+     */
+    public enum Type {
+        /**A deposit type transaction.*/
+        DEPOSIT,
+        /**A withdrawal type transaction.*/
+        WITHDRAWAL;
     }
 }

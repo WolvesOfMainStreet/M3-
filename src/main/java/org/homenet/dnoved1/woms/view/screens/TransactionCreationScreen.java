@@ -18,8 +18,8 @@ public interface TransactionCreationScreen extends BaseScreen {
 
     /**
      * A parameter name for the type of transaction that is being created. The
-     * associated argument should be one of {@link Transaction#TYPE_DEPOSIT} or
-     * {@link Transaction#TYPE_WITHDRAWAL}.
+     * associated argument should be one of the values of
+     * {@link Transaction.Type}.
      */
     String TRANSACTION_TYPE = "transactionType";
 
