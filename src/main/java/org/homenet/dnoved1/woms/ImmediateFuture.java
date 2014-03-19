@@ -10,6 +10,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class ImmediateFuture<V> implements Future<V> {
 
+    /**
+     * An immediate Void future. Since all Void futures are null, only one
+     * immediate instance should ever be needed.
+     */
+    public static final ImmediateFuture<Void> VOID_FUTURE = new ImmediateFuture<Void>(null);
+
     /**The result to return.*/
     private V result;
 
