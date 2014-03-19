@@ -1,5 +1,7 @@
 package org.homenet.dnoved1.woms.model.report;
 
+import java.io.Serializable;
+
 import org.homenet.dnoved1.woms.model.Account;
 import org.homenet.dnoved1.woms.model.Displayable;
 import org.homenet.dnoved1.woms.model.Transaction;
@@ -8,7 +10,7 @@ import org.homenet.dnoved1.woms.model.User;
 /**
  * A report, summarizing some aspect of all the data stored in the model.
  */
-public interface Report extends Displayable {
+public interface Report extends Displayable, Serializable {
 
     /**
      * Visits a user from which information can be gathered for this report.

@@ -21,6 +21,9 @@ import org.homenet.dnoved1.woms.model.Withdrawal;
  */
 public class SpendingCategoryReport implements Report {
 
+    /**Serial version.*/
+    private static final long serialVersionUID = 1L;
+
     /**The user which is currently being visited.*/
     private User currentUser;
 
