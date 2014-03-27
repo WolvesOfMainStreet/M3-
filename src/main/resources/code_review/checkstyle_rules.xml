@@ -23,8 +23,6 @@
     <module name="JavadocType"/>
     <module name="JavadocVariable"/>
     <module name="WriteTag"/>
-    <module name="AbstractClassName"/>
-    <module name="AbstractClassName"/>
     <module name="ClassTypeParameterName"/>
     <module name="ConstantName"/>
     <module name="LocalFinalVariableName"/>
