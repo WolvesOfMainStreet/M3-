@@ -80,6 +80,8 @@
     <module name="Indentation"/>
     <module name="UpperEll"/>
     <module name="OuterTypeFilename"/>
+    <module name="FileContentsHolder"/>
   </module>
   <module name="StrictDuplicateCode"/>
+  <module name="SuppressionCommentFilter"/>
 </module>
