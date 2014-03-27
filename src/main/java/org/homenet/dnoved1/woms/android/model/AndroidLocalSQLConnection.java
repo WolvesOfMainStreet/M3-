@@ -26,6 +26,9 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class AndroidLocalSQLConnection implements DatabaseConnection {
 
+    /**Warning message when an unknown transaction is processed.*/
+    private static final String WARNING_UNKNOWN_TRANSACTION = "Unknown transaction %s.";
+
     /**The current local sqlite database version.*/
     private static final int DATABASE_VERSION = 5;
     /**The name of the local sqlite database.*/
@@ -354,7 +357,7 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
             cv.put(KEY_TRANSACTION_WITHDRAWAL_CATEGORY, category);
         } else {
             shouldInsert = false;
-            System.err.println("Unknown transaction class " + transaction.getClass().getName() + '.');
+            System.err.println(String.format(WARNING_UNKNOWN_TRANSACTION, transaction.getClass().getName()));
         }
 
         if (shouldInsert) {
@@ -476,7 +479,7 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
             cv.put(KEY_TRANSACTION_WITHDRAWAL_REASON, withdrawal.getReason());
             cv.put(KEY_TRANSACTION_WITHDRAWAL_CATEGORY, withdrawal.getExpenseCategory().name());
         } else {
-            System.err.println("Unknown transaction class " + nuw.getClass().getName() + '.');
+            System.err.println(String.format(WARNING_UNKNOWN_TRANSACTION, nuw.getClass().getName()));
             return;
         }
 

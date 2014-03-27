@@ -24,6 +24,9 @@ import android.widget.TextView;
  */
 public class AndroidReportScreen extends AndroidBaseScreen implements ReportScreen {
 
+    /**Error message when a view that must be a button is not.*/
+    private static final String ERROR_VIEW_NOT_BUTTON = "View must be a button.";
+
     /**The format string for displaying the selected start/end period dates.*/
     private static final String DATE_FORMAT = "%1$tB %1$te, %1$tY";
 
@@ -71,7 +74,7 @@ public class AndroidReportScreen extends AndroidBaseScreen implements ReportScre
      */
     public void chooseStartPeriod(View view) {
         if (!(view instanceof Button)) {
-            throw new IllegalArgumentException("View must be a button.");
+            throw new IllegalArgumentException(ERROR_VIEW_NOT_BUTTON);
         }
 
         final Button startPeriodButton = (Button) view;
@@ -104,7 +107,7 @@ public class AndroidReportScreen extends AndroidBaseScreen implements ReportScre
      */
     public void chooseEndPeriod(View view) {
         if (!(view instanceof Button)) {
-            throw new IllegalArgumentException("View must be a button.");
+            throw new IllegalArgumentException(ERROR_VIEW_NOT_BUTTON);
         }
 
         final Button endPeriodButton = (Button) view;
