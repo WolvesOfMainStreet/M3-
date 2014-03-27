@@ -60,7 +60,9 @@
     <module name="DefaultComesLast"/>
     <module name="EqualsHashCode"/>
     <module name="FallThrough"/>
-    <module name="HiddenField"/>
+    <module name="HiddenField">
+        <property name="tokens" value="VARIABLE_DEF"/>
+    </module>
     <module name="IllegalCatch"/>
     <module name="ModifiedControlVariable"/>
     <module name="MultipleStringLiterals"/>
