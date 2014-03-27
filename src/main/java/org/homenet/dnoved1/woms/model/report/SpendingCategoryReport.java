@@ -87,14 +87,14 @@ public class SpendingCategoryReport implements Report {
     public String[] multiLineString() {
         List<String> lines = new ArrayList<String>();
 
-        lines.add("Spending Category Report for " + user.getUsername());
-        lines.add("\t" + SimpleDateFormat.getDateInstance().format(startPeriod)
+        lines.add(oneLineString());
+        lines.add('\t' + SimpleDateFormat.getDateInstance().format(startPeriod)
                 + " - " + SimpleDateFormat.getDateInstance().format(endPeriod));
 
         BigDecimal totalExpenses = BigDecimal.ZERO;
         for (ExpenseCategory type: ExpenseCategory.values()) {
             BigDecimal expense = expensesPerCategory.get(type);
-            lines.add("\t" + type.name() + ": " + NumberFormat.getCurrencyInstance().format(expense.doubleValue()));
+            lines.add('\t' + type.name() + ": " + NumberFormat.getCurrencyInstance().format(expense.doubleValue()));
             totalExpenses = totalExpenses.add(expense);
         }
 

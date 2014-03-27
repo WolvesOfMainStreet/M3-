@@ -86,15 +86,15 @@ public class IncomeSourceReport implements Report {
     public String[] multiLineString() {
         List<String> lines = new ArrayList<String>();
 
-        lines.add("Spending Category Report for " + user.getUsername());
-        lines.add("\t" + SimpleDateFormat.getDateInstance().format(start)
+        lines.add(oneLineString());
+        lines.add('\t' + SimpleDateFormat.getDateInstance().format(start)
                 + " - " + SimpleDateFormat.getDateInstance().format(end));
 
         BigDecimal total = new BigDecimal(0, MathContext.DECIMAL32);
         for (Entry<String, BigDecimal> entry: sourceToIncome.entrySet()) {
             String source = entry.getKey();
             BigDecimal amount = entry.getValue();
-            lines.add("\t" + source + ": " + NumberFormat.getCurrencyInstance().format(amount.doubleValue()));
+            lines.add('\t' + source + ": " + NumberFormat.getCurrencyInstance().format(amount.doubleValue()));
             total = total.add(amount);
         }
 
