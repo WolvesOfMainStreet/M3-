@@ -77,6 +77,7 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
     private static final String TRANSACTION_TYPE_WITHDRAWAL = "type_withdrawal";
 
     //-----SQL Table Structure--------------------------------------------------
+    // CHECKSTYLE:OFF Turn off checkstyle for SQL commands due to MultipleStringLiterals
 
     /**A sql command for creating the user table.*/
     private static final String CREATE_TABLE_USER =
@@ -123,6 +124,10 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
     private static final String WHERE_DOUBLE_STRING = "%s='%s' AND %s='%s'";
     /**A format string for a where clause for one integer column and one string column.*/
     private static final String WHERE_INT_STRING = "%s=%d AND %s='%s'";
+    /**A format string for a drop table command.*/
+    private static final String DROP_TABLE = "DROP TABLE %s";
+
+    //CHECKSTYLE:ON End of SQL Commands
 
     /**The instance of the sqlite database helper object.*/
     private LocalSQLiteDatabase sqlitedb;
@@ -641,9 +646,9 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE " + TABLE_USER);
-            db.execSQL("DROP TABLE " + TABLE_ACCOUNT);
-            db.execSQL("DROP TABLE " + TABLE_TRANSACTION);
+            db.execSQL(String.format(DROP_TABLE, TABLE_USER));
+            db.execSQL(String.format(DROP_TABLE, TABLE_ACCOUNT));
+            db.execSQL(String.format(DROP_TABLE, TABLE_TRANSACTION));
 
             onCreate(db);
         }
