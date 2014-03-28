@@ -2,7 +2,6 @@ package org.homenet.dnoved1.woms.view.screens;
 
 import java.util.Date;
 
-import org.homenet.dnoved1.woms.model.Transaction;
 
 /**
  * The transaction creation screen. The transaction creation screen has one

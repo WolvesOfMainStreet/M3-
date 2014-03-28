@@ -29,9 +29,9 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
     /**Warning message when an unknown transaction is processed.*/
     private static final String WARNING_UNKNOWN_TRANSACTION = "Unknown transaction %s.";
 
-    /**The current local sqlite database version.*/
+    /**The current local SQLite database version.*/
     private static final int DATABASE_VERSION = 5;
-    /**The name of the local sqlite database.*/
+    /**The name of the local SQLite database.*/
     private static final String DATABASE_NAME = "womsMainDB";
 
     //-----SQL Names------------------------------------------------------------
@@ -132,7 +132,7 @@ public class AndroidLocalSQLConnection implements DatabaseConnection {
 
     //CHECKSTYLE:ON End of SQL Commands
 
-    /**The instance of the sqlite database helper object.*/
+    /**The instance of the SQLite database helper object.*/
     private LocalSQLiteDatabase sqlitedb;
 
     /**The currently logged in user.*/
