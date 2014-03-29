@@ -69,6 +69,25 @@
     <import file="custom_rules.xml" optional="true" />
 
     <!--Custom tasks start-->
+    <target name="swing">
+        <echo>Compiling core and swing classes.</echo>
+        <javac destdir="bin/classes">
+            <src path="${source.dir}" />
+            <src path="${source.swing.dir}" />
+            <exclude name="**/android/**" />
+        </javac>
+
+        <echo>Jaring core and swing classes.</echo>
+        <jar destfile="bin/WOMS.jar"
+             basedir="bin/classes"
+             excludes="**/android/**">
+            <manifest>
+                <attribute name="Main-Class"
+                    value="org.homenet.dnoved1.woms.swing.view.screens.SwingMainScreen" />
+            </manifest>
+        </jar>
+    </target>
+
     <target name="checkstyle">
         <taskdef resource="checkstyletask.properties"
             classpath="${checkstyle.jar.path}"/>
