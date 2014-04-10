@@ -34,7 +34,7 @@ public class AndroidMainScreen extends AndroidBaseScreen implements MainScreen {
         setContentView(R.layout.main_screen);
         initializeAndroidEnvironment();
         this.presenter = new MainPresenter(this);
-        mp1 = MediaPlayer.create(AndroidMainScreen.this, raw.myMusic);
+        mp1 = MediaPlayer.create(AndroidMainScreen.this, R.myMusic);
         mp1.start();
     }
 
