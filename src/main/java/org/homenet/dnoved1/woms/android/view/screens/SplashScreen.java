@@ -18,6 +18,12 @@ public class SplashScreen extends AndroidBaseScreen {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
         this.presenter = new LoginPresenter(this);
+        
+        long start = System.currentTimeMillis();
+		while (System.currentTimeMillis()-start < 3000) {
+			System.out.print("");
+		}
+
     }
 
 }
