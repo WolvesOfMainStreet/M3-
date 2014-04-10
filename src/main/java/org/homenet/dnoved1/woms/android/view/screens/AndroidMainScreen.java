@@ -17,6 +17,7 @@ import org.homenet.dnoved1.woms.view.screens.UserOverviewScreen;
 
 import android.os.Bundle;
 import android.view.View;
+import android.media.MediaPlayer;
 
 /**
  * The android implementation of {@link cs2340.woms.view.screens.MainScreen}.
@@ -25,6 +26,7 @@ public class AndroidMainScreen extends AndroidBaseScreen implements MainScreen {
 
     /**The presenter for this screen.*/
     private MainPresenter presenter;
+    public MediaPlayer mp1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,8 @@ public class AndroidMainScreen extends AndroidBaseScreen implements MainScreen {
         setContentView(R.layout.main_screen);
         initializeAndroidEnvironment();
         this.presenter = new MainPresenter(this);
+        mp1 = MediaPlayer.create(AndroidMainScreen.this, R.raw.myMusic);
+        mp1.start();
     }
 
     /**
